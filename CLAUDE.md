@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 28-03-2026
+> Last updated: 29-03-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -18,6 +18,8 @@ India's first teacher-powered platform for real insights into school workplaces.
 Teachers leave experiences of schools (salary, culture, management, ease of working, facilities etc). Schools earn trust through verified teacher feedback and attract top talent i.e., teachers.
 
 Think: Glassdoor with Tripadvisor positioning. Functionally it is Glassdoor (workplace reviews, specific to schools) but the brand positioning is Tripadvisor — positive, discovery-oriented. Teachers visit to find great workplaces, not to rant. Schools partner to build reputation and attract top teachers. Both sides should want to be on it.
+
+Market: 4 million private school teachers across 340,000+ private schools in India. Over 50% work without written contracts; ~40% in temporary roles. Private school teacher unions are functionally nonexistent — staffroom could serve as a de facto collective voice mechanism.
 
 Stage: Early-stage, bootstrapped. ₹30 per sign up on Meta Ads.
 Community: 12k+ (WhatsApp + Instagram + YouTube). Sign-ups: 2,905 (as of Mar 2026).
@@ -95,6 +97,28 @@ Note: Clarity is installed on staging and UAT too — ~100 sessions in the data 
 
 ---
 
+## Competitive Landscape
+
+**No direct Indian competitor exists.** The market is genuinely unoccupied — no platform in India offers anonymous, teacher-powered workplace reviews of schools.
+
+**Structural moat:** Every platform with a large teacher base (CENTA, Suraasa, Edustoke) monetizes through schools. Anonymous negative reviews would destroy their revenue. This structural conflict prevents any of them from building what staffroom is building — it's not a cosmetic difference, it's fundamental.
+
+**Threats to monitor:**
+- **CENTA** (medium-high): 1.9M teachers, 100K+ schools, NITI Aayog partner, ₹20Cr Series A1. Could add a review layer to their "CENTA Rated" certification. Best response: build review density fast enough that CENTA would rather partner than compete.
+- **AmbitionBox/Info Edge** (medium-high): 10M+ monthly users, owns Naukri and Shiksha. Could build a school vertical in months if motivated. Saving grace: education is sub-1% of Info Edge revenue; unit economics of small schools don't fit their model.
+- **Suraasa** (medium): 650K+ teachers, $7.2M raised. Focused on international teacher mobility, not domestic. Different segment — targets teachers seeking UK/US/UAE roles, not ₹11K–25K/month domestic private school teachers.
+- **SchoolNaukri.com** (sleeper): Claims 5 lakh+ verified teacher profiles. Pure job board now, but pivot distance to reviews is short. Monitor.
+
+**Non-product risks:**
+- India's criminal defamation law (Section 356 BNS 2023) gives schools real legal leverage against reviewers. Robust IT Act Section 79 intermediary compliance and strong anonymization are strategic priorities, not nice-to-haves.
+- School management associations (NISA = 1 lakh+ schools, 26 states) are organized and litigious.
+
+**The moat is not the tech** — buildable in 3–6 months by any funded player. The moat is review density + trust brand + first-mover in key cities. This is why city-by-city saturation is the right strategy.
+
+Full competitive analysis: knowledge/staffroom-competitive-landscape.md
+
+---
+
 ## Current Priorities
 
 1. Saturate 1-2 cities in India with >70% searches leading user to school with at least 3 experiences
@@ -131,6 +155,11 @@ Current baseline (Mar 2026): 15 schools nationwide have 3+ reviews. 1,408 total 
 
 Brand assets (logos, templates, social media, ratings UI) are in: assets/
 URL references (Google Docs, Figma, social channels, content scripts) are in: references.md
+Skills are in: skills/ (in this repo), mirrored to .claude/skills/ for Cowork.
+Deep-dive strategic documents (competitive analysis, research) are in: knowledge/
+
+Key knowledge files:
+- knowledge/staffroom-competitive-landscape.md — full competitor analysis, investor Q&A prep, threat playbook
 
 ---
 
