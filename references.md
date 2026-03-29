@@ -21,7 +21,6 @@ Access method is noted for each — use the appropriate MCP tool.
 | Asset | URL | Access |
 |---|---|---|
 | Figma — Product Prototype | https://www.figma.com/design/uPI06ZgIgr5DwHZ4QQY3ou/Staff-Room?node-id=208-3195 | Figma MCP |
-| Figma — Brand Guidelines (source) | https://www.figma.com/design/uPI06ZgIgr5DwHZ4QQY3ou/Staff-Room?node-id=639-545 | Figma MCP |
 
 Note: Brand Guidelines are also available as a PDF in assets/brand-guidelines.pdf. Use the PDF for reading content; use Figma MCP when you need design token values or component specifications.
 
