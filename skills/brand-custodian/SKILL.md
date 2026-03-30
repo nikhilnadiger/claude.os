@@ -99,10 +99,16 @@ and values. Single checkpoint before any brand-facing content is delivered.
 
 1. Read `references/brand-narrative.md` — voice system, personality, tagline,
    core promise
-2. Read `references/output-playbook.md` — channel-specific rules for the
-   output type requested
-3. If visual elements are involved (email header, deck, asset description),
-   read `references/visual-identity.md`
+2. Read `references/output-playbook.md` — navigate directly to the section
+   matching the output type. Sections: **1** Product UI copy, **2** Teacher-
+   facing communication, **3** School-facing communication, **4** Investor/
+   partner materials, **5** Social media spotlights, **6** Community management,
+   **7** Email and WhatsApp broadcasts, **8** Internal docs with external reach,
+   **9** Before/After common violations, **10** Moderation rules
+3. **Read `references/visual-identity.md`** — mandatory whenever the output
+   involves any visual element: email headers, deck slides, in-app UI,
+   asset descriptions, or any copy that will appear alongside a visual.
+   Never recall brand colours or typography from memory.
 4. Write or review the output against all Key Rules above
 5. Run the Red Flags checklist before delivering
 6. If reviewing existing content: annotate each violation with the rule it

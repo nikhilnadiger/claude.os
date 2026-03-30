@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 29-03-2026
+> Last updated: 30-03-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -21,79 +21,36 @@ Think: Glassdoor with Tripadvisor positioning. Functionally it is Glassdoor (wor
 
 Market: 4 million private school teachers across 340,000+ private schools in India. Over 50% work without written contracts; ~40% in temporary roles. Private school teacher unions are functionally nonexistent — staffroom could serve as a de facto collective voice mechanism.
 
-Stage: Early-stage, bootstrapped. ₹30 per sign up on Meta Ads.
-Community: 12k+ (WhatsApp + Instagram + YouTube). Sign-ups: 2,905 (as of Mar 2026).
-Reviews: 635 submitted across 555 unique schools. Only 15 schools have 3+ reviews — the PMF threshold. 255 reviews are fully complete. 133 districts covered. Bengaluru is the leading district by volume.
-Revenue model: a work in progress — active pilots with education businesses and schools.
+Stage: Early-stage, bootstrapped. Revenue model a work in progress — active pilots with education businesses and schools.
+Current metrics: knowledge/staffroom-product-metrics.md
+Teacher segments (3): Government low-income/rural — Private low-income — Private aspirational/experienced. Full profiles: knowledge/staffroom-teacher-insights.md
 
 ---
 
-## Tech Stack
+## Engineering — Safety Rules
 
-Frontend: Next.js 16, React 19, Tailwind v4, Redux Toolkit
-Backend: NestJS 11 (TypeORM, Passport/JWT, pg) — runs on DO production droplet (strm-app-prd) as PM2 process under stfrmuser1. Port 9000. In production, accessed via api-prod.thestaffroom.in (nginx). On localhost/UAT, accessed via Next.js catch-all proxy at /api/[...path] → INTERNAL_BACKEND_URL.
-Backend (Legacy — still deployed, NOT used by current app): Two Cloudflare Workers still live but no longer called by the active codebase:
-  - school-review worker (school-review.thestaffroom2024.workers.dev): original legacy backend from separate repo (school-reviewer-forked). ~59 req/24h likely from its own internal cron jobs. 1k subrequests/24h all returning 4xx — its cron calls a dead Azure endpoint (orailap.azurewebsites.net). Zero references to this worker in the current frontend, NestJS, or any active code. Safe to disable. Do NOT add new code that calls this worker.
-  - backend worker (api.thestaffroom.in): ~28 req/24h from unknown sources (old cached clients or crawlers), NOT from the main app. Corresponds to backend-deprecated/ in repo. Do NOT add new code that calls this worker.
-Hosting: Digital Ocean Droplets — production (strm-app-prd, BLR1): Next.js :3000 + NestJS :9000, managed by PM2 under stfrmuser1. UAT (ubuntu-s-1vcpu-2gb-blr1-01, BLR1): Next.js :5000 + NestJS :7000, exposed at uat-api.thestaffroom.in via nginx.
-nginx (production): thestaffroom.in → :3000 (Next.js), api-prod.thestaffroom.in → :9000 (NestJS)
-Database: Neon PostgreSQL (primary, used by NestJS) + Cloudflare D1 (secondary, used by CF Workers)
+Full codebase context: load `codebase-context` skill. The following rules are
+non-negotiable and must always be in context:
 
-Key rules:
-- New features go into backend-nest. Do not touch backend-deprecated/ — it is the old CF Worker, replaced by NestJS, but still deployed and receiving legacy traffic.
-- PROJECT_REFERENCE.md in the repo is outdated — it describes an old dual-CF-Worker architecture that no longer applies. Ignore it.
-- Production client-side API routing: NEXT_PUBLIC_API_BASE_URL=https://api-prod.thestaffroom.in (NestJS). This is baked into the Next.js build at build time.
-- The catch-all proxy at pages/api/[...path].ts (INTERNAL_BACKEND_URL) is only active on localhost and UAT — not in production. Never use hardcoded /api/... paths for server-side calls; always use getApiBaseUrl() from lib/api-base.ts.
-
-Repo: /mnt/GitHub/staffroom-v2
+- **New features go into `backend-nest/` only.** Do NOT touch `backend-deprecated/`.
+- **Do NOT call legacy CF workers** — not school-review worker, not api.thestaffroom.in.
+- **`PROJECT_REFERENCE.md` is outdated** — ignore it entirely.
+- **Never hardcode `/api/...` paths.** Always use `getApiBaseUrl()` from `lib/api-base.ts`.
+- **Before any PR:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Both must pass with 0 errors. Never skip.
+- **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
+- Repo: `/mnt/GitHub/staffroom-v2`
 
 ---
 
-## Deployment Process
+## Product Insights
 
-Nikhil's workflow: code changes made locally via Claude Code → pushed to UAT branch on GitHub → CI/CD pipeline auto-deploys to UAT server → tested at uat.thestaffroom.in → merged to main branch → CI/CD pipeline auto-deploys to production → live at thestaffroom.in.
+Full metrics: `knowledge/staffroom-product-metrics.md` (refresh before any decision).
 
-Developer's (Krishnan/Nilangshu) workflow: unknown — confirm with them before advising on deployment steps.
-
----
-
-## Code Quality Rules
-
-BEFORE creating any PR, always run both of the following in sequence.
-Run in BOTH repo root AND /backend-nest:
-
-1. pnpm build       # must succeed with 0 errors
-2. pnpm lint        # must succeed with 0 errors
-
-If either fails: fix all errors before pushing. Never push a failing build. If errors are complex, flag them to me — do not silently skip.
-
-WHEN planning for code fixes or improvements:
-1. Avoid edits to proxy list, config, ports, environment variables, routing logic etc.
-2. Consider and avoid risks to existing workflow, product functionality and efficiency.
-
-If no other way to fix the issue or build the feature, explicitly ask me for approval along with potential risks and mitigation.
-
-WHEN investigating a bug or issue, go through the workflow one step at a time to confirm inputs and outputs are working as expected.
-
----
-
-## Product Insights (Clarity — last 30 days)
-
-Traffic: 2,351 sessions, 1,682 users. Avg session: 2.87 pages, 138s. Bounce rate: 56%.
-
-Device: 90% mobile (2,122), 9% desktop (220), 1% tablet. Every UI/UX decision must be mobile-first.
-
-Geography: Bengaluru 44% (1,030 sessions), then Mumbai (172), Chennai (109), Pune (108), Delhi (107), Hyderabad (99), Kolkata (88). All India. Bengaluru is the natural first city to saturate.
-
-Key funnel: Homepage → Login → /home → Share Experience. Login is the second-biggest exit page (606 exits) — significant drop-off there.
-
-School pages: Only 20–37 sessions each. Discovery/search is the bottleneck, not school page quality.
-
-UX friction: 18.8% of sessions have dead clicks (443/2,351) — users tapping things that aren't interactive. Primarily a mobile issue.
-
-Channel attribution: Only 394/2,351 sessions have UTM data (Direct 222, Organic 131, Social 41). ~1,957 sessions are untracked — almost certainly Instagram Ads traffic without UTMs.
-
-Note: Clarity is installed on staging and UAT too — ~100 sessions in the data are from non-production environments and slightly inflate numbers.
+Structural implications (always apply):
+- **90% mobile** — every UI/UX decision must be mobile-first, no exceptions
+- **Bengaluru is 44% of sessions** — primary city for content and product focus
+- **Login page is primary drop-off** (606 exits) — conversion priority
+- **~1,957 sessions untracked** — Instagram Ads traffic missing UTMs; fix on all paid links
 
 ---
 
@@ -145,9 +102,10 @@ Current baseline (Mar 2026): 15 schools nationwide have 3+ reviews. 1,408 total 
 
 - Be brief. No preamble. No summaries unless asked.
 - Be honest — push back if something is wrong.
-- When in doubt about scope or unable to complete a task, ask one clear question.
+- When in doubt about scope or unable to complete a task, ask one clear question before proceeding, not after.
 - Never add features or scope not explicitly requested.
 - For code: always show what changed and why.
+- When a URL, Google Doc, Figma link, or external file is shared for action: fetch and verify its contents before proceeding. Never assume the link is correct, live, or contains what the label implies.
 
 ---
 
@@ -160,6 +118,10 @@ Deep-dive strategic documents (competitive analysis, research) are in: knowledge
 
 Key knowledge files:
 - knowledge/staffroom-competitive-landscape.md — full competitor analysis, investor Q&A prep, threat playbook
+- knowledge/staffroom-product-metrics.md — platform counts, Clarity analytics (refresh before use)
+- knowledge/staffroom-teacher-insights.md — user research, 3 segments, verbatim quotes
+- knowledge/staffroom-content-performance.md — YouTube, Instagram, Meta Ads performance data
+- knowledge/skill-architecture.md — read before creating any new skill
 
 ---
 
@@ -176,6 +138,6 @@ Chrome (Claude in Chrome): Before attempting any browser automation, always ask 
 - Target users: Indian teachers in private schools and their school principals and owners.
 - Do not make claims that are not verified by data.
 - LinkedIn: Nikhil has a personal LinkedIn (active, with a configured skill for posting). staffroom has a LinkedIn page that is not currently used.
-- Content: Instagram and YouTube content is paused as of now.
+- Content: All channels paused as of Mar 2026. When content resumes, YouTube is the primary channel (highest completion rates, subscriber acquisition). Instagram and WhatsApp are secondary.
 - Pitch deck (Feb 2026) is in assets/pitch-deck-feb-2026.pptx. Note: content may be outdated.
-     
+- Before creating a new skill: read knowledge/skill-architecture.md

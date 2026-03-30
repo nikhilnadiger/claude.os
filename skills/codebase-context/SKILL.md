@@ -1,0 +1,95 @@
+---
+name: codebase-context
+version: 1.0
+description: >
+  Load for any staffroom engineering task: fixing bugs, implementing features,
+  understanding the codebase architecture, deployment questions, database queries,
+  or infrastructure questions. Triggers: 'fix this bug', 'implement feature',
+  'how is the backend set up', 'deploy to', 'which file handles', 'how does X
+  work in the codebase', 'database schema', 'add an endpoint', 'architecture
+  question', 'what port does', 'how do I run'. Not for content strategy, visual
+  assets, or brand decisions.
+
+triggers:
+  - "fix this bug"
+  - "implement feature"
+  - "how is the backend set up"
+  - "deploy to"
+  - "which file handles"
+  - "how does this work in the codebase"
+  - "database schema"
+  - "add an endpoint"
+  - "architecture question"
+  - "what port does"
+  - "codebase"
+  - "backend"
+  - "NestJS"
+  - "Next.js"
+  - "production server"
+  - "UAT"
+  - "PM2"
+
+uses_references:
+  - references/stack-topology.md
+  - references/deployment-guide.md
+
+related_skills: []
+---
+
+# codebase-context
+
+## Purpose
+
+Provides full technical context for the staffroom codebase — stack topology,
+environment specifics, legacy system details, and deployment workflow. Load
+this for any engineering task.
+
+## When to Load This Skill
+
+- Fixing a bug in the frontend or backend
+- Implementing a new feature or endpoint
+- Understanding how a part of the codebase works
+- Deployment, CI/CD, or environment questions
+- Database schema or query questions
+- Infrastructure or hosting questions
+
+## When NOT to Load This Skill
+
+- Content strategy or script writing → use content-strategy
+- Visual asset creation → use visual-asset-creation
+- Brand voice review → use brand-custodian
+- Non-engineering product decisions
+
+## Safety Rules — Non-Negotiable
+
+These rules are also in CLAUDE.md. They are repeated here because violating
+them causes real harm to the codebase and production system.
+
+1. **New features go into `backend-nest/` only.** Do NOT touch `backend-deprecated/`
+   — it is the old CF Worker, still deployed and receiving legacy traffic.
+2. **Do NOT add any code that calls the legacy CF workers** — not the
+   school-review worker, not api.thestaffroom.in. Zero calls. Ever.
+3. **`PROJECT_REFERENCE.md` in the repo is outdated** — it describes the old
+   dual-CF-Worker architecture. Ignore it entirely.
+4. **Never hardcode `/api/...` paths** for server-side calls. Always use
+   `getApiBaseUrl()` from `lib/api-base.ts`. The catch-all proxy at
+   `pages/api/[...path].ts` is only active on localhost and UAT — not production.
+5. **Run `pnpm build` and `pnpm lint` before any PR** — in BOTH repo root AND
+   `/backend-nest`. Both must succeed with 0 errors. Fix all errors before pushing.
+   Never skip. If complex, flag to Nikhil — do not silently skip.
+6. **Avoid edits to proxy config, ports, environment variables, or routing
+   logic** unless there is no other way. If unavoidable, ask Nikhil for explicit
+   approval with risks and mitigation stated.
+
+## Code Investigation Rule
+
+When investigating a bug or issue: go through the workflow one step at a time,
+confirming inputs and outputs are working as expected at each step before
+moving to the next. Do not jump to fixes before confirming the diagnosis.
+
+## Reference Files
+
+- **`references/stack-topology.md`** — read for any question about stack
+  versions, ports, hosting, databases, nginx, PM2, or legacy workers
+- **`references/deployment-guide.md`** — read for deployment workflow, CI/CD,
+  UAT vs production environment details, and URLs
