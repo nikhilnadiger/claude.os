@@ -1,6 +1,6 @@
 ---
 name: visual-asset-creation
-version: 1.1
+version: 1.2
 description: >
   Use for creating any staffroom visual asset: YouTube thumbnails, Instagram
   Reel covers, quote cards, data visualisation cards, LinkedIn post images,
@@ -62,11 +62,19 @@ Creates every type of staffroom visual asset across three creation paths:
 1. **Gemini path** — Claude generates a precise Imagen 3 prompt + specifies
    which logo file to upload alongside it → Nikhil pastes prompt + logo into
    Gemini → gets a final, ready-to-use image. No post-generation edits.
-2. **Figma MCP path** — Claude designs the asset directly in Figma via MCP
+   **Limitation:** Imagen 3 renders a maximum of 3–5 words of text reliably.
+   For text-heavy assets, all copy must be added via Figma MCP after generation.
+2. **Gemini + Figma MCP (two-step) path** — Gemini generates the illustrated
+   background scene; Figma MCP adds all text overlays, copy, URLs, and trust
+   indicators on top. Best for illustrated WhatsApp graphics, Meta ads, and
+   any asset that needs both a rich scene AND substantial readable copy.
+   Validated workflow: Gemini produces high-quality Indian-context flat
+   illustrations that exceed what Figma MCP can draw programmatically.
+3. **Figma MCP path** — Claude designs the asset directly in Figma via MCP
    (typography, brand colours, text content, logo placement). Best for
    design-only assets that do not need AI imagery: data cards, quote cards,
    text-heavy layouts, carousels.
-3. **Real image path** — Claude fetches a credible real image (government
+4. **Real image path** — Claude fetches a credible real image (government
    website, company site, Wikipedia, press archive) via WebFetch, then places
    it in a Figma layout via MCP with brand overlays. No AI generation needed.
 
@@ -123,11 +131,13 @@ to an AI video agent or a human creator without any additional briefing.
 
 | Asset type | Best path |
 |---|---|
-| Thumbnail, Reel cover, illustrated scenes | Gemini |
+| Thumbnail, Reel cover, illustrated scenes (no copy) | Gemini |
+| WhatsApp graphic (illustrated scene + copy) | Gemini + Figma MCP (two-step) |
+| Meta ad (illustrated scene + copy) | Gemini + Figma MCP (two-step) |
 | Data card, quote card, text post | Figma MCP |
 | Real school/teacher/organisation photo | Real image + Figma MCP |
 | Carousel sequence | Figma MCP (all frames in one file) |
-| Meta ad creative (static) | Gemini or Figma MCP |
+| Meta ad creative (minimal text) | Gemini only |
 | Video (Short, Reel, ad) | Video Production Brief |
 
 ## Workflow
@@ -138,16 +148,25 @@ to an AI video agent or a human creator without any additional briefing.
    table to determine which path and which reference file to load next
 3. Read the relevant path reference file:
    - **Gemini path** → read `references/gemini-assets.md`
+   - **Gemini + Figma MCP path** → read `references/gemini-assets.md` then `references/figma-assets.md`
    - **Figma MCP path** → read `references/figma-assets.md`
    - **Real image path** → read `references/real-image-assets.md`
    - **Video Production Brief** → read `references/video-brief-template.md`
 4. For **Gemini path**: write the prompt, specify the logo file to upload
    alongside it, and note output dimensions. Deliver as a ready-to-paste block.
-5. For **Figma MCP path**: use the Figma MCP (`use_figma`) to build the asset —
+5. For **Gemini + Figma MCP (two-step) path**:
+   a. Write the Gemini background prompt (scene only, logo baked in, max 3–5 words
+      of text). Deliver as a ready-to-paste block for Nikhil to run.
+   b. Once Nikhil confirms the Gemini output, use Figma MCP to place the
+      generated image as a background frame and add all text overlays: headline,
+      body copy, trust indicators, URL, reassurance copy. All readable copy
+      lives in the Figma layer, not in the Gemini image.
+   c. Share the Figma file link as the final deliverable.
+6. For **Figma MCP path**: use the Figma MCP (`use_figma`) to build the asset —
    brand colours, typography, text content, logo. Share the Figma file link.
-6. For **Real image path**: fetch the image via WebFetch, confirm it is
+7. For **Real image path**: fetch the image via WebFetch, confirm it is
    appropriate and credible, then use Figma MCP to place it in a branded layout.
-7. For **Video Production Brief**: produce the brief in the standard format from
+8. For **Video Production Brief**: produce the brief in the standard format from
    video-brief-template.md.
 
 ## Output Format
@@ -161,6 +180,11 @@ to an AI video agent or a human creator without any additional briefing.
 **Gemini/Imagen 3 Prompt:**
 [prompt — ready to copy-paste]
 ```
+
+**Gemini + Figma MCP path:**
+Step 1 — deliver Gemini prompt block (same format as Gemini path above).
+Step 2 — after Nikhil confirms the background image, deliver Figma file link
+with description of text overlays added.
 
 **Figma MCP path:** Share Figma file link with description of what was built.
 
