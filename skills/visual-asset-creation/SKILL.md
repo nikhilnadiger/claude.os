@@ -1,6 +1,6 @@
 ---
 name: visual-asset-creation
-version: 1.2
+version: 1.3
 description: >
   Use for creating any staffroom visual asset: YouTube thumbnails, Instagram
   Reel covers, quote cards, data visualisation cards, LinkedIn post images,
@@ -8,9 +8,9 @@ description: >
   'create a thumbnail', 'make a visual', 'design a quote card', 'thumbnail
   for this video', 'visual for this reel', 'create an asset', 'make a graphic',
   'data card', 'image for this post', 'carousel', 'video brief', 'fetch an
-  image', 'create a figma file'. This skill routes to the right creation
-  path (Gemini prompt, Figma MCP, or real image) based on asset type.
-  Not for script writing (use content-strategy) or brand voice review
+  image'. This skill routes to the right creation path (Gemini illustration
+  prompt, Gemini + PowerPoint two-step, or PowerPoint-only) based on asset
+  type. Not for script writing (use content-strategy) or brand voice review
   (use brand-custodian).
 
 triggers:
@@ -27,13 +27,12 @@ triggers:
   - "YouTube thumbnail"
   - "carousel"
   - "video brief"
-  - "create a figma file"
   - "fetch an image for"
 
 uses_references:
   - references/asset-creation-guide.md
   - references/gemini-assets.md
-  - references/figma-assets.md
+  - references/pptx-assets.md
   - references/real-image-assets.md
   - references/video-brief-template.md
 
@@ -59,24 +58,27 @@ live_references:
 
 Creates every type of staffroom visual asset across three creation paths:
 
-1. **Gemini path** — Claude generates a precise Imagen 3 prompt + specifies
-   which logo file to upload alongside it → Nikhil pastes prompt + logo into
-   Gemini → gets a final, ready-to-use image. No post-generation edits.
-   **Limitation:** Imagen 3 renders a maximum of 3–5 words of text reliably.
-   For text-heavy assets, all copy must be added via Figma MCP after generation.
-2. **Gemini + Figma MCP (two-step) path** — Gemini generates the illustrated
-   background scene; Figma MCP adds all text overlays, copy, URLs, and trust
-   indicators on top. Best for illustrated WhatsApp graphics, Meta ads, and
-   any asset that needs both a rich scene AND substantial readable copy.
-   Validated workflow: Gemini produces high-quality Indian-context flat
-   illustrations that exceed what Figma MCP can draw programmatically.
-3. **Figma MCP path** — Claude designs the asset directly in Figma via MCP
-   (typography, brand colours, text content, logo placement). Best for
-   design-only assets that do not need AI imagery: data cards, quote cards,
-   text-heavy layouts, carousels.
+1. **Gemini standalone path** — Claude generates an Imagen 3 prompt + specifies
+   which logo file to upload → Nikhil pastes prompt + logo into Gemini → image
+   is the final deliverable. No PPTX step.
+   Use when: the asset needs no text overlay (pure illustration, abstract
+   background, visual-only asset). Claude decides based on whether the brief
+   requires readable copy on top of the image.
+   **Critical:** When this image will later go into a PPTX, add "absolutely no
+   text, numbers, or words in the image" and define clear zones for PPTX layers.
+   Never mix Gemini-baked text with PPTX overlays — text will clash and appear twice.
+2. **Gemini + PowerPoint (two-step) path** — Gemini generates the illustration-
+   only background; Claude then builds a PPTX file (python-pptx) with the
+   Gemini image as the full-bleed background and all text, copy, URLs, pills,
+   and logo as PPTX layers on top. Best for WhatsApp graphics, Meta ads,
+   thumbnails, and Reel covers that need both a rich illustrated scene and
+   substantial readable copy.
+3. **PowerPoint path** — Claude builds the asset entirely in PPTX using brand
+   colour fills (no Gemini background needed). Best for data cards, quote cards,
+   carousels, and text-heavy layouts.
 4. **Real image path** — Claude fetches a credible real image (government
-   website, company site, Wikipedia, press archive) via WebFetch, then places
-   it in a Figma layout via MCP with brand overlays. No AI generation needed.
+   website, company site, Wikipedia, press archive) via WebFetch, then builds a
+   PPTX with the real image as background and brand text overlays on top.
 
 For video assets, Claude produces a **Video Production Brief** — a complete
 document (script, visual guide, voice directions, timing) that can be handed
@@ -94,13 +96,13 @@ to an AI video agent or a human creator without any additional briefing.
 - Producing a Meta ad creative
 - Creating a video production brief for short or long-form video
 - Fetching and placing a real image from an external source
-- Building an editable asset in Figma
 
 ## When NOT to Load This Skill
 
 - Writing scripts or content — use content-strategy
 - Brand voice review of text — use brand-custodian
-- Technical Figma design work (component design, design system) — different workflow
+- Reading existing Figma designs for reference — use Figma MCP directly (read-only)
+- Note: Figma MCP cannot create or edit assets; all asset creation uses PPTX
 
 ## Key Rules
 
@@ -124,21 +126,26 @@ to an AI video agent or a human creator without any additional briefing.
 7. **Semantic colours are UI-only** — never use #3D9970, #C04B3A, #E8D485,
    or #9E9E96 in marketing assets, thumbnails, social posts, or ad creatives.
 8. **Always read asset-creation-guide.md** before writing any prompt or
-   opening Figma — it contains path-specific templates, the thumbnail formula,
-   carousel structure rules, video brief format, and real image guidance.
+   building any PPTX — it contains path-specific templates, the thumbnail
+   formula, carousel structure rules, video brief format, and real image
+   guidance.
 
 ## Creation Path Decision
 
 | Asset type | Best path |
 |---|---|
-| Thumbnail, Reel cover, illustrated scenes (no copy) | Gemini |
-| WhatsApp graphic (illustrated scene + copy) | Gemini + Figma MCP (two-step) |
-| Meta ad (illustrated scene + copy) | Gemini + Figma MCP (two-step) |
-| Data card, quote card, text post | Figma MCP |
-| Real school/teacher/organisation photo | Real image + Figma MCP |
-| Carousel sequence | Figma MCP (all frames in one file) |
-| Meta ad creative (minimal text) | Gemini only |
+| Illustrated scene — no text needed | Gemini standalone |
+| Thumbnail / Reel cover — needs text hook | Gemini + PowerPoint (two-step) |
+| WhatsApp graphic / Meta ad — needs copy | Gemini + PowerPoint (two-step) |
+| Data card, quote card, text post | PowerPoint only |
+| Real school/teacher/organisation photo | Real image + PowerPoint |
+| Carousel sequence | PowerPoint only (all frames in one PPTX) |
 | Video (Short, Reel, ad) | Video Production Brief |
+
+**Claude decides the path** by evaluating whether the brief requires readable
+copy on the asset. If no text is needed → Gemini standalone. If text is needed
+on top of an illustration → Gemini + PowerPoint. If no illustration needed
+→ PowerPoint only. When in doubt, ask Nikhil.
 
 ## Workflow
 
@@ -147,48 +154,53 @@ to an AI video agent or a human creator without any additional briefing.
 2. Read `references/asset-creation-guide.md` — use the Creation Path Decision
    table to determine which path and which reference file to load next
 3. Read the relevant path reference file:
-   - **Gemini path** → read `references/gemini-assets.md`
-   - **Gemini + Figma MCP path** → read `references/gemini-assets.md` then `references/figma-assets.md`
-   - **Figma MCP path** → read `references/figma-assets.md`
-   - **Real image path** → read `references/real-image-assets.md`
+   - **Gemini + PowerPoint path** → read `references/gemini-assets.md` then `references/pptx-assets.md`
+   - **PowerPoint only path** → read `references/pptx-assets.md`
+   - **Real image path** → read `references/real-image-assets.md` then `references/pptx-assets.md`
    - **Video Production Brief** → read `references/video-brief-template.md`
-4. For **Gemini path**: write the prompt, specify the logo file to upload
-   alongside it, and note output dimensions. Deliver as a ready-to-paste block.
-5. For **Gemini + Figma MCP (two-step) path**:
-   a. Write the Gemini background prompt (scene only, logo baked in, max 3–5 words
-      of text). Deliver as a ready-to-paste block for Nikhil to run.
-   b. Once Nikhil confirms the Gemini output, use Figma MCP to place the
-      generated image as a background frame and add all text overlays: headline,
-      body copy, trust indicators, URL, reassurance copy. All readable copy
-      lives in the Figma layer, not in the Gemini image.
-   c. Share the Figma file link as the final deliverable.
-6. For **Figma MCP path**: use the Figma MCP (`use_figma`) to build the asset —
-   brand colours, typography, text content, logo. Share the Figma file link.
-7. For **Real image path**: fetch the image via WebFetch, confirm it is
-   appropriate and credible, then use Figma MCP to place it in a branded layout.
-8. For **Video Production Brief**: produce the brief in the standard format from
+4. For **Gemini + PowerPoint (two-step) path**:
+   a. Write the illustration-only Gemini prompt (no text in image, clear zones
+      defined). Deliver as a ready-to-paste block for Nikhil to run in Gemini.
+   b. Nikhil runs the prompt in Gemini, downloads the image, uploads it to chat.
+   c. Claude receives the image, builds a PPTX using python-pptx: image as
+      full-bleed background layer, then ALL text (headline, copy, pills, URL,
+      logo) as PPTX layers on top. See `references/pptx-assets.md` for specs.
+   d. Save PPTX to working directory, deliver `computer://` link. Nikhil exports
+      each slide as PNG (File → Export → PNG, highest quality).
+5. For **PowerPoint only path**: build directly in PPTX with brand colour fills
+   (no Gemini step). See `references/pptx-assets.md` for asset-type specs.
+6. For **Real image path**: fetch the image via WebFetch, confirm it is
+   appropriate and credible, then embed it as background in a PPTX and add
+   brand text overlays. See `references/pptx-assets.md` for specs.
+7. For **Video Production Brief**: produce the brief in the standard format from
    video-brief-template.md.
 
 ## Output Format
 
-**Gemini path:**
+**Gemini + PowerPoint (two-step) — Step 1 output:**
 ```
 **Asset:** [type + channel]
-**Dimensions:** [e.g., 1280×720px, 9:16]
+**Dimensions:** [e.g., 1080×1080px, 1:1]
 **Logo to upload alongside prompt:** [variant name from assets/logos/]
 
-**Gemini/Imagen 3 Prompt:**
+**Gemini/Imagen 3 Prompt (illustration-only — no text in image):**
 [prompt — ready to copy-paste]
+
+→ Run this in Gemini, download the image, and upload it here to continue.
 ```
 
-**Gemini + Figma MCP path:**
-Step 1 — deliver Gemini prompt block (same format as Gemini path above).
-Step 2 — after Nikhil confirms the background image, deliver Figma file link
-with description of text overlays added.
+**Gemini + PowerPoint — Step 2 output (after Nikhil uploads image):**
+Claude builds and saves the PPTX. Deliver as:
+```
+[View your asset](<computer://link to .pptx file>)
 
-**Figma MCP path:** Share Figma file link with description of what was built.
+Open in PowerPoint → File → Export → PNG → highest quality.
+Each slide exports as a separate PNG.
+```
 
-**Real image path:** Share Figma file link + cite source URL of the image used.
+**PowerPoint only path:** Build PPTX, save, deliver `computer://` link with export instructions.
+
+**Real image path:** Fetch image via WebFetch, build PPTX with image as background, deliver link + cite image source URL.
 
 **Video Production Brief:** Markdown document — see format in video-brief-template.md.
 

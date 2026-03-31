@@ -73,7 +73,8 @@ Skill reference docs (in skills/*/references/):
 - product-context/references/api-inventory.md — all NestJS API endpoints and contracts
 - codebase-context/references/stack-topology.md — infra: frontend, NestJS, hosting, DB overview
 - engineering-review/references/architecture-patterns.md — NestJS patterns, DB conventions, auth patterns
-- (+ brand-custodian, visual-asset-creation, content-strategy reference files)
+- visual-asset-creation/references/pptx-assets.md — PowerPoint path: python-pptx setup, all asset types, colour/font spec, export instructions
+- (+ brand-custodian/references/, content-strategy/references/ — see those skills for routing)
 
 ---
 
@@ -84,7 +85,7 @@ staffroom's claude.os has 7 skills in two clusters plus one cross-cutting skill:
 | Cluster | Skill | Primary intent |
 |---|---|---|
 | Brand | brand-custodian | Brand voice, rules, what staffroom sounds/looks like |
-| Brand | visual-asset-creation | Create Figma/AI visual assets |
+| Brand | visual-asset-creation | Create PowerPoint/Gemini visual assets |
 | Brand | content-strategy | Plan and script content (YouTube, Instagram, WhatsApp) |
 | Engineering | codebase-context | Implement or debug code in the staffroom codebase |
 | Engineering | engineering-review | Review PRs, architecture decisions, ADRs |
@@ -225,6 +226,12 @@ skill system but may still appear in other locations:
 | engineering-review/references/code-review-checklist.md | D1 described as teacher_counts module only; "no new modules should touch D1" | D1 used by 10+ NestJS modules — updated to reflect actual architecture | Fixed in Task 6 |
 | knowledge/staffroom-product-metrics.md | Query guidance used wrong table names: `reviews` and `users` | Correct tables: `stepper_form_data` (reviews), `"User"` (sign-ups, PascalCase + quoted) | Fixed in Task 6 |
 | CLAUDE.md | Duplicate Chrome instruction in "Tool Access Notes" section | Already covered in MCP Tool Safety Rules section — Tool Access Notes section removed | Fixed in Task 6 |
+| visual-asset-creation/SKILL.md | Figma MCP paths (two-step and standalone) documented as active creation paths | Figma MCP is read-only — all asset creation routes to PowerPoint (python-pptx). SKILL.md updated to v1.3. | Fixed in Task 7 |
+| visual-asset-creation/references/gemini-assets.md | "3–5 words max in Gemini / add longer text via Figma MCP" | Illustration-only mode for PPTX two-step; Gemini standalone is valid final path when no text needed | Fixed in Task 7 |
+| visual-asset-creation/references/asset-creation-guide.md | All Figma MCP entries in creation path table | Replaced with PowerPoint path entries; PowerPoint section added | Fixed in Task 7 |
+| visual-asset-creation/references/figma-assets.md | File presented as active Figma MCP creation workflow | Figma MCP is read-only — file repurposed as layout spec reference; all creation redirects to pptx-assets.md | Fixed in Task 7 |
+| visual-asset-creation/references/real-image-assets.md | "Use Figma MCP to place image in branded layout" | Replaced with "Build a PPTX with image as full-bleed background" | Fixed in Task 7 |
+| CLAUDE.md | Figma MCP described as "read access only — do not write without approval" | Clarified: Figma MCP is read-only entirely; no creation possible; asset creation uses pptx-assets.md | Fixed in Task 7 |
 
 ---
 

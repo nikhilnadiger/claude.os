@@ -32,13 +32,14 @@ institution, or a news context.
    - Publicly available
    - Non-copyrighted or Creative Commons / government press release
    - Not defamatory or embarrassing to any person or institution
-3. Use Figma MCP to place image in a branded layout:
-   - Brand colour overlay or banner (partial overlay at 30–50% opacity using
-     Deep Forest Green #043630 or Dark Teal #004D43) for context
+3. Build a PPTX with the image as full-bleed background (see `pptx-assets.md`
+   for the python-pptx setup). Add brand layers on top:
+   - Semi-transparent brand colour overlay (30–50% opacity, Deep Forest Green
+     #043630 or Dark Teal #004D43) if the image needs contrast for text
    - Text: Zalando Sans SemiExpanded Bold for headline, Satoshi for body
-   - Logo: placed clearly — `logo-light.png` on dark overlay, `logo-dark.png`
-     on light areas
-4. Cite source in Figma file notes and in the content description
+   - Logo: `logo-light.png` on dark overlays, `logo-dark.png` on light areas
+4. Cite the source URL in the PPTX file name or a comment, and in the content
+   description delivered to Nikhil
 
 ---
 

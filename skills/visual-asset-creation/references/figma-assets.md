@@ -4,14 +4,26 @@ last_updated: Mar 2026
 source: brand-custodian/references/visual-identity.md
 ---
 
-# Figma MCP Path Assets
+# Figma — Reference Only
 
-**BEFORE USING:** Read `brand-custodian/references/visual-identity.md` to
-confirm current brand colours and typography. Never write colour codes from memory.
+> **STATUS (Mar 2026): Figma MCP is read-only.**
+> Claude can read existing Figma files (get metadata, screenshots, variable
+> definitions, design context) but **cannot create new files or edit existing
+> designs** via MCP. All visual asset creation routes to the PowerPoint path.
+> See `references/pptx-assets.md` for the active asset creation workflow.
+>
+> This file is retained as a layout and specification reference — the design
+> specs below document the intended layouts for each asset type and remain
+> valid as a design source of truth. When Figma MCP gains write access in
+> future, this file can be reactivated.
 
-Covers: quote cards, data visualisation cards, LinkedIn post images, carousels,
-and text-heavy Meta ad statics. All built directly in Figma via MCP — no Gemini
-needed. Claude builds the asset; Nikhil gets a Figma file link.
+---
+
+# Asset Layout Specifications (Design Reference)
+
+The specs below are the canonical layout definitions for each asset type.
+Currently implemented via the PowerPoint path (`pptx-assets.md`).
+Use these specs when building PPTX assets to ensure design consistency.
 
 ---
 
@@ -44,7 +56,7 @@ when the quote names a real, resonant experience.
 - Platform data points: "34% of teachers say management is good"
 - Validation statements: "Teachers Are TIRED. Not the kind sleep fixes."
 
-**Figma MCP build:**
+**Layout spec (implement in PPTX):**
 1. Background: Soft Mint #F1FEF8 (warm/emotional quotes) OR Deep Forest Green
    #043630 (data/authority quotes)
 2. Quote text: Satoshi Bold, 40–52pt. On dark: Warm Cream #E6D7B6. On light:
@@ -55,7 +67,7 @@ when the quote names a real, resonant experience.
 5. Logo: bottom strip — `logo-light.png` on dark, `logo-dark.png` on light
 6. Minimal decoration — the quote must dominate
 
-**Gemini fallback (if Figma MCP unavailable):**
+**PPTX implementation note — Quote Card background option:**
 ```
 Clean graphic design, minimal, high contrast. Background: [soft mint #F1FEF8 /
 deep forest green #043630]. Central area: completely blank, reserved for quote
@@ -75,7 +87,7 @@ Upload alongside: [logo-dark.png on light / logo-light.png on dark].
 **Goal:** Make a platform data point visually compelling and shareable.
 Primary format for Pillar 5 (Platform Data Reveals) content.
 
-**Figma MCP build:**
+**Layout spec (implement in PPTX):**
 1. Background: Deep Forest Green #043630 or Dark Teal #004D43
 2. Primary number: Zalando Sans SemiExpanded Bold, 80–100pt. Lime Accent #D0FF71
    or Warm Cream #E6D7B6.
@@ -107,7 +119,7 @@ Based on 635 teacher experiences — thestaffroom.in
 **Goal:** Authoritative, data-credible visual for school/partner audience.
 More professional tone than Instagram — less warm, more structured.
 
-**Figma MCP build:**
+**Layout spec (implement in PPTX):**
 1. Background: Soft Mint #F1FEF8 (professional light) or Deep Forest Green
    #043630 (authoritative dark)
 2. Headline: Zalando Sans SemiExpanded Bold. On light: #043630. On dark: #E6D7B6.
@@ -137,16 +149,17 @@ multi-point argument where each frame is standalone but part of a whole.
 - Lime Accent #D0FF71 accent elements used consistently
 - Frame number: small "1/5", "2/5" etc. at top-right if more than 3 frames
 
-**Figma MCP setup:**
+**PPTX setup (multi-slide carousel):**
 - Create one file with N artboards named Frame-1 through Frame-N
 - Build all frames before sharing — deliver as a complete set, not individually
 
 ---
 
-## Asset Type 5: Meta Ad Creative (Figma MCP variant)
+## Asset Type 5: Meta Ad Creative (Text-Heavy / Data-Led)
 
-**Use Figma MCP when:** the ad is data-led or text-heavy.
-**Use Gemini instead when:** the ad needs an illustrated scene background (see gemini-assets.md).
+**Use PowerPoint only path when:** the ad is data-led or text-heavy (implement via pptx-assets.md).
+**Use Gemini + PPTX path when:** the ad needs an illustrated scene background plus copy overlays.
+**Use Gemini standalone when:** the ad is purely illustrative with no text overlay needed.
 
 **Dimensions:** 1080×1080px (1:1) for feed; 1080×1920px (9:16) for Stories
 
@@ -155,7 +168,7 @@ multi-point argument where each frame is standalone but part of a whole.
 - Kannada-English bilingual: CPR ₹144 vs English-only ₹279 — mandatory for Bengaluru
 - Hook must retain viewer past 5 seconds (high VPT correlates with lower CPR)
 
-**Figma MCP build:**
+**Layout spec (implement in PPTX):**
 1. Background: Deep Forest Green #043630 or Dark Teal #004D43
 2. Primary text hook: 5–7 words max, Zalando Sans SemiExpanded Bold,
    Lime Accent #D0FF71 or Warm Cream #E6D7B6

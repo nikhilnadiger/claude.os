@@ -46,7 +46,14 @@ Nikhil uploads the logo file alongside the prompt. Specify in every prompt:
 - No real people's faces — illustrated characters, silhouettes, or abstract only
 - Indian context mandatory — South Asian character appearance, Indian school
   settings, Indian classroom objects
-- Text in prompt: 3–5 words max — add longer text via Figma MCP after generation
+- **Illustration-only mode (for Gemini + PPTX two-step path):** include
+  "absolutely no text, numbers, or words in the image" in every prompt. All
+  copy is added by the PPTX step. Define clear zones that match where PPTX
+  text layers will land.
+- **Standalone mode (rare — only when no PPTX step follows):** Gemini can
+  render limited short labels or single-word overlays, but results are
+  inconsistent for longer copy. Never use standalone mode when a PPTX step
+  will follow — text will clash and appear twice.
 - Prompt length: 50–150 words — outside this range outputs degrade
 - Style keyword: "flat illustration, warm colour palette, Indian educational context"
 
@@ -62,7 +69,7 @@ communicates value in under 1 second.
 Large readable text + visual anchor + brand colour background
 
 **Composition:**
-- Left 60%: completely clear — reserved for text overlay (added via Figma MCP)
+- Left 60%: completely clear — reserved for text overlay (added in PPTX step)
 - Right 40%: illustrated Indian teacher character OR topic-relevant visual
 - Background: Deep Forest Green #043630 or Dark Teal #004D43 (high contrast)
 - Accent: Lime Accent #D0FF71 for emphasis elements
@@ -89,8 +96,10 @@ Upload alongside: logo-light.png — place at bottom-right clear zone.
 - Teaching Practice: chalkboard, illustrated students, teaching tools
 - Wellbeing: softer composition, Warm Cream background (#E6D7B6), contemplative character
 
-**After Gemini:** Use Figma MCP to add text overlay (Zalando Sans SemiExpanded Bold,
-3–6 words) on the left 60% clear space.
+**After Gemini:** Nikhil uploads the image to chat. Claude builds a PPTX with
+the image as full-bleed background, then adds headline text (Zalando Sans
+SemiExpanded Bold) in the left 60% clear zone. See `pptx-assets.md` Asset
+Type 4 for the thumbnail PPTX spec.
 
 ---
 
@@ -116,15 +125,21 @@ Upload alongside: [logo-light.png on dark bg / logo-dark.png on light bg]
 — place at upper-right clear zone.
 ```
 
-**After Gemini:** Use Figma MCP to add hook text in top 25%
-(Zalando Sans SemiExpanded Bold).
+**After Gemini:** Nikhil uploads the image to chat. Claude builds a PPTX with
+the image as full-bleed background, then adds hook text (Zalando Sans
+SemiExpanded Bold) in the top 25% clear zone. See `pptx-assets.md` Asset
+Type 5 for the Reel cover PPTX spec.
 
 ---
 
 ## Asset Type 3: Meta Ad Creative (Gemini variant)
 
-**Use Gemini when:** the ad needs an illustrated scene background.
-**Use Figma MCP instead when:** the ad is data-led or text-heavy (see figma-assets.md).
+**Use Gemini standalone when:** the ad needs an illustrated scene and Gemini
+will be the final deliverable (no text overlay required).
+**Use Gemini + PPTX when:** the ad needs an illustrated background AND substantial
+copy, pills, URL, or trust indicators layered on top.
+**Use PowerPoint only when:** the ad is data-led or text-heavy with no illustration
+needed (see pptx-assets.md).
 
 **Dimensions:** 1080×1080px (1:1) for feed; 1080×1920px (9:16) for Stories ads
 
@@ -135,21 +150,25 @@ Upload alongside: [logo-light.png on dark bg / logo-dark.png on light bg]
 - AI Avatar format: CPR ₹101 — worth scaling
 - Hook must retain viewer past 5 seconds (VPT correlates with CPR)
 
-**Prompt template (1:1 feed ad):**
+**Prompt template (1:1 feed ad — illustration-only for PPTX two-step):**
 ```
 Flat illustration, Indian educational context, square format (1:1).
 Background: deep forest green (#043630) or dark teal (#004D43). Centre:
 [illustrated scene relevant to ad message — e.g., teacher looking at
-phone with school building in background]. Large clear zone at top for
-short text hook (3–5 words max). Small clear zone bottom-right for logo.
-Lime accent (#D0FF71) used sparingly. Style: bold, high contrast, designed
-to stop scroll on a phone feed. No real faces, no text in image.
+phone with school building in background]. Top 30% of image: completely
+clear, no elements — reserved for text hook overlay. Bottom 15%: clear
+strip reserved for URL and logo. Lime accent (#D0FF71) used sparingly.
+Style: bold, high contrast, designed to stop scroll on a phone feed.
+Absolutely no text, numbers, or words in the image.
 
-Upload alongside: logo-light.png — place at bottom-right clear zone.
+Upload alongside: logo-light.png — Claude will place logo in PPTX step.
 ```
 
-**After Gemini:** Use Figma MCP to add hook text (Zalando Sans SemiExpanded Bold,
-Lime Accent or Warm Cream) and Kannada variant of hook for Bengaluru targeting.
+**After Gemini:** Nikhil uploads the image to chat. Claude builds a PPTX with
+the image as full-bleed background, then adds all copy: hook text (Zalando Sans
+SemiExpanded Bold, Lime Accent or Warm Cream), body copy, CTA, URL, logo, and
+Kannada variant of hook for Bengaluru targeting. See `pptx-assets.md` Asset
+Type 1 for the WhatsApp/Meta ad PPTX spec.
 
 ---
 
@@ -165,5 +184,6 @@ If first Imagen 3 output is wrong, these fixes reliably help:
 | Wrong tone (too casual) | "clean, professional, editorial illustration" |
 | Colours look off | Add exact hex codes: "background exactly #043630" |
 | Characters look generic | "Indian teacher, professional kurta or formal shirt, warm expression" |
-| Unwanted text appeared | "absolutely no text, numbers, or words in the image" |
+| Unwanted text appeared | "absolutely no text, numbers, or words in the image" — mandatory in all illustration-only prompts |
+| Text clashed with PPTX overlay | Switch to illustration-only mode: rebuild the Gemini prompt with no text; all copy moves to PPTX step |
 | Wrong background | "solid flat colour background, no gradients, no patterns" |

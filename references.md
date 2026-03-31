@@ -32,7 +32,9 @@ Note: Brand Guidelines are available as a PDF in assets/brand-guidelines.pdf. Us
 |---|---|---|
 | Instagram | https://www.instagram.com/thestaffroomdotin/ | Chrome extension |
 | YouTube | https://www.youtube.com/@thestaffroom-in | Chrome extension |
-| LinkedIn | https://www.linkedin.com/company/thestaffroom/ | Chrome extension |
+| LinkedIn (staffroom page) | https://www.linkedin.com/company/thestaffroom/ | Chrome extension |
+| LinkedIn (Nikhil personal) | https://www.linkedin.com/in/nikhilnadiger/ | Chrome extension |
+| Nikhil LinkedIn KPI Sheet | https://docs.google.com/spreadsheets/d/1eBrZr6LVgbIyzcvQTvjWVQCXSDtK_P-R4feUQIyP8vI | Google Drive MCP / Apps Script |
 
 ---
 

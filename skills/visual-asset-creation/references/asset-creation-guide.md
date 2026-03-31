@@ -35,15 +35,16 @@ in marketing assets**. Product UI states only.
 
 | Asset type | Path | Reference file |
 |---|---|---|
-| YouTube thumbnail | Gemini | gemini-assets.md |
-| Instagram Reel cover / Short cover | Gemini | gemini-assets.md |
-| Meta ad (illustrated scene) | Gemini | gemini-assets.md |
-| Quote card | Figma MCP | figma-assets.md |
-| Data visualisation card | Figma MCP | figma-assets.md |
-| LinkedIn post image | Figma MCP | figma-assets.md |
-| Carousel sequence | Figma MCP | figma-assets.md |
-| Meta ad (data-led / text-heavy) | Figma MCP | figma-assets.md |
-| Real school/person/org photo | Real image + Figma MCP | real-image-assets.md |
+| YouTube thumbnail | Gemini + PowerPoint | gemini-assets.md → pptx-assets.md |
+| Instagram Reel cover / Short cover | Gemini + PowerPoint | gemini-assets.md → pptx-assets.md |
+| WhatsApp graphic | Gemini + PowerPoint | gemini-assets.md → pptx-assets.md |
+| Meta ad (illustrated scene + copy) | Gemini + PowerPoint | gemini-assets.md → pptx-assets.md |
+| Quote card | PowerPoint only | pptx-assets.md |
+| Data visualisation card | PowerPoint only | pptx-assets.md |
+| LinkedIn post image | PowerPoint only | pptx-assets.md |
+| Carousel sequence | PowerPoint only | pptx-assets.md |
+| Meta ad (data-led / text-heavy) | PowerPoint only | pptx-assets.md |
+| Real school/person/org photo | Real image + PowerPoint | real-image-assets.md → pptx-assets.md |
 | Video (Short, Reel, ad, episode) | Video Production Brief | video-brief-template.md |
 
 ---
@@ -54,8 +55,9 @@ in marketing assets**. Product UI states only.
   characters, silhouettes, or abstract compositions only
 - **Indian context is mandatory** — school settings, classroom objects,
   Indian-looking illustrated characters, Indian educational contexts
-- **Text in Gemini prompts: 3–5 words max** — add longer text via Figma MCP;
-  Imagen 3 fails on long text
+- **Illustration-only mode in Gemini (mandatory for Gemini + PPTX path):** include
+  "absolutely no text, numbers, or words in the image" — all copy goes in the PPTX step.
+  Never mix Gemini-baked text with PPTX overlays; text will appear twice and clash.
 - **Prompt length for Gemini: 50–150 words** — outside this range outputs degrade
 - **Style keyword for Gemini:** "flat illustration, warm colour palette,
   Indian educational context" unless the asset type requires otherwise
@@ -79,13 +81,32 @@ generated image has the logo baked in. No post-generation editing needed.
 ## Do-Not-Generate List
 
 - Real named public figures' faces or likenesses
-- Text passages longer than 5 words in Gemini (add in Figma)
+- Any text in Gemini prompts when a PPTX step follows — use illustration-only mode
 - Specific school logos or third-party brands (without permission)
 - News screenshots or document mockups
 - Photorealistic imagery in Gemini (use illustration style — photorealism is inconsistent)
 - Any content that could be read as defamatory toward a school or person
 - Images using semantic UI colours (#3D9970, #C04B3A, #E8D485, #9E9E96)
   in marketing contexts
+
+---
+
+## PowerPoint Path
+
+**When to use:** All assets that need text, copy, data, or layout — whether
+or not they also have a Gemini illustration background.
+
+Claude builds PPTX files programmatically using python-pptx. Nikhil opens
+the file in PowerPoint (Mac) and exports each slide as PNG.
+
+**Setup:** `pip install python-pptx --break-system-packages`
+
+**Full spec (slide dimensions, colour codes, font spec, asset-type layouts,
+export instructions):** see `references/pptx-assets.md`.
+
+**Critical rule:** If the PPTX uses a Gemini image as background, that
+Gemini image must be illustration-only (no text). If Gemini baked in text,
+the PPTX must have zero text overlays. Never mix.
 
 ---
 
