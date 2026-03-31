@@ -57,14 +57,50 @@ SKILL.md structure:
 
 ### knowledge/ — distilled research and platform data
 
-Platform-wide, multi-skill reference data:
+Platform-wide, multi-skill reference data. Loaded on demand — not always in context.
+
+Current knowledge docs:
 - staffroom-teacher-insights.md — user research findings
 - staffroom-content-performance.md — YouTube, Instagram, Meta Ads data
 - staffroom-product-metrics.md — platform counts, Clarity analytics
 - staffroom-competitive-landscape.md — competitor analysis
+- staffroom-ux-constraints.md — non-negotiable UX floors for all design/frontend work
 - skill-architecture.md — this file
 
-Knowledge docs are loaded on demand, not always in context.
+---
+
+## The 7-Skill Ecosystem
+
+staffroom's claude.os has 7 skills in two clusters plus one cross-cutting skill:
+
+| Cluster | Skill | Primary intent |
+|---|---|---|
+| Brand | brand-custodian | Brand voice, rules, what staffroom sounds/looks like |
+| Brand | visual-asset-creation | Create Figma/AI visual assets |
+| Brand | content-strategy | Plan and script content (YouTube, Instagram, WhatsApp) |
+| Engineering | codebase-context | Implement or debug code in the staffroom codebase |
+| Engineering | engineering-review | Review PRs, architecture decisions, ADRs |
+| Product | product-context | Understand how features, flows, and APIs work |
+| Product | product-design | UI/UX design decisions, screen design, critique |
+
+**related_skills must be bidirectional.** If skill A lists skill B in related_skills,
+skill B must list skill A. Verify this on every new skill or update.
+
+---
+
+## Floor vs. Ceiling Model (Product Design)
+
+The product-design skill uses a two-layer model that applies more broadly:
+
+**Floor (non-negotiable):** `staffroom-ux-constraints.md` defines hard limits
+derived from production data. These apply to every design and frontend task,
+regardless of scope. Violating them is always wrong.
+
+**Ceiling (aspirational):** `design-process.md` defines the full design workflow.
+Use it when there is time for thorough design work.
+
+Apply this model whenever "minimum viable" vs "ideal" is in tension: always
+meet the floor unconditionally; reach for the ceiling when scope allows.
 
 ---
 
@@ -133,6 +169,47 @@ Examples of safety trip-wires:
 - Always use getApiBaseUrl(), never hardcode /api/ paths (codebase-context + CLAUDE.md)
 - Always read visual-identity.md before any brand colour usage (visual-asset-creation + brand-custodian)
 - pnpm build + lint must pass before any PR (codebase-context + CLAUDE.md)
+
+---
+
+## File Governance
+
+### Staleness Detection
+
+All reference files and knowledge docs should carry:
+- `last_updated` in YAML frontmatter (month + year)
+- `staleness_note` for files with data that expires (metrics, analytics, performance data)
+
+A file without a `last_updated` date should be treated as potentially stale.
+
+### Update Triggers
+
+| Event | Files to update |
+|---|---|
+| New analytics data (Clarity, Neon) | staffroom-product-metrics.md, staffroom-ux-constraints.md |
+| New content published | staffroom-content-performance.md |
+| Codebase architecture change | stack-topology.md, deployment-guide.md |
+| New competitor action | staffroom-competitive-landscape.md |
+| New teacher research | staffroom-teacher-insights.md |
+| New skill created | CLAUDE.md (Assets & References), skill-architecture.md (ecosystem table) |
+
+### Update Proposal Process
+
+When a file needs updating:
+1. State which file, which section, and what the correct value is.
+2. Confirm the source (e.g. "Clarity dashboard, Mar 2026").
+3. Make only the targeted change — do not rewrite surrounding sections.
+4. Update `last_updated` in frontmatter.
+
+### Known Inaccuracies (Track Here)
+
+Files with documented inaccuracies that have been corrected in the live
+skill system but may still appear in other locations:
+
+| File | Inaccuracy | Correct value | Status |
+|---|---|---|---|
+| codebase-context/references/stack-topology.md | ORM listed as TypeORM | DB client is raw `pg` Pool with parameterised SQL — NOT TypeORM | Fixed in Task 4 |
+| codebase-context/references/stack-topology.md | D1 listed as "CF Workers only (legacy)" | D1 is legitimately used by NestJS teacher-counts module via D1Service | Fixed in Task 4 |
 
 ---
 

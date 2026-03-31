@@ -2,7 +2,7 @@
 
 > Source: Dovetail user research (11 interviews, Dec 2024) + WhatsApp community behavioral signals
 > Last updated: Mar 2026
-> Skills: [content-strategy, brand-custodian, visual-asset-creation]
+> Skills: [content-strategy, brand-custodian, visual-asset-creation, product-context, product-design]
 
 ---
 

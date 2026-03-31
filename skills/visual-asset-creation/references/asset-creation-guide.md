@@ -89,7 +89,7 @@ generated image has the logo baked in. No post-generation editing needed.
 
 ---
 
-## Asset Type 9: Video Production Brief
+## Video Production Brief
 
 **When to use:** Any video asset — YouTube Short, Instagram Reel, Meta video
 ad, YouTube long-form episode. The completed brief can be handed to an AI

@@ -1,7 +1,7 @@
 ---
 last_updated: Mar 2026
 source: Microsoft Clarity dashboard, Neon PostgreSQL, Meta Ads Manager
-skills: [content-strategy, codebase-context, brand-custodian]
+skills: [content-strategy, codebase-context, brand-custodian, product-context]
 staleness_note: >
   All figures are point-in-time snapshots. Refresh before using in any
   investor/partner material, content, or product decision. For live platform

@@ -3,12 +3,12 @@ name: codebase-context
 version: 1.0
 description: >
   Load for any staffroom engineering task: fixing bugs, implementing features,
-  understanding the codebase architecture, deployment questions, database queries,
+  understanding the codebase, deployment questions, database queries,
   or infrastructure questions. Triggers: 'fix this bug', 'implement feature',
   'how is the backend set up', 'deploy to', 'which file handles', 'how does X
-  work in the codebase', 'database schema', 'add an endpoint', 'architecture
-  question', 'what port does', 'how do I run'. Not for content strategy, visual
-  assets, or brand decisions.
+  work in the codebase', 'database schema', 'add an endpoint', 'what port does',
+  'how do I run'. Not for code review or architecture decisions (use
+  engineering-review), content strategy, visual assets, or brand decisions.
 
 triggers:
   - "fix this bug"
@@ -19,7 +19,6 @@ triggers:
   - "how does this work in the codebase"
   - "database schema"
   - "add an endpoint"
-  - "architecture question"
   - "what port does"
   - "codebase"
   - "backend"
@@ -33,7 +32,10 @@ uses_references:
   - references/stack-topology.md
   - references/deployment-guide.md
 
-related_skills: []
+related_skills:
+  - engineering-review
+  - product-context
+  - product-design
 ---
 
 # codebase-context
@@ -55,10 +57,13 @@ this for any engineering task.
 
 ## When NOT to Load This Skill
 
+- Code review or PR review → use engineering-review
+- Architecture decisions or ADRs → use engineering-review
+- Understanding product features or data flows → use product-context
+- UI/UX design decisions → use product-design
 - Content strategy or script writing → use content-strategy
 - Visual asset creation → use visual-asset-creation
 - Brand voice review → use brand-custodian
-- Non-engineering product decisions
 
 ## Safety Rules — Non-Negotiable
 

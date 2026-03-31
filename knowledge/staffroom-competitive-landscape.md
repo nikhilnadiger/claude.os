@@ -1,3 +1,10 @@
+---
+skills: [brand-custodian, content-strategy, product-context]
+last_updated: Mar 2026
+source: desk research, company websites, funding databases, news sources
+staleness_note: Competitor funding rounds, headcount, and product moves change frequently — verify key claims before investor or partner conversations
+---
+
 # staffroom's competitive landscape: wide-open market, real but manageable threats
 
 **staffroom operates in a genuinely unoccupied niche.** After extensive analysis of every plausible competitor and adjacent player, no platform in India offers anonymous, teacher-powered workplace reviews of schools. The closest global analogy — Glassdoor — covers Indian schools only superficially, with most individual school branches attracting fewer than 20 reviews. The real competitive threats are not direct rivals but structural forces: school management retaliation, India's criminal defamation laws, and the theoretical pivot risk from platforms like AmbitionBox (Info Edge/Naukri) that already own workplace-review infrastructure. With **4 million private school teachers** across **340,000+ private schools** — over half working without written contracts — the demand side is enormous. The strategic window is open but not infinite.

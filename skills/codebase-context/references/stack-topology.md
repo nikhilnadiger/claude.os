@@ -26,7 +26,7 @@ source: live codebase + infrastructure
 | Item | Detail |
 |---|---|
 | Framework | NestJS 11 |
-| ORM | TypeORM |
+| DB client | pg (raw Pool, parameterised queries — NOT TypeORM) |
 | Auth | Passport/JWT |
 | DB driver | pg (PostgreSQL) |
 | Port (prod) | :9000 |
@@ -87,10 +87,12 @@ legacy traffic — do not touch backend-deprecated/.
 | DB | Purpose | Used by |
 |---|---|---|
 | Neon PostgreSQL | Primary — all active data | NestJS (backend-nest) |
-| Cloudflare D1 | Secondary — legacy data | CF Workers only (legacy) |
+| Cloudflare D1 | teacher_counts table | NestJS teacher-counts module only (via D1Service) |
 
-New features use Neon PostgreSQL exclusively via NestJS. Do not write new
-code that queries D1 directly from the frontend or a new worker.
+New features use Neon PostgreSQL exclusively via NestJS. D1 is used by the
+existing `teacher-counts` NestJS module — this is intentional and correct.
+Do not create new D1 tables or extend D1 usage to new NestJS modules. Do not
+query D1 directly from the frontend or a new CF Worker.
 
 ---
 
