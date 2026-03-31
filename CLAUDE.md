@@ -155,12 +155,6 @@ Key knowledge files:
 
 ---
 
-## Tool Access Notes
-
-Chrome (Claude in Chrome): Before attempting any browser automation, always ask Nikhil to open Chrome in the nikhilnadiger@gmail.com profile first. Do not attempt to connect until confirmed. (Full MCP rules: see MCP Tool Safety Rules section above.)
-
----
-
 ## Always Remember
 
 - staffroom is always written lowercase. Never 'StaffRoom' or 'Staffroom'.

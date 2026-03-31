@@ -33,11 +33,10 @@ Any PR that fails these must be rejected. No exceptions.
 **PostgresService usage:**
 - All DB access through `PostgresService` (injected as `private readonly postgres: PostgresService`)
 - Queries use parameterised form: `this.postgres.query('SELECT ... WHERE id = $1', [id])`
-- Returns `{ rows: T[] }` — access results via `.rows`
+- Returns `T[]` directly — the service unwraps `result.rows` internally. Access as `rows[0]`, not `result.rows[0]`.
 - All `postgres.query()` calls must be awaited — missing `await` causes silent data loss
 - **NOT TypeORM entity pattern** — no `@Entity()`, no `Repository<T>`, no `getRepository()`
-- Note: `references/stack-topology.md` in codebase-context lists `ORM: TypeORM` — this is incorrect.
-  Live `postgres.service.ts` uses raw `pg` Pool with parameterised SQL. Do not introduce TypeORM patterns.
+- PostgresService wraps raw `pg` Pool with parameterised SQL. Do not introduce TypeORM patterns.
 
 **DTOs:**
 - Request validation uses class-validator decorators on DTO classes (`@IsString()`, `@IsNotEmpty()`, etc.)
@@ -86,10 +85,12 @@ Any PR that fails these must be rejected. No exceptions.
 | `FormReview` | Legacy | `ENABLE_FORM_REVIEW_FETCH=false` — do not write new code against it |
 
 **Cloudflare D1:**
-- `teacher_counts` table in D1 — used by the existing NestJS `teacher-counts` module only
-- No new NestJS modules should touch D1
-- Modifying existing teacher-counts D1 queries is acceptable
-- Do not create new D1 tables or expand D1 usage to new modules
+- D1 is used by multiple NestJS modules — not just `teacher-counts`. Active modules using D1
+  include: teacher-counts, nudges, tracking, places, admin, short-form, phone-otp, and others.
+- All D1 access goes through `D1Service` — never query D1 directly from frontend or CF Workers.
+- **Do not create new D1 tables without explicit approval from Nikhil.**
+- New features that need new persistent data should use Neon via PostgresService by default.
+- Full D1 table list: `product-context/references/db-schema.md` Section 3.
 
 ---
 
@@ -146,5 +147,5 @@ Complete all items before pushing. No shortcuts.
 
 **Database:**
 - [ ] If schema change: migration file written and tested locally
-- [ ] If new table: confirmed in Neon, not D1 (unless extending existing teacher-counts module)
+- [ ] If new table: confirmed in Neon by default; new D1 tables require explicit Nikhil approval
 - [ ] If data migration: tested with real data shape, rollback path documented

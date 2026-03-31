@@ -9,6 +9,9 @@ source: live codebase — backend-nest/src/, pages/ (verified Mar 2026)
 Six primary flows verified from live codebase. Do not rely on legacy
 `SCHOOL_DATA_FLOW.md` or `PROJECT_REFERENCE.md` — both are outdated.
 
+For full DB table definitions, column names, and active/legacy status across both
+Neon and D1, see `references/db-schema.md`.
+
 ---
 
 ## Flow 1: School Search

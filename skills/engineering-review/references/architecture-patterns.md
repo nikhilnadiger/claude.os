@@ -55,26 +55,23 @@ Services own all business logic and all database access.
 ```typescript
 @Injectable()
 export class FeatureService {
-  constructor(private readonly postgres: PostgresService) {}
+  constructor(private readonly pg: PostgresService) {}
 
   async getById(id: string) {
-    const result = await this.postgres.query(
+    const rows = await this.pg.query<FeatureRow>(
       'SELECT * FROM feature_table WHERE id = $1',
       [id]
     );
-    return result.rows[0] ?? null;
+    return rows[0] ?? null;  // query() returns T[] directly — NOT { rows: T[] }
   }
 }
 ```
 
 **PostgresService is not TypeORM.** It wraps a raw `pg` Pool directly:
-- Use `this.postgres.query(sql, params)` — always parameterised, never string-concatenated
-- Returns `{ rows: T[] }` — access via `.rows`
+- Use `this.pg.query<T>(sql, params)` — always parameterised, never string-concatenated
+- Returns `T[]` directly (the service unwraps `result.rows` internally)
 - All calls must be `await`ed
-
-**Important:** `codebase-context/references/stack-topology.md` lists `ORM: TypeORM` — this is
-incorrect. The live `postgres.service.ts` imports `Pool` from `pg` and executes raw SQL
-with parameterised queries. Do not introduce TypeORM entity patterns into this codebase.
+- Do not introduce TypeORM entity patterns into this codebase
 
 ---
 
@@ -98,20 +95,34 @@ JWT is verified via Passport. Do not implement custom JWT verification in a serv
 | Table/View | Status | Notes |
 |---|---|---|
 | `stepper_form_data` | Active | Primary review submissions |
-| `stepper_form_approval` | Active | 5 boolean approval flags |
-| `schools` | Active | Core school data, includes pincode fields |
-| `users` | Active | Auth + profile |
-| `searches` | Active | `name` = search term (not teacher's name) |
-| `pincode_lookup` | Active | **Materialized view** — not a regular table. Refreshed on schedule. Fallback for location resolution after `schools` table lookup. |
-| `FormReview` | Legacy | `ENABLE_FORM_REVIEW_FETCH=false` — do not reference |
+| `stepper_form_approval` | Active | Per-field moderation flags |
+| `schools` | Active | UDISE school master data |
+| `school_mapping` | Active | Maps Google Place IDs → school_ids |
+| `"User"` | Active | Auth + profile (camelCase columns, Prisma-originated) |
+| `"UserLoginSession"` | Active | Login geolocation → pincode/city |
+| `whatsapp_users` | Active | WhatsApp-verified users |
+| `save_school_by_user` | Active | User bookmarks |
+| `profile`, `report_card`, `facility` | Active | UDISE reference data (read-only) |
+| `pincode_directory` | Active | Source for pincode_lookup (do not query directly) |
+| `pincode_lookup` | Active | **Materialized view** — fallback pincode→location resolution |
+| `"FormReview"` | Legacy | `ENABLE_FORM_REVIEW_FETCH=false` — do not reference |
 
-**Cloudflare D1 (existing usage only):**
-- `teacher_counts` table — used by NestJS `teacher-counts` module via `D1Service`
-- This is existing, legitimate architecture — the module reads D1 intentionally
-- **Do not create new D1 tables or extend D1 usage to new modules**
-- Modifying existing teacher-counts D1 queries is acceptable
-- Note: `codebase-context/references/stack-topology.md` says "CF Workers only (legacy)"
-  for D1 — this predates the NestJS teacher-counts module and is incorrect for that module.
+Full column definitions and complete active/legacy table list:
+→ `product-context/references/db-schema.md`
+
+**Cloudflare D1 (existing usage — multiple modules):**
+
+D1 is used extensively by NestJS, not just teacher-counts. Active D1 tables include:
+`teacher_counts`, `admins`, `users` (legacy phone store), `question_completion_tracking`,
+`nudges`, `nudge_link_clicks`, `phone_otps`, `manual_schools`, `unmapped_schools`,
+`school_details_cache`, `api_cache`, `user_tracking`, `share_clicks`, `share_events`,
+`badge_contributor`, and four queue tables (`search_intent_queue`, `abandonment_queue`,
+`update_is_live_queue`, `full_completion_queue`).
+
+- All D1 access goes through `D1Service` — never query D1 directly from frontend or CF Worker
+- **Do not create new D1 tables without explicit approval from Nikhil**
+- Several tables exist in BOTH Neon and D1; NestJS always uses the D1 version for those
+- See `product-context/references/db-schema.md` Section 5 for the full dual-database table list
 
 ---
 

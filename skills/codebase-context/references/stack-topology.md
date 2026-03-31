@@ -86,13 +86,24 @@ legacy traffic — do not touch backend-deprecated/.
 
 | DB | Purpose | Used by |
 |---|---|---|
-| Neon PostgreSQL | Primary — all active data | NestJS (backend-nest) |
-| Cloudflare D1 | teacher_counts table | NestJS teacher-counts module only (via D1Service) |
+| Neon PostgreSQL | Primary — reviews, users, schools, UDISE data | NestJS (backend-nest) via PostgresService |
+| Cloudflare D1 (REVIEW_DB) | Nudge pipeline, tracking, admin auth, school enrichment | NestJS via D1Service (REST API) |
 
-New features use Neon PostgreSQL exclusively via NestJS. D1 is used by the
-existing `teacher-counts` NestJS module — this is intentional and correct.
-Do not create new D1 tables or extend D1 usage to new NestJS modules. Do not
-query D1 directly from the frontend or a new CF Worker.
+**D1 is used by more than just teacher-counts.** Active D1 tables include:
+`teacher_counts`, `admins`, `users` (legacy phone store), `question_completion_tracking`,
+`nudges`, `nudge_link_clicks`, `phone_otps`, `manual_schools`, `unmapped_schools`,
+`school_details_cache`, `api_cache`, `user_tracking`, `share_clicks`, `share_events`,
+`badge_contributor`, and four queue tables (`search_intent_queue`, `abandonment_queue`,
+`update_is_live_queue`, `full_completion_queue`).
+
+**Several tables exist in BOTH databases** — the Neon copies are historical shadows;
+NestJS always reads/writes the D1 versions for those tables.
+
+Full schema with all columns, constraints, and active/legacy status:
+→ `product-context/references/db-schema.md`
+
+Do not create new D1 tables or new Neon tables without explicit approval from Nikhil.
+Do not query D1 from the frontend or a CF Worker — always go through NestJS.
 
 ---
 

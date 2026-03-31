@@ -29,8 +29,8 @@ staleness_note: >
 **PMF definition:** ≥70% of searches yield ≥3 reviews in 7 cities (top 7 by
 private school teacher density). Current baseline: 15 schools nationwide.
 
-To get current figures: query Neon PostgreSQL (`reviews`, `users`, `searches`
-tables) or ask Nikhil for a fresh export.
+To get current figures: query Neon PostgreSQL (`stepper_form_data` for reviews,
+`"User"` for sign-ups, `searches` for search counts) or ask Nikhil for a fresh export.
 
 ---
 

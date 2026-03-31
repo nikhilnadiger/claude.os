@@ -1,5 +1,5 @@
 ---
-last_updated: Mar 2026
+last_updated: Mar 2026 (31)
 maintained_by: Nikhil Nadiger
 purpose: >
   Structural standards for staffroom's claude.os skill ecosystem.
@@ -66,6 +66,14 @@ Current knowledge docs:
 - staffroom-competitive-landscape.md — competitor analysis
 - staffroom-ux-constraints.md — non-negotiable UX floors for all design/frontend work
 - skill-architecture.md — this file
+
+Skill reference docs (in skills/*/references/):
+- product-context/references/db-schema.md — full DB schema: all Neon + D1 tables, columns, active/legacy status
+- product-context/references/data-flow.md — six primary product flows (search, review, auth, nudge, etc.)
+- product-context/references/api-inventory.md — all NestJS API endpoints and contracts
+- codebase-context/references/stack-topology.md — infra: frontend, NestJS, hosting, DB overview
+- engineering-review/references/architecture-patterns.md — NestJS patterns, DB conventions, auth patterns
+- (+ brand-custodian, visual-asset-creation, content-strategy reference files)
 
 ---
 
@@ -209,7 +217,14 @@ skill system but may still appear in other locations:
 | File | Inaccuracy | Correct value | Status |
 |---|---|---|---|
 | codebase-context/references/stack-topology.md | ORM listed as TypeORM | DB client is raw `pg` Pool with parameterised SQL — NOT TypeORM | Fixed in Task 4 |
-| codebase-context/references/stack-topology.md | D1 listed as "CF Workers only (legacy)" | D1 is legitimately used by NestJS teacher-counts module via D1Service | Fixed in Task 4 |
+| codebase-context/references/stack-topology.md | D1 listed as "CF Workers only (legacy)" | D1 used by multiple NestJS modules (teacher-counts, nudges, tracking, places, short-form, admin) | Fixed in Task 5 |
+| engineering-review/references/architecture-patterns.md | PostgresService shown returning `result.rows[0]` | Service unwraps to `T[]`; correct pattern is `rows[0]` not `result.rows[0]` | Fixed in Task 5 |
+| engineering-review/references/architecture-patterns.md | D1 described as teacher_counts only | D1 used by 10+ NestJS modules — see db-schema.md | Fixed in Task 5 |
+| engineering-review/references/code-review-checklist.md | PostgresService returns `{ rows: T[] }` — access via `.rows` | Returns `T[]` directly; correct pattern is `rows[0]` not `result.rows[0]` | Fixed in Task 6 |
+| engineering-review/references/code-review-checklist.md | Stale annotation saying stack-topology.md still lists TypeORM | stack-topology.md was already corrected; annotation removed | Fixed in Task 6 |
+| engineering-review/references/code-review-checklist.md | D1 described as teacher_counts module only; "no new modules should touch D1" | D1 used by 10+ NestJS modules — updated to reflect actual architecture | Fixed in Task 6 |
+| knowledge/staffroom-product-metrics.md | Query guidance used wrong table names: `reviews` and `users` | Correct tables: `stepper_form_data` (reviews), `"User"` (sign-ups, PascalCase + quoted) | Fixed in Task 6 |
+| CLAUDE.md | Duplicate Chrome instruction in "Tool Access Notes" section | Already covered in MCP Tool Safety Rules section — Tool Access Notes section removed | Fixed in Task 6 |
 
 ---
 
