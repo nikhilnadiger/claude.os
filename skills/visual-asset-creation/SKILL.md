@@ -130,6 +130,49 @@ to an AI video agent or a human creator without any additional briefing.
    formula, carousel structure rules, video brief format, and real image
    guidance.
 
+## Design Quality Standard
+
+Brand compliance (Key Rules above) is the floor. It is not the goal.
+
+The goal of every marketing asset is to **earn a forward** — a teacher
+shares it with colleagues, a principal sends it to teachers. An asset that
+is on-brand but does not earn that action has failed its purpose.
+
+Before finalising any asset, apply these checks in order:
+
+**1. Hierarchy — one dominant element**
+Every asset must have one thing that hits first: a headline, a number, an
+illustration, a face. If two elements compete for attention, the asset is
+broken. Fix by making one bigger or removing the other.
+
+**2. Breathing room — restraint over completeness**
+Resist filling every zone. Empty space is not wasted — it directs the eye
+and signals confidence. If the copy can be cut, cut it. If a stat can be
+removed without losing the message, remove it.
+
+**3. The 3-second test**
+Simulate the WhatsApp scroll: would the message land in 3 seconds on a
+phone screen? If not, it will be skipped. Only the headline, dominant visual,
+and CTA need to survive this test. Everything else is secondary.
+
+**4. The forward test**
+Ask: would a teacher forward this to a colleague? Would a principal send
+this to their staff? If the honest answer is "maybe" or "probably not", the
+asset is not done. The emotional hook is missing or the copy is too heavy.
+Common fixes: cut body copy by half, make the headline more specific, ensure
+the illustration or visual centrepiece has room to breathe.
+
+**5. Delight — one unexpected element**
+Every strong asset has one element that rewards the eye: an accent line, an
+oversize number, a brandmark, a single word in a contrasting colour. This
+is layer 5. It costs nothing to add and is often what makes the difference
+between "informative" and "shareable."
+
+These checks apply **before writing PPTX code**, not after. Design on paper
+or in text first. Code second.
+
+---
+
 ## Creation Path Decision
 
 | Asset type | Best path |
