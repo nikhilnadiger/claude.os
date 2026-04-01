@@ -282,6 +282,20 @@ WhatsApp-verified user records. One row per verified phone number.
 
 ---
 
+### `searches` (Neon)
+Search query log. One row per search request from the `/search/resolve` endpoint.
+
+| Column | Type | Notes |
+|---|---|---|
+| `name` | text | The search term entered by the teacher — NOT the teacher's name |
+| *(additional columns — verify against pg_dump for full schema)* | | |
+
+**Key distinction:** `name` stores the search query string (e.g., "Delhi Public School Bengaluru"), not any personal identifier. Do not confuse with teacher name fields.
+
+**Used by:** `search.service.ts` (INSERT on every `/search/resolve` call). Referenced for search-count metrics in `staffroom-product-metrics.md`.
+
+---
+
 ### `pincode_directory` (Neon)
 India Post pincode reference data. ~160K+ rows. Source table for the `pincode_lookup` materialized view.
 

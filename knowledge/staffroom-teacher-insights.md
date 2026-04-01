@@ -115,7 +115,7 @@ This is a live content opportunity — content that names this gap without explo
 
 1. **The three segments have different content needs** — a single tone will not serve all. Segment 1 needs practical, grounded, low-resource classroom content. Segment 2 needs craft recognition and tools. Segment 3 needs emotional validation and systemic commentary.
 
-2. **staffroom's review model directly addresses a real, articulated gap** — teachers want to know about school culture before joining. None of the existing platforms give them this. The D1 form completion data (30.7% completion rate) suggests the problem is not motivation — it's form friction.
+2. **staffroom's review model directly addresses a real, articulated gap** — teachers want to know about school culture before joining. None of the existing platforms give them this. The D1 form completion data (30.7% completion rate — D1 counts all form-start attempts including abandoned starts before Section 0, giving a broader denominator than the ~40% figure in `staffroom-product-metrics.md` which measures completions among submitted reviews only) suggests the problem is not motivation — it's form friction.
 
 3. **Recognition is the core emotional hook** — staffroom's ability to surface and celebrate teacher experiences is not a feature, it is the product's emotional reason for existing.
 

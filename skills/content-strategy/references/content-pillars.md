@@ -125,7 +125,7 @@ before using in any script; these figures change as reviews grow):**
   low, few in the middle)
 - 635 reviews, 555 schools, 133 districts
 
-To get current figures: query Neon PostgreSQL (`reviews` table) or ask
+To get current figures: query Neon PostgreSQL (`stepper_form_data` table) or ask
 Nikhil to provide a fresh CSV export before producing Pillar 3 content.
 
 **Topic ideas:**

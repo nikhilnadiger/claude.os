@@ -79,7 +79,7 @@ Any PR that fails these must be rejected. No exceptions.
 | `stepper_form_data` | Active | Primary review submission data |
 | `stepper_form_approval` | Active | 5 boolean approval fields |
 | `schools` | Active | School lookup — includes pincode and location fields |
-| `users` | Active | Auth + profile |
+| `"User"` | Active | Auth + profile (camelCase columns, Prisma-originated — must be quoted in SQL) |
 | `searches` | Active | `name` field = search term (not the teacher's name) |
 | `pincode_lookup` | Active | **Materialized view** in Neon — not a regular table. Fallback for location resolution. |
 | `FormReview` | Legacy | `ENABLE_FORM_REVIEW_FETCH=false` — do not write new code against it |

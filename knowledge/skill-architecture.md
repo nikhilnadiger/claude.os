@@ -78,9 +78,9 @@ Skill reference docs (in skills/*/references/):
 
 ---
 
-## The 7-Skill Ecosystem
+## The 8-Skill Ecosystem
 
-staffroom's claude.os has 7 skills in two clusters plus one cross-cutting skill:
+staffroom's claude.os has 8 skills across four clusters:
 
 | Cluster | Skill | Primary intent |
 |---|---|---|
@@ -91,6 +91,7 @@ staffroom's claude.os has 7 skills in two clusters plus one cross-cutting skill:
 | Engineering | engineering-review | Review PRs, architecture decisions, ADRs |
 | Product | product-context | Understand how features, flows, and APIs work |
 | Product | product-design | UI/UX design decisions, screen design, critique |
+| Personal | nikhil-linkedin | Write and analyse LinkedIn posts in Nikhil's founder voice |
 
 **related_skills must be bidirectional.** If skill A lists skill B in related_skills,
 skill B must list skill A. Verify this on every new skill or update.
@@ -232,6 +233,14 @@ skill system but may still appear in other locations:
 | visual-asset-creation/references/figma-assets.md | File presented as active Figma MCP creation workflow | Figma MCP is read-only — file repurposed as layout spec reference; all creation redirects to pptx-assets.md | Fixed in Task 7 |
 | visual-asset-creation/references/real-image-assets.md | "Use Figma MCP to place image in branded layout" | Replaced with "Build a PPTX with image as full-bleed background" | Fixed in Task 7 |
 | CLAUDE.md | Figma MCP described as "read access only — do not write without approval" | Clarified: Figma MCP is read-only entirely; no creation possible; asset creation uses pptx-assets.md | Fixed in Task 7 |
+| product-design/references/component-standards.md | Colour Application section listed non-existent colours (Staffroom Orange #FF5A1F, Light Sand #FFF8F3, Deep Charcoal #1A1A1A, Warm Grey #6B6B6B) contradicting visual-identity.md | Replaced with correct brand palette (#043630, #004D43, #E6D7B6, #F1FEF8, #D0FF71) and semantic UI colours from visual-identity.md | Fixed in Task 8 |
+| engineering-review/references/code-review-checklist.md | `users` listed as active Neon table for auth + profile | Active Neon auth table is `"User"` (PascalCase, quoted, Prisma-originated). `users` is a D1 table (legacy phone store). | Fixed in Task 8 |
+| content-strategy/references/content-pillars.md | Pillar 3 guidance referenced `reviews` table for Neon query | `reviews` does not exist. Correct table is `stepper_form_data`. | Fixed in Task 8 |
+| product-context/references/db-schema.md | `searches` table missing from Section 1 Active Neon Tables | `searches` is an active Neon table used by search.service.ts — added to Section 1 | Fixed in Task 8 |
+| visual-asset-creation/SKILL.md | Key Rule 1 said "before writing any prompt or building any Figma asset" | v1.3 replaced Figma with PPTX but this line was not updated — now reads "any PPTX" | Fixed in Task 8 |
+| knowledge/staffroom-ux-constraints.md | "Staffroom's user base" — capitalised | Brand rule violation — changed to "staffroom's" | Fixed in Task 8 |
+| knowledge/skill-architecture.md | "The 7-Skill Ecosystem" — nikhil-linkedin omitted from table, count wrong | Table updated to 8 skills across 4 clusters with nikhil-linkedin added | Fixed in Task 8 |
+| knowledge/staffroom-teacher-insights.md | 30.7% completion rate appeared to contradict the 40% figure in product-metrics.md and ux-constraints.md | Added clarifying note: D1 measures all form-start attempts (broader denominator); Neon measures completions among submitted reviews | Fixed in Task 8 |
 
 ---
 

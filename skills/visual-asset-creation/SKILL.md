@@ -107,7 +107,7 @@ to an AI video agent or a human creator without any additional briefing.
 ## Key Rules
 
 1. **Always read `brand-custodian/references/visual-identity.md` first**
-   before writing any prompt or building any Figma asset. Never recall brand
+   before writing any prompt or building any PPTX. Never recall brand
    colours or typography from memory — they must be read from the source.
    Using wrong colours or fonts is a critical error that invalidates the asset.
 2. **Brand colours only in all marketing assets** — Deep Forest Green #043630,

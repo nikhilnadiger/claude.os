@@ -33,7 +33,7 @@ Any design or implementation that violates them is wrong by definition.
 
 ### 3. Device Baseline: Budget Android
 
-Staffroom's user base is Indian private school teachers. The dominant
+staffroom's user base is Indian private school teachers. The dominant
 device profile:
 
 - Redmi, Realme, Samsung Galaxy M-series — 3–5 year old mid-range Android

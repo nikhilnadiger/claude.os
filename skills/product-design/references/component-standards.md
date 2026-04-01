@@ -190,13 +190,46 @@ information.
 
 ## Colour Application
 
-Full palette in `brand-custodian/references/visual-identity.md`.
+Full palette and semantic colour definitions in
+`brand-custodian/references/visual-identity.md`. Always read from that source
+— never recall hex values from memory.
 
-- **Primary action:** Staffroom Orange (#FF5A1F) — primary CTAs, active nav
-- **Background:** White (#FFFFFF) on cards; Light Sand (#FFF8F3) on page backgrounds
-- **Text:** Deep Charcoal (#1A1A1A) for body; Warm Grey (#6B6B6B) for secondary
-- **Error:** Standard error red — do not use brand orange for error states (ambiguous)
-- **Success:** Standard success green
+### Brand Colours — UI Application
+
+| Colour | Hex | UI Application |
+|---|---|---|
+| Deep Forest Green | #043630 | Primary CTA background, active nav indicator, branded headers |
+| Dark Teal | #004D43 | Secondary backgrounds, depth on dark surfaces |
+| Warm Cream | #E6D7B6 | Warm card backgrounds, highlighted sections |
+| Soft Mint | #F1FEF8 | Default page/surface background, near-white areas |
+| Lime Accent | #D0FF71 | Accent highlights, emphasis on dark backgrounds |
+
+**Text on light surfaces (Soft Mint / Warm Cream):** Use Deep Forest Green
+(#043630) — confirm 4.5:1 contrast against the specific background.
+**Text on dark surfaces (Forest Green / Dark Teal):** Use Soft Mint (#F1FEF8)
+or Warm Cream (#E6D7B6).
+
+### Semantic Colours — State Usage (UI only)
+
+These are for product UI states only — never in marketing assets or social
+content. Source: `brand-custodian/references/visual-identity.md`.
+
+| State | Hex | Apply to |
+|---|---|---|
+| Success | #3D9970 | Confirmation messages, submitted states, check icons |
+| Error | #C04B3A | Validation errors, required field warnings, failure alerts |
+| Loading / WIP | #E8D485 | Skeleton screens, pending badges, in-progress indicators |
+| Neutral / Disabled | #9E9E96 | Disabled buttons, placeholder text, secondary metadata |
+
+**Error states:** Never use Deep Forest Green (#043630) for error states — it
+is the primary brand colour and its use for errors creates ambiguity.
+
+### Codebase Divergence Note
+
+The frontend currently renders `#214838` in some places where `#043630` is
+canonical. This is a known divergence. Do not introduce `#214838` in new
+design output — always use `#043630`. Flag for correction in the next design
+system pass.
 
 Contrast requirement: WCAG AA — 4.5:1 for body text, 3:1 for large text
 (24px+ or 18.67px bold+).
