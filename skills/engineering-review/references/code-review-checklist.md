@@ -149,3 +149,27 @@ Complete all items before pushing. No shortcuts.
 - [ ] If schema change: migration file written and tested locally
 - [ ] If new table: confirmed in Neon by default; new D1 tables require explicit Nikhil approval
 - [ ] If data migration: tested with real data shape, rollback path documented
+
+---
+
+## Section 8: Cross-Impact Analysis
+
+Complete this for every proposed change before finalising a plan. No item is
+exempt — even small changes can have non-obvious downstream effects.
+
+**For each proposed change, answer:**
+
+| Question | Required answer |
+|---|---|
+| What other features, APIs, or flows does this change touch? | List them explicitly. "None" must be verified, not assumed. |
+| Can this change break, slow, or degrade any currently working feature? | State any risk — even mild. Silence is not acceptable. |
+| Is this fix addressing the root cause, or a visible symptom? | If symptom-only: which root-cause fix must accompany it to be effective? |
+| Are any two items in this plan solving the same root problem? | If yes, merge them into one item. |
+| Does this change have hard dependencies (A only works if B is done first)? | If yes, state explicitly and sequence accordingly. |
+| Does this change affect cost, complexity, or response speed? | If yes, explain the impact and why it is justified. |
+
+**WebView-specific cross-impact check:**
+For any change involving OTP, authentication, external links, deep links, or
+browser navigation — confirm whether the fix also works inside Instagram and
+WhatsApp in-app browsers. A fix that works in real Chrome but fails in a
+WebView is an incomplete fix. State the WebView behaviour explicitly.

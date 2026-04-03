@@ -31,6 +31,7 @@ Teacher segments (3): Government low-income/rural — Private low-income — Pri
 
 Full codebase context: load `codebase-context` skill.
 PR review and architecture decisions: load `engineering-review` skill.
+**Comprehensive product/engineering audit:** load `engineering-review` + `product-context` + `product-design` skills, then load `knowledge/staffroom-ux-constraints.md`.
 The following rules are non-negotiable and must always be in context:
 
 - **New features go into `backend-nest/` only.** Do NOT touch `backend-deprecated/`.
@@ -127,6 +128,19 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
 - Nikhil Nadiger: co-founder, all decisions
 - Nilangshu: engineering consultant
 - Krishnan: developer working under Nilangshu
+
+---
+
+## Planning Protocol
+
+These rules apply to every engineering or product plan, in plan mode and implementation mode.
+
+- **Verify before proposing.** Before including any claim in a plan, verify it against production code or live analytics (Clarity, Neon, Cloudflare). "This feature doesn't exist" and "this feature exists" both require evidence. Do not assert — confirm.
+- **Cross-impact is mandatory.** For every proposed change, explicitly state what other working features, APIs, or flows it touches. State any risk of degradation — even mild risks must be surfaced. Never present a change as isolated without checking.
+- **Root cause vs. symptom.** When a fix only holds if another fix also happens, state that dependency explicitly and flag the pair. Never present dependent fixes as independent. Confirm that the proposed fix addresses the root cause, not just the visible symptom.
+- **Manual intervention must be pre-aligned.** When a plan requires Nikhil's physical presence — triggering a real OTP, browser testing in Instagram/WhatsApp WebView, production actions — identify this before starting. State it explicitly and confirm availability before the work begins, not when you arrive at that step.
+- **Dependencies and sequencing before finalising.** Before presenting a final plan, identify all interdependencies between proposed changes. Merge items that solve the same root problem. Sequence items that have hard dependencies (A only works if B is done first).
+- **Comprehensive information before approval.** If the information needed to make a decision is incomplete, gather it first. Do not present something for approval/rejection when the evidence is partial.
 
 ---
 

@@ -21,6 +21,12 @@ triggers:
   - "ADR"
   - "is this pattern correct"
   - "review this code"
+  - "comprehensive review"
+  - "audit the product"
+  - "full product review"
+  - "engineering review"
+  - "review production"
+  - "product audit"
 
 uses_references:
   - references/code-review-checklist.md
@@ -83,6 +89,7 @@ a PR or architecture decision causes real, hard-to-reverse harm.
 | PR review or code review | `references/code-review-checklist.md` |
 | Architecture decision or ADR | `references/architecture-patterns.md` |
 | Both apply | Read both files |
+| Comprehensive product/engineering audit | Read both reference files + load `product-context` skill + load `product-design` skill + load `knowledge/staffroom-ux-constraints.md` |
 
 ## Workflow
 
@@ -94,3 +101,11 @@ a PR or architecture decision causes real, hard-to-reverse harm.
    architecture-patterns.md), produce a structured ADR before approving
    the approach
 5. State findings clearly: what passes, what fails, what needs change
+
+**In audit mode (comprehensive product/engineering review):**
+- Every issue surfaced must be verified against production code or live
+  Clarity/Neon/Cloudflare data before being included in the plan. Do not
+  assert that a feature is missing or present — confirm it from the source.
+- Apply the full Planning Protocol from `CLAUDE.md` before presenting the plan:
+  cross-impact analysis, dependency identification, manual intervention flags,
+  and root-cause vs. symptom check on every item.

@@ -106,6 +106,39 @@ Design and engineering implications:
   - Minimum required fields — every optional field is a potential drop-off
   - Each step: one clear question or section, not a wall of inputs
 
+### 9. WebView / In-App Browser
+
+A significant share of staffroom traffic enters via Instagram Ads or WhatsApp
+links (nudges, referrals). These users are in a WebView — Instagram's or
+WhatsApp's in-app browser — not real Chrome. WebView behavior differs from
+the full browser in ways that directly affect auth, OTP, and external links.
+
+**What changes in a WebView:**
+- WhatsApp deep links (e.g., `wa.me/...`) may not open the WhatsApp app.
+  A user in Instagram WebView who triggers a WhatsApp OTP cannot switch to
+  WhatsApp to retrieve it without losing the session.
+- `_system` targets and `window.open(..., '_system')` calls may be silently
+  blocked — the button does nothing, no error is shown to the user.
+- External app-switching is unreliable; users may not know how to open the
+  page in real Chrome.
+
+**Design implication — always assume WebView:**
+Any feature involving OTP delivery, external app links, deep links, or
+`_system` targets must work correctly for a user trapped in a WebView.
+The non-WebView case is a bonus, not the baseline.
+
+**Specific consequences:**
+- OTP error copy must not assume the OTP was received. The user may not
+  have seen it at all. Copy must guide them out of the WebView first.
+- A fix to error copy is NOT independent from a fix to WebView handling.
+  If the WebView issue is unresolved, better copy alone will not fix the
+  user experience.
+- External link CTAs must show a visible fallback instruction when
+  `_system` is blocked (e.g., "Tap ··· → Open in [Chrome/Safari]").
+  This instruction must always be visible, not only on error.
+- Test any auth or link flow by manually entering the page URL inside
+  Instagram or WhatsApp — real Chrome behaviour is not a valid proxy.
+
 ---
 
 ## Constraint Application Protocol
