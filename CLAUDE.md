@@ -40,7 +40,7 @@ The following rules are non-negotiable and must always be in context:
 - **Never hardcode `/api/...` paths.** Always use `getApiBaseUrl()` from `lib/api-base.ts`.
 - **Never create a PR targeting `main`.** Never run `gh pr create --base main`. Never merge to main. Never suggest merging to main. Nikhil handles the merge to main manually on GitHub after UAT testing.
 - **When asked to push to UAT:** run `git push origin uat` and stop. No `gh pr create`. Nothing else.
-- **Before any PR:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Both must pass with 0 errors. Never skip.
+- **After completing local changes:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop and report ready — do NOT push to UAT without explicit instruction from Nikhil.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`
 

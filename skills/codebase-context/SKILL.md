@@ -79,9 +79,9 @@ them causes real harm to the codebase and production system.
 4. **Never hardcode `/api/...` paths** for server-side calls. Always use
    `getApiBaseUrl()` from `lib/api-base.ts`. The catch-all proxy at
    `pages/api/[...path].ts` is only active on localhost and UAT — not production.
-5. **Run `pnpm build` and `pnpm lint` before any PR** — in BOTH repo root AND
-   `/backend-nest`. Both must succeed with 0 errors. Fix all errors before pushing.
-   Never skip. If complex, flag to Nikhil — do not silently skip.
+5. **After completing local changes, run `pnpm build` and `pnpm lint`** — in BOTH
+   repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop
+   and report ready — do NOT push to UAT until Nikhil explicitly asks.
 6. **Avoid edits to proxy config, ports, environment variables, or routing
    logic** unless there is no other way. If unavoidable, ask Nikhil for explicit
    approval with risks and mitigation stated.

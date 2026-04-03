@@ -51,28 +51,32 @@ A hardcoded bypass exists in `backend-nest/src/whatsapp/whatsapp.service.ts` (li
 
 ```
 Local changes (via Claude Code)
-  → Push to UAT branch on GitHub   ← CLAUDE CODE STOPS HERE
-    → CI/CD auto-deploys to UAT server
-      → Nikhil tests at uat.thestaffroom.in
-        → Nikhil merges to main (manually, on GitHub)
-          → CI/CD auto-deploys to production
-            → Live at thestaffroom.in
+  → Run pnpm build + pnpm lint (automatic, after every local implementation)
+    → Fix all errors and re-run until both pass
+      → Stop and report "ready for UAT"   ← CLAUDE CODE STOPS HERE
+        → Push to UAT branch on GitHub (only when Nikhil explicitly asks)
+          → CI/CD auto-deploys to UAT server
+            → Nikhil tests at uat.thestaffroom.in
+              → Nikhil merges to main (manually, on GitHub)
+                → CI/CD auto-deploys to production
+                  → Live at thestaffroom.in
 ```
 
-**Claude Code's role ends at `git push origin uat`. Nothing beyond that.**
+**After completing local changes:**
+1. Run `pnpm build` in repo root — fix all errors, re-run until 0 errors
+2. Run `pnpm lint` in repo root — fix all errors, re-run until 0 errors
+3. Run `pnpm build` in `/backend-nest` — fix all errors, re-run until 0 errors
+4. Run `pnpm lint` in `/backend-nest` — fix all errors, re-run until 0 errors
 
+When all four pass, stop and report ready. Do NOT push to UAT.
+
+**Claude Code's role ends at reporting clean build/lint. Nothing beyond that.**
+
+- Do NOT push to UAT unless Nikhil explicitly asks
 - Do NOT run `gh pr create` — not to main, not to any branch, unless Nikhil explicitly asks
 - Do NOT open, draft, or suggest a PR targeting `main`
 - Do NOT merge branches
 - Nikhil handles UAT testing and the merge to main himself
-
-**Before pushing to any branch:**
-1. Run `pnpm build` in repo root — must succeed with 0 errors
-2. Run `pnpm lint` in repo root — must succeed with 0 errors
-3. Run `pnpm build` in `/backend-nest` — must succeed with 0 errors
-4. Run `pnpm lint` in `/backend-nest` — must succeed with 0 errors
-
-Never push a failing build or lint. Fix all errors first.
 
 ---
 
