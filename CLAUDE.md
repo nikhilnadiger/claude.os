@@ -38,6 +38,8 @@ The following rules are non-negotiable and must always be in context:
 - **Do NOT call legacy CF workers** — not school-review worker, not api.thestaffroom.in.
 - **`PROJECT_REFERENCE.md` is outdated** — ignore it entirely.
 - **Never hardcode `/api/...` paths.** Always use `getApiBaseUrl()` from `lib/api-base.ts`.
+- **Never create a PR targeting `main`.** Never run `gh pr create --base main`. Never merge to main. Never suggest merging to main. Nikhil handles the merge to main manually on GitHub after UAT testing.
+- **When asked to push to UAT:** run `git push origin uat` and stop. No `gh pr create`. Nothing else.
 - **Before any PR:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Both must pass with 0 errors. Never skip.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`

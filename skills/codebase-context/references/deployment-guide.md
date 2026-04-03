@@ -51,13 +51,20 @@ A hardcoded bypass exists in `backend-nest/src/whatsapp/whatsapp.service.ts` (li
 
 ```
 Local changes (via Claude Code)
-  → Push to UAT branch on GitHub
+  → Push to UAT branch on GitHub   ← CLAUDE CODE STOPS HERE
     → CI/CD auto-deploys to UAT server
-      → Test at uat.thestaffroom.in
-        → Merge to main branch
+      → Nikhil tests at uat.thestaffroom.in
+        → Nikhil merges to main (manually, on GitHub)
           → CI/CD auto-deploys to production
             → Live at thestaffroom.in
 ```
+
+**Claude Code's role ends at `git push origin uat`. Nothing beyond that.**
+
+- Do NOT run `gh pr create` — not to main, not to any branch, unless Nikhil explicitly asks
+- Do NOT open, draft, or suggest a PR targeting `main`
+- Do NOT merge branches
+- Nikhil handles UAT testing and the merge to main himself
 
 **Before pushing to any branch:**
 1. Run `pnpm build` in repo root — must succeed with 0 errors
