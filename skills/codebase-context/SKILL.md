@@ -85,6 +85,10 @@ them causes real harm to the codebase and production system.
 6. **Avoid edits to proxy config, ports, environment variables, or routing
    logic** unless there is no other way. If unavoidable, ask Nikhil for explicit
    approval with risks and mitigation stated.
+7. **Before pushing to UAT when asked:** run `git status` to confirm working tree
+   is clean and all changes are committed. If uncommitted changes exist, commit
+   them first (`git add <specific files>` + `git commit`). Then run
+   `git push origin uat` — never `git push origin main:uat` or other refspecs.
 
 ## Code Investigation Rule
 

@@ -39,7 +39,7 @@ The following rules are non-negotiable and must always be in context:
 - **`PROJECT_REFERENCE.md` is outdated** — ignore it entirely.
 - **Never hardcode `/api/...` paths.** Always use `getApiBaseUrl()` from `lib/api-base.ts`.
 - **Never create a PR targeting `main`.** Never run `gh pr create --base main`. Never merge to main. Never suggest merging to main. Nikhil handles the merge to main manually on GitHub after UAT testing.
-- **When asked to push to UAT:** run `git push origin uat` and stop. No `gh pr create`. Nothing else.
+- **When asked to push to UAT:** first run `git status` — confirm working tree is clean and all changes are committed. If uncommitted changes exist, commit them first (`git add <specific files>` + `git commit`). Then run `git push origin uat` and stop. Never use `git push origin main:uat` or any other refspec.
 - **After completing local changes:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop and report ready — do NOT push to UAT without explicit instruction from Nikhil.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`
@@ -55,6 +55,7 @@ Structural implications (always apply):
 - **Bengaluru is 44% of sessions** — primary city for content and product focus
 - **Login page is primary drop-off** (606 exits) — conversion priority
 - **~1,957 sessions untracked** — Instagram Ads traffic missing UTMs; fix on all paid links
+- **Instagram Ads is a primary traffic source** — WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
 
 Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 44×44pt touch targets, 360px mobile viewport, ≤0.6s animations, 2G-capable, no auto-play media.
 

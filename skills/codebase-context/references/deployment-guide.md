@@ -78,6 +78,16 @@ When all four pass, stop and report ready. Do NOT push to UAT.
 - Do NOT merge branches
 - Nikhil handles UAT testing and the merge to main himself
 
+**When Nikhil asks to push to UAT — execute in this exact order:**
+1. Run `git status` — working tree must be clean. If uncommitted changes exist, stop and commit them first:
+   ```bash
+   git add <specific files>   # never git add -A or git add .
+   git commit -m "descriptive message"
+   ```
+2. Run `git log --oneline -3` — confirm the latest commit contains the expected changes
+3. Only then run `git push origin uat` — nothing else
+4. Never use refspecs like `git push origin main:uat` — only `git push origin uat`
+
 ---
 
 ## Developer Workflow (Krishnan / Nilangshu)

@@ -139,6 +139,12 @@ Complete all items before pushing. No shortcuts.
 - [ ] No console errors or warnings in browser devtools
 - [ ] No unexpected network requests in devtools Network tab
 
+**WebView testing (mandatory for any change touching login, OTP, auth, or interactive input fields):**
+- [ ] Tested in Instagram in-app browser: tap the input field — confirm the field remains visible above the keyboard when focused
+- [ ] Keyboard scroll behaviour verified: input does not disappear behind the keyboard on focus
+- [ ] Clarity dead-click and rage-click data checked, filtered to in-app browser sessions on the affected element
+- [ ] WebView behaviour stated explicitly in the PR description — "works in Chrome DevTools" alone is not sufficient
+
 **Safety grep checks:**
 - [ ] `grep -r "thestaffroom2024" .` — no new references
 - [ ] `grep -r "api.thestaffroom.in" .` — no new references in active code
