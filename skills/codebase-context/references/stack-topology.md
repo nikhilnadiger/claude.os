@@ -31,6 +31,7 @@ source: live codebase + infrastructure
 | DB driver | pg (PostgreSQL) |
 | Port (prod) | :9000 |
 | Port (UAT) | :7000 |
+| Port (local) | :8788 |
 | Process manager | PM2, user: stfrmuser1 |
 | External URL (prod) | api-prod.thestaffroom.in |
 | External URL (UAT) | uat-api.thestaffroom.in |

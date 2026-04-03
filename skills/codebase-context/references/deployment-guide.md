@@ -8,6 +8,45 @@ source: Nikhil's deployment workflow
 
 ---
 
+## Local Development
+
+### Starting the stack
+
+Run both processes simultaneously in separate terminals:
+
+```bash
+# Terminal 1 — Frontend (Next.js)
+pnpm dev
+# Runs on localhost:3000
+
+# Terminal 2 — Backend (NestJS)
+cd backend-nest && pnpm start:dev
+# Runs on localhost:8788
+```
+
+The catch-all proxy (`pages/api/[...path].ts`) reads `INTERNAL_BACKEND_URL=http://localhost:8788` from root `.env`. No config changes needed — routing works out of the box.
+
+### OTP bypass for local login
+
+A hardcoded bypass exists in `backend-nest/src/whatsapp/whatsapp.service.ts` (lines 195–224):
+
+- **Phone:** `7592090926`
+- **OTP:** `000000`
+
+`verifyOtp` for this pair skips all D1 lookups and returns a valid JWT directly. No real WhatsApp message is needed — even if one is sent, it is never checked for this phone number.
+
+### ⚠ Risk: local backend connects to production databases
+
+`backend-nest/.env` points to production Neon PostgreSQL and production Cloudflare D1. There is no local or staging DB.
+
+| Action | Risk |
+|---|---|
+| Viewing school pages | Read-only — zero risk |
+| Logging in with bypass phone | Creates/updates user record for `7592090926` in production PG — low risk, manually deletable |
+| Submitting a review | Writes a real review to production PG — delete manually after testing |
+
+---
+
 ## Nikhil's Workflow (Primary)
 
 ```
