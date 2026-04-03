@@ -14,6 +14,15 @@ description: >
   (3) future partners - education sector allies. Posts optimizes for quality engagement
   over vanity metrics. Also triggers when Nikhil shares a LinkedIn post URL to update
   the KPI sheet with new post analytics.
+triggers:
+  - "write a LinkedIn post"
+  - "LinkedIn post"
+  - "post for LinkedIn"
+  - "edit this post"
+  - "LinkedIn draft"
+  - "linkedin.com"
+  - "nikhil linkedin"
+
 uses_references:
   - references/voice-principles.md
   - references/post-patterns.md

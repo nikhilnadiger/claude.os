@@ -108,7 +108,7 @@ JWT is verified via Passport. Do not implement custom JWT verification in a serv
 | `"FormReview"` | Legacy | `ENABLE_FORM_REVIEW_FETCH=false` — do not reference |
 
 Full column definitions and complete active/legacy table list:
-→ `product-context/references/db-schema.md`
+→ `product-context/references/neon-schema.md`
 
 **Cloudflare D1 (existing usage — multiple modules):**
 
@@ -122,7 +122,7 @@ D1 is used extensively by NestJS, not just teacher-counts. Active D1 tables incl
 - All D1 access goes through `D1Service` — never query D1 directly from frontend or CF Worker
 - **Do not create new D1 tables without explicit approval from Nikhil**
 - Several tables exist in BOTH Neon and D1; NestJS always uses the D1 version for those
-- See `product-context/references/db-schema.md` Section 5 for the full dual-database table list
+- See `product-context/references/d1-schema.md` Section 2 for the full dual-database table list
 
 ---
 

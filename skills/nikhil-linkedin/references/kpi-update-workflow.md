@@ -1,6 +1,7 @@
 ---
-last_updated: "Mar 2026"
-skill: nikhil-linkedin
+last_updated: Mar 2026
+skills: [nikhil-linkedin]
+source: Nikhil Nadiger workflow design, Mar 2026
 purpose: >
   Step-by-step workflow for updating the LinkedIn KPI Sheet when Nikhil shares
   a new post URL. Runs in Chrome. No manual data entry required from Nikhil.

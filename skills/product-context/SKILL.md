@@ -30,7 +30,8 @@ triggers:
 uses_references:
   - references/data-flow.md
   - references/api-inventory.md
-  - references/db-schema.md
+  - references/neon-schema.md
+  - references/d1-schema.md
 
 related_skills:
   - product-design
@@ -99,7 +100,8 @@ brand-positioned as Tripadvisor — positive, discovery-oriented.
 |---|---|
 | User journey / data flow | `references/data-flow.md` |
 | API endpoints / contracts | `references/api-inventory.md` |
-| DB tables / columns / schema | `references/db-schema.md` |
+| Neon DB tables / columns / schema | `references/neon-schema.md` |
+| D1 tables / dual-DB / cross-DB relationships | `references/d1-schema.md` |
 | User research / teacher segments | Live reference: staffroom-teacher-insights.md |
 | Platform metrics / Clarity data | Live reference: staffroom-product-metrics.md |
 

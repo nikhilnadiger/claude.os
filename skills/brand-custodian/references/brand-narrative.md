@@ -1,6 +1,6 @@
 ---
 source: distilled-from: https://docs.google.com/document/d/1lTkYH9gL9yd-ebTjw37LwrsvhLrBEpzJFDSqYPQ96b0/edit
-last-updated: 2026-03-29
+last_updated: Mar 2026
 skills: [brand-custodian, content-strategy, visual-asset-creation]
 update-frequency: When brand positioning, tagline, or voice system changes
 ---

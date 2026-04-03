@@ -68,7 +68,8 @@ Current knowledge docs:
 - skill-architecture.md — this file
 
 Skill reference docs (in skills/*/references/):
-- product-context/references/db-schema.md — full DB schema: all Neon + D1 tables, columns, active/legacy status
+- product-context/references/neon-schema.md — Neon PostgreSQL schema: active tables, materialized views, enum types, legacy tables
+- product-context/references/d1-schema.md — Cloudflare D1 schema: active tables, dual-database tables, cross-DB relationships
 - product-context/references/data-flow.md — six primary product flows (search, review, auth, nudge, etc.)
 - product-context/references/api-inventory.md — all NestJS API endpoints and contracts
 - codebase-context/references/stack-topology.md — infra: frontend, NestJS, hosting, DB overview

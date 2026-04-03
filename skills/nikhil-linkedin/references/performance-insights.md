@@ -1,6 +1,7 @@
 ---
-last_updated: "Mar 2026"
-skill: nikhil-linkedin
+last_updated: Mar 2026
+skills: [nikhil-linkedin]
+source: LinkedIn KPI Sheet + published post analysis (Mar 2026)
 staleness_note: >
   This file contains durable principles only — not post-level KPI data.
   For current metrics (impressions, engagement rates, demographics by post),

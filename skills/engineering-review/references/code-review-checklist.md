@@ -90,7 +90,7 @@ Any PR that fails these must be rejected. No exceptions.
 - All D1 access goes through `D1Service` — never query D1 directly from frontend or CF Workers.
 - **Do not create new D1 tables without explicit approval from Nikhil.**
 - New features that need new persistent data should use Neon via PostgresService by default.
-- Full D1 table list: `product-context/references/db-schema.md` Section 3.
+- Full D1 table list: `product-context/references/d1-schema.md` Section 1.
 
 ---
 

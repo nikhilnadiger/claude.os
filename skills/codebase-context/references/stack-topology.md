@@ -100,7 +100,8 @@ legacy traffic — do not touch backend-deprecated/.
 NestJS always reads/writes the D1 versions for those tables.
 
 Full schema with all columns, constraints, and active/legacy status:
-→ `product-context/references/db-schema.md`
+→ Neon: `product-context/references/neon-schema.md`
+→ D1: `product-context/references/d1-schema.md`
 
 Do not create new D1 tables or new Neon tables without explicit approval from Nikhil.
 Do not query D1 from the frontend or a CF Worker — always go through NestJS.

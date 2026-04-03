@@ -159,7 +159,7 @@ These rules apply to every engineering or product plan, in plan mode and impleme
 
 Brand assets (logos, templates, social media, ratings UI) are in: assets/
 URL references (Google Docs, Figma, social channels, content scripts) are in: references.md
-Skills are in: skills/ (in this repo), mirrored to .claude/skills/ for Cowork.
+Skills are in: skills/ (in this repo). Cowork reads them by file path directly from the claude.os workspace — no sync to .claude/ required.
 Deep-dive strategic documents (competitive analysis, research) are in: knowledge/
 
 Key knowledge files:

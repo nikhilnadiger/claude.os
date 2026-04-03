@@ -10,7 +10,7 @@ Six primary flows verified from live codebase. Do not rely on legacy
 `SCHOOL_DATA_FLOW.md` or `PROJECT_REFERENCE.md` — both are outdated.
 
 For full DB table definitions, column names, and active/legacy status across both
-Neon and D1, see `references/db-schema.md`.
+Neon tables, see `references/neon-schema.md`. D1 tables, see `references/d1-schema.md`.
 
 ---
 

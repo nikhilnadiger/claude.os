@@ -1,6 +1,7 @@
 ---
-last_updated: "Mar 2026"
-skill: nikhil-linkedin
+last_updated: Mar 2026
+skills: [nikhil-linkedin]
+source: distilled from Nikhil Nadiger's published LinkedIn posts (Mar 2026)
 purpose: 11 post patterns with structure, examples, and key tells.
 ---
 
