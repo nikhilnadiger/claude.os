@@ -139,11 +139,7 @@ Complete all items before pushing. No shortcuts.
 - [ ] No console errors or warnings in browser devtools
 - [ ] No unexpected network requests in devtools Network tab
 
-**WebView testing (mandatory for any change touching login, OTP, auth, or interactive input fields):**
-- [ ] Tested in Instagram in-app browser: tap the input field — confirm the field remains visible above the keyboard when focused
-- [ ] Keyboard scroll behaviour verified: input does not disappear behind the keyboard on focus
-- [ ] Clarity dead-click and rage-click data checked, filtered to in-app browser sessions on the affected element
-- [ ] WebView behaviour stated explicitly in the PR description — "works in Chrome DevTools" alone is not sufficient
+- [ ] Apply Test Fidelity Classification (Section 9) to all tests — declare tier for each. All Fidelity C items must appear in the ready report before Nikhil decides to push to UAT.
 
 **Safety grep checks:**
 - [ ] `grep -r "thestaffroom2024" .` — no new references
@@ -179,3 +175,29 @@ For any change involving OTP, authentication, external links, deep links, or
 browser navigation — confirm whether the fix also works inside Instagram and
 WhatsApp in-app browsers. A fix that works in real Chrome but fails in a
 WebView is an incomplete fix. State the WebView behaviour explicitly.
+
+---
+
+## Section 9: Test Fidelity Framework
+
+Every test falls into one of three tiers. Declare the tier for each test in the ready report. Never report a Fidelity B or C test as passing without stating the limitation.
+
+**Fidelity A — Claude Code can run, result reliable:**
+Build, lint, grep safety checks, API responses, server-side rendering, Redux state, DB query results, network request inspection in devtools.
+
+**Fidelity B — proxy only. Must declare the proxy and its known limitation:**
+
+| Proxy used | What it covers | What it does NOT cover |
+|---|---|---|
+| Chrome DevTools at 360px | Viewport width, layout reflow | WebView keyboard behavior — `visualViewport.resize` fires in Chrome but not in real Instagram/WhatsApp/Facebook in-app browsers |
+| Chrome DevTools network throttling | Approximate bandwidth reduction | Real network variability, packet loss, and latency on budget Android devices |
+| Lighthouse / DevTools CPU throttling | Approximate performance signal | Real memory pressure, thermal throttling, and jank on low-end devices |
+
+**Fidelity C — cannot test. Requires Nikhil's manual verification before UAT push:**
+- Real WebView keyboard behavior: input field visibility above keyboard on focus in Instagram, WhatsApp, Facebook, Telegram, LinkedIn in-app browsers
+- Real OTP flow: requires Nikhil's phone to receive and enter the OTP
+- Real low-end Android device: CPU/memory pressure, scroll jank, touch response
+- Share deep links: correct opening behavior in external apps
+- Any behavior dependent on the system keyboard rather than the browser's simulated keyboard
+
+**Rule:** All Fidelity C items relevant to the PR must appear verbatim in the ready report under "Requires manual verification." The ready report format is defined in `codebase-context/references/deployment-guide.md`.

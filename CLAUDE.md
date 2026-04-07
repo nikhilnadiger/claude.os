@@ -41,6 +41,7 @@ The following rules are non-negotiable and must always be in context:
 - **Never create a PR targeting `main`.** Never run `gh pr create --base main`. Never merge to main. Never suggest merging to main. Nikhil handles the merge to main manually on GitHub after UAT testing.
 - **When asked to push to UAT:** first run `git status` — confirm working tree is clean and all changes are committed. If uncommitted changes exist, commit them first (`git add <specific files>` + `git commit`). Then run `git push origin uat` and stop. Never use `git push origin main:uat` or any other refspec.
 - **After completing local changes:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop and report ready — do NOT push to UAT without explicit instruction from Nikhil.
+- **Never claim a test passed if it was run in a lower-fidelity environment than required.** When a required test cannot be run accurately, state this explicitly — do not substitute a proxy and report success. This applies to all test categories. Fidelity classification in `engineering-review/references/code-review-checklist.md`.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`
 
@@ -144,6 +145,7 @@ These rules apply to every engineering or product plan, in plan mode and impleme
 - **Manual intervention must be pre-aligned.** When a plan requires Nikhil's physical presence — triggering a real OTP, browser testing in Instagram/WhatsApp WebView, production actions — identify this before starting. State it explicitly and confirm availability before the work begins, not when you arrive at that step.
 - **Dependencies and sequencing before finalising.** Before presenting a final plan, identify all interdependencies between proposed changes. Merge items that solve the same root problem. Sequence items that have hard dependencies (A only works if B is done first).
 - **Comprehensive information before approval.** If the information needed to make a decision is incomplete, gather it first. Do not present something for approval/rejection when the evidence is partial.
+- **Minimum viable change — internal two-step process (applies to the solution, not the investigation).** Investigate broadly — cross-impact, root cause, all dependencies. Then: (1) draft the smallest code change the investigation confirms will fix the root cause; (2) critique that draft — how could it fail? What new risks, dependencies, or loopholes does it introduce? The final proposal must address the critiqued issues while remaining the smallest possible change that does so. This process is internal — only the refined proposal is presented to Nikhil. Thorough investigation and a minimal, self-critiqued solution are both required simultaneously.
 
 ---
 

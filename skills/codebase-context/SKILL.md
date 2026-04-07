@@ -89,6 +89,10 @@ them causes real harm to the codebase and production system.
    is clean and all changes are committed. If uncommitted changes exist, commit
    them first (`git add <specific files>` + `git commit`). Then run
    `git push origin uat` — never `git push origin main:uat` or other refspecs.
+8. **Minimum viable change — internal two-step process.** Draft the smallest
+   change the investigation confirms will fix the root cause. Critique it:
+   failure modes, new risks, new dependencies, loopholes. Present only the
+   refined result to Nikhil. See CLAUDE.md Planning Protocol for full definition.
 
 ## Code Investigation Rule
 

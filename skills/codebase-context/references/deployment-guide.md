@@ -70,6 +70,17 @@ Local changes (via Claude Code)
 
 When all four pass, stop and report ready. Do NOT push to UAT.
 
+**Ready report — required format when reporting to Nikhil:**
+
+**Fidelity A — tested by Claude Code, result reliable:**
+List what was tested and passed (build, lint, grep checks, API responses, DB queries, SSR, Redux state, network requests).
+
+**Fidelity B — proxy used, limitation declared:**
+List each proxy test, what it covered, and what it did not cover. Example: "Tested at 360px in Chrome DevTools — covers viewport width, does not replicate WebView keyboard behavior."
+
+**Fidelity C — cannot test, requires Nikhil's manual verification before UAT push:**
+List each item with exactly what to check and how. If this section is non-empty, state it prominently so Nikhil can verify before deciding to push.
+
 **Claude Code's role ends at reporting clean build/lint. Nothing beyond that.**
 
 - Do NOT push to UAT unless Nikhil explicitly asks
