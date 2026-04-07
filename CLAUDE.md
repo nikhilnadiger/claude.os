@@ -165,6 +165,7 @@ These rules apply to every engineering or product plan, in plan mode and impleme
 Brand assets (logos, templates, social media, ratings UI) are in: assets/
 URL references (Google Docs, Figma, social channels, content scripts) are in: references.md
 Skills are in: skills/ (in this repo). Cowork reads them by file path directly from the claude.os workspace — no sync to .claude/ required.
+Claude Code CLI base path (Windows): `C:\Users\nikhi\Documents\GitHub\claude.os` — when running as Claude Code CLI, resolve all skill and reference file paths relative to this base path. Example: `skills/codebase-context/SKILL.md` → `C:\Users\nikhi\Documents\GitHub\claude.os\skills\codebase-context\SKILL.md`.
 Deep-dive strategic documents (competitive analysis, research) are in: knowledge/
 
 Key knowledge files:
