@@ -35,6 +35,7 @@ Note: Brand Guidelines are available as a PDF in assets/brand-guidelines.pdf. Us
 | LinkedIn (staffroom page) | https://www.linkedin.com/company/thestaffroom/ | Chrome extension |
 | LinkedIn (Nikhil personal) | https://www.linkedin.com/in/nikhilnadiger/ | Chrome extension |
 | Nikhil LinkedIn KPI Sheet | https://docs.google.com/spreadsheets/d/1eBrZr6LVgbIyzcvQTvjWVQCXSDtK_P-R4feUQIyP8vI | Google Drive MCP / Apps Script |
+| LinkedIn KPI Web App | https://script.google.com/macros/s/AKfycbzCvE7ejSmpg_jTQAe5uto2KalKPYUnumCrA9lL3u2i_8-gtjuDI9rn_aphAefo7oETHA/exec | POST via fetch from Sheets tab |
 
 ---
 
