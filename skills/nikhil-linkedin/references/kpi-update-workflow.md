@@ -1,7 +1,7 @@
 ---
 last_updated: "Apr 2026"
 skill: nikhil-linkedin
-webapp_url: "https://script.google.com/macros/s/AKfycbwIhve8swG3i604K4Y5CxPKsecu_gpRRf8NREMUcYg9gGe0u8WITrO0zwVeRA3COtRxhQ/exec"
+webapp_url: "https://script.google.com/macros/s/AKfycbzCvE7ejSmpg_jTQAe5uto2KalKPYUnumCrA9lL3u2i_8-gtjuDI9rn_aphAefo7oETHA/exec"
 purpose: >
   Step-by-step workflow for updating the LinkedIn KPI Sheet when Nikhil shares
   a new post URL. Fully automated via Apps Script Web App — no manual steps
@@ -23,17 +23,18 @@ If not: ask Nikhil to open Chrome with that profile before proceeding.
 
 From the URL extract {POST_ID} — the numeric ID.
 
-Decode exact post date using BigInt (run in Chrome via javascript_tool):
+Decode exact IST publish date using the calibrated epoch (run in Chrome via javascript_tool):
 ```javascript
-const ms = Number(BigInt('{POST_ID}') >> 22n);
-new Date(ms).toISOString().split('T')[0]; // YYYY-MM-DD (UTC)
+const EPOCH = -51192580n;  // calibrated: Post 20 (ID 7447285355323744256 = 2026-04-07 IST)
+const IST   = 19800000n;   // +5h30m offset
+const ts = (BigInt('{POST_ID}') >> 22n) + EPOCH + IST;
+new Date(Number(ts)).toISOString().substring(0, 10); // YYYY-MM-DD
 ```
-LinkedIn snowflake IDs encode Unix ms in the top 42 bits. This gives the exact
-UTC creation date with no approximation needed.
 
-Note: LinkedIn shows relative dates ("3d", "2w", "1mo") on the analytics page.
-Always decode from the post ID instead. The decoded date may differ by 1 day
-from IST (UTC+5:30); use as-is unless Nikhil corrects.
+Note: LinkedIn IDs do NOT use Unix epoch in the top bits — the raw shift gives an
+arbitrary value. Always apply the EPOCH constant. Re-calibrate only if Post 20's
+date (2026-04-07) is ever found to be wrong. Never use relative timestamps ("3d",
+"2w", "1mo") — always decode from the post ID.
 
 ---
 
@@ -63,14 +64,17 @@ Note: Demographics unavailable for posts older than 360 days. Mark as "n/a".
 
 ## Step 3: Check Which Existing Posts Need Refreshing
 
-Call doGet to read the current post list from the sheet:
+From the Google Sheets tab, read the post list via gviz CSV (reliable, no CORS issues):
 
 ```javascript
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwIhve8swG3i604K4Y5CxPKsecu_gpRRf8NREMUcYg9gGe0u8WITrO0zwVeRA3COtRxhQ/exec';
 (async () => {
-  const r = await fetch(WEBAPP_URL, { redirect: 'follow' });
-  const data = await r.json();
-  return data.posts; // [{postNum, date, url}, ...]
+  const r = await fetch('https://docs.google.com/spreadsheets/d/1eBrZr6LVgbIyzcvQTvjWVQCXSDtK_P-R4feUQIyP8vI/gviz/tq?tqx=out:csv&sheet=LinkedIn%20KPIs&range=A:C');
+  const csv = await r.text();
+  const rows = csv.trim().split('\n').slice(1); // skip header
+  return rows.map(row => {
+    const [num, date, url] = row.split(',').map(v => v.replace(/^"|"$/g, ''));
+    return { postNum: Number(num), date, url };
+  });
 })()
 ```
 
@@ -89,12 +93,14 @@ Then POST from that tab using javascript_tool:
 ```javascript
 (async () => {
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzCvE7ejSmpg_jTQAe5uto2KalKPYUnumCrA9lL3u2i_8-gtjuDI9rn_aphAefo7oETHA/exec';
-  const r = await fetch(WEB_APP_URL, {
+  // no-cors + no Content-Type = text/plain, which bypasses CORS preflight.
+  // Apps Script receives the raw body and JSON.parses it correctly.
+  // Response is opaque — verify success via gviz read (see Step 5).
+  await fetch(WEB_APP_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    mode: 'no-cors',
     body: JSON.stringify({ posts: [ /* array of post objects */ ] })
   });
-  return await r.text();
 })()
 ```
 
@@ -163,29 +169,13 @@ Cols J–AF = metrics + demographics (overwritten on every refresh).
 | AE | 31 | Top Job Title #1 % | decimal |
 | AF | 32 | Edu Sector Reach % | decimal |
 
-POST to the Web App using no-cors + text/plain to avoid CORS preflight:
 
-```javascript
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwIhve8swG3i604K4Y5CxPKsecu_gpRRf8NREMUcYg9gGe0u8WITrO0zwVeRA3COtRxhQ/exec';
-
-await fetch(WEBAPP_URL, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'text/plain' },
-  body: JSON.stringify({ posts: [row1, row2] })
-});
-```
-
-CORS note: Apps Script Web Apps do not handle OPTIONS preflight correctly.
-Using mode: 'no-cors' + Content-Type: text/plain bypasses the preflight.
-The body is still valid JSON — Apps Script parses it correctly.
-Response is opaque — always verify success via a separate doGet call after posting.
 
 ---
 
 ## Step 5: Verify and Report
 
-After posting, call doGet and confirm new or updated rows are present.
+After posting, read via gviz CSV to confirm rows are present and values are correct:
 
 Report to Nikhil:
 - New post number and impressions
@@ -217,10 +207,4 @@ New post        | Always add
 
 ---
 
-## Important: Correcting Non-Metric Columns on Existing Rows
 
-The updateLinkedInKPI function preserves columns 1-9 and column 33 for existing
-rows (editorial data and post text are never overwritten). To correct dates,
-URLs, topics, patterns, or other non-metric fields, the Apps Script must do a
-direct range write rather than calling updateLinkedInKPI. Build a fresh full row
-and write it directly to the correct row range, or fix manually in the sheet.
