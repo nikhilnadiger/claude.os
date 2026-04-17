@@ -81,7 +81,7 @@ Skill reference docs (in skills/*/references/):
 
 ## The 8-Skill Ecosystem
 
-staffroom's claude.os has 8 skills across four clusters:
+staffroom's claude.os has 9 skills across four clusters:
 
 | Cluster | Skill | Primary intent |
 |---|---|---|
@@ -93,6 +93,7 @@ staffroom's claude.os has 8 skills across four clusters:
 | Product | product-context | Understand how features, flows, and APIs work |
 | Product | product-design | UI/UX design decisions, screen design, critique |
 | Personal | nikhil-linkedin | Write and analyse LinkedIn posts in Nikhil's founder voice |
+| Strategy | advisory-councils | Expert council deliberation on strategic decisions |
 
 **related_skills must be bidirectional.** If skill A lists skill B in related_skills,
 skill B must list skill A. Verify this on every new skill or update.

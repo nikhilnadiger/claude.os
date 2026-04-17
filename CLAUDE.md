@@ -160,6 +160,27 @@ These rules apply to every engineering or product plan, in plan mode and impleme
 
 ---
 
+## Advisory Councils
+
+Four expert councils available for strategic decisions. Trigger by typing:
+`"run [council-name] council: [your question]"`
+
+**Councils:**
+- `brand-marketing` — Piyush Pandey, Prasoon Joshi, Santosh Desai, Rory Sutherland
+- `visual-design` — Sudhir Sharma, Sujata Keshavan, Michael Bierut
+- `product-design` — Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug
+- `software-engineering` — Pramod Varma, Venkat Subramaniam, Martin Fowler, Kent Beck, Kelsey Hightower
+
+**Joint council:** `"run joint council [council-a + council-b]: [question]"`
+
+**When to use:** Strategic brand, positioning, visual identity, product direction,
+or architecture decisions. Not for implementation tasks — use codebase-context
+or engineering-review for those.
+
+Skill: `skills/advisory-councils/`. Full routing and rules in SKILL.md.
+
+---
+
 ## Assets & References
 
 Brand assets (logos, templates, social media, ratings UI) are in: assets/
