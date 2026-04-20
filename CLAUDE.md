@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 31-03-2026
+> Last updated: 20-04-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -195,6 +195,7 @@ Key knowledge files:
 - knowledge/staffroom-teacher-insights.md — user research, 3 segments, verbatim quotes
 - knowledge/staffroom-content-performance.md — YouTube, Instagram, Meta Ads performance data
 - knowledge/staffroom-ux-constraints.md — non-negotiable UX floors for all design and frontend work
+- knowledge/staffroom-whatsapp-community.md — WhatsApp community analysis: group structure, user profiles, engagement patterns, content strategy evolution (Oct 2024 – Apr 2026). Load when discussing community strategy, teacher engagement, WhatsApp content, or user behavior. Raw chat exports in knowledge/staffroom-whatsapp-community/
 - knowledge/skill-architecture.md — read before creating any new skill
 
 Key skill reference files:
