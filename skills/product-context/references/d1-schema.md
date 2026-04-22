@@ -1,9 +1,9 @@
 ---
 skills: [product-context, codebase-context, engineering-review]
-last_updated: Mar 2026
-source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/)
+last_updated: Apr 2026
+source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/), PRAGMA table_info verified Apr 2026
 staleness_note: >
-  Schema reflects production state as of Mar 2026. Verify against D1 before any
+  Schema reflects production state as of Apr 2026. Verify against D1 before any
   table change. Use PRAGMA table_info(<table>) via Cloudflare MCP or wrangler.
 ---
 
@@ -333,6 +333,78 @@ Records which users have earned the "Contributor" badge (for completing a full r
 
 ---
 
+### `nudge_template_configs` (D1)
+Configuration for WhatsApp nudge message delivery — API credentials and template pointers per slug/provider.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, autoincrement |
+| `slug` | TEXT | NOT NULL — identifies the nudge config (e.g. 'default', 'abandonment') |
+| `display_name` | TEXT | nullable |
+| `api_base_url` | TEXT | NOT NULL — WhatsApp API provider base URL |
+| `customer_id` | TEXT | NOT NULL — provider customer ID |
+| `bot_id` | TEXT | NOT NULL — provider bot/channel ID |
+| `template_name` | TEXT | NOT NULL — WhatsApp template name to use |
+| `namespace` | TEXT | NOT NULL — WhatsApp template namespace |
+| `language_code` | TEXT | default `'en_US'` |
+| `component_spec_json` | TEXT | nullable — JSON string of template component variables |
+| `enabled` | INTEGER | default 1 — 0 = disabled |
+| `created_at` | TEXT | default strftime |
+| `updated_at` | TEXT | default strftime |
+
+**Used by:** `nudge-send.service.ts` (reads config before dispatching WhatsApp messages).
+
+---
+
+### `whatsapp_nudge_templates` (D1)
+Lightweight per-nudge-type template mapping. Simpler than `nudge_template_configs`; keyed by nudge_type.
+
+| Column | Type | Notes |
+|---|---|---|
+| `nudge_type` | TEXT | PK — 'search_intent' \| 'abandonment' \| 'update_is_live' \| 'full_completion' |
+| `template_name` | TEXT | NOT NULL — WhatsApp template name |
+| `template_language` | TEXT | default `'en_US'` |
+| `enabled` | INTEGER | default 1 |
+| `created_at` | TEXT | default datetime('now') |
+| `updated_at` | TEXT | default datetime('now') |
+
+**Used by:** nudge pipeline services (alternate template lookup keyed by nudge type).
+
+---
+
+### `place_location_cache` (D1)
+Cache of resolved city/district/state for Google Places IDs. Powers teacher count geography resolution.
+
+| Column | Type | Notes |
+|---|---|---|
+| `place_id` | TEXT | PK — Google Maps Place ID |
+| `city` | TEXT | nullable |
+| `district` | TEXT | nullable |
+| `state` | TEXT | nullable |
+| `created_at` | INTEGER | unix epoch, NOT NULL |
+| `updated_at` | INTEGER | nullable, unix epoch |
+
+**Used by:** `places.service.ts` (cache lookup before calling Google Places API for city resolution).
+
+---
+
+### `referrals` (D1)
+Records referral relationships between teachers.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, autoincrement |
+| `referrer_id` | TEXT | NOT NULL — D1 users.id of the referring teacher |
+| `referee_id` | TEXT | NOT NULL — D1 users.id of the referred teacher |
+| `referrer_phone` | TEXT | nullable |
+| `referee_phone` | TEXT | nullable |
+| `referral_code` | TEXT | NOT NULL — the code used to track this referral |
+| `created_at` | TEXT | default datetime('now') |
+
+**Used by:** `referral.service.ts` (INSERT when a referred teacher signs up), `user.service.ts` (SELECT for referral stats).
+
+---
+
 ---
 
 ## 2. Dual-Database Tables — Neon Shadows
@@ -354,7 +426,7 @@ The following tables exist in **both** Neon and D1. The **NestJS code exclusivel
 | `phone_otps` | Shadow | **Active** | |
 | `school_details_cache` | Shadow | **Active** | |
 | `unmapped_schools` | Shadow | **Active** | |
-| `top_rated_cache` | Dead | Dead | Not referenced in NestJS code at all |
+| `top_rated_cache` | Dead | Dead (see Section 3) | Not referenced in NestJS code at all |
 
 ---
 
@@ -362,12 +434,44 @@ The following tables exist in **both** Neon and D1. The **NestJS code exclusivel
 
 ## 3. D1 Tables With No Active Code Reference
 
+These tables exist in D1 but are not referenced anywhere in `backend-nest/src/`. Schema is preserved for completeness; they may have been written by legacy CF Workers.
 
-| Table | Notes |
-|---|---|
-| `place_city_cache` | D1-only table (not in Neon). Not referenced anywhere in backend-nest/src/. Possibly written by legacy CF Workers. |
-| `top_rated_cache` | Exists in both Neon and D1. Not referenced in NestJS code. Dead feature. |
+### `place_city_cache` (D1 — no active NestJS reference)
+Rich cache of Google Places data + UDISE school matching for a place ID.
 
+| Column | Type | Notes |
+|---|---|---|
+| `id` | TEXT | PK |
+| `place_id` | TEXT | NOT NULL — Google Maps Place ID |
+| `google_city` | TEXT | nullable |
+| `google_admin_area_level_2` | TEXT | nullable — district from Google |
+| `google_admin_area_level_1` | TEXT | nullable — state from Google |
+| `google_full_address_components` | TEXT | nullable — JSON of full address components |
+| `school_db_school_id` | INTEGER | nullable — matched UDISE school_id |
+| `school_db_block_name` | TEXT | nullable |
+| `school_db_district_name` | TEXT | nullable |
+| `school_db_state_name` | TEXT | nullable |
+| `school_db_address` | TEXT | nullable |
+| `school_db_pincode` | TEXT | nullable |
+| `possible_city_matches` | TEXT | nullable — JSON array of candidate city matches |
+| `normalized_city` | TEXT | nullable |
+| `teacher_count` | INTEGER | default 0 |
+| `data_source` | TEXT | nullable |
+| `last_updated` | TIMESTAMP | default CURRENT_TIMESTAMP |
+| `created_at` | TIMESTAMP | default CURRENT_TIMESTAMP |
+
+### `top_rated_cache` (D1 — no active NestJS reference)
+Cached top-rated school list. Singleton row (id defaulted to 1).
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, default 1 — singleton |
+| `data` | TEXT | NOT NULL — JSON string of cached result |
+| `updated_at` | TEXT | NOT NULL |
+| `created_at` | TEXT | default datetime('now') |
+
+
+---
 
 ---
 
@@ -383,4 +487,9 @@ D1 question_completion_tracking.id  ←→  D1 abandonment_queue.question_tracki
 Neon stepper_form_data.reviewId  ←→  Neon stepper_form_approval.reviewId
 Neon school_mapping.school_id  ←→  Neon schools.school_id
 Neon school_mapping.place_id  ←→  stepper_form_data.placeId
+D1 referrals.referrer_id  ←→  D1 users.id (referrer)
+D1 referrals.referee_id   ←→  D1 users.id (referee)
+D1 referrals.referral_code ←→ Neon "User".referral_code (referral tracking)
+D1 place_location_cache.place_id  ←→  stepper_form_data.placeId (teacher count resolution)
+D1 nudge_template_configs.slug  ←→  nudge_type values in D1 nudges (WhatsApp delivery config)
 ```

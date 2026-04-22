@@ -1,7 +1,7 @@
 ---
 skills: [codebase-context]
-last_updated: Mar 2026
-source: live codebase + infrastructure
+last_updated: Apr 2026
+source: live codebase + infrastructure (package.json verified Apr 2026)
 ---
 
 # Stack Topology
@@ -12,8 +12,8 @@ source: live codebase + infrastructure
 
 | Item | Detail |
 |---|---|
-| Framework | Next.js 16 |
-| UI library | React 19 |
+| Framework | Next.js 16.1.6 |
+| UI library | React 19.2.3 |
 | Styling | Tailwind v4 |
 | State | Redux Toolkit |
 | Port (prod) | :3000 |
@@ -26,7 +26,7 @@ source: live codebase + infrastructure
 | Item | Detail |
 |---|---|
 | Framework | NestJS 11 |
-| DB client | pg (raw Pool, parameterised queries — NOT TypeORM) |
+| DB client | pg (raw Pool, parameterised queries — NOT TypeORM). Note: `@nestjs/typeorm` is listed in package.json but has 0 usages in source — it is an unused ghost dependency. |
 | Auth | Passport/JWT |
 | DB driver | pg (PostgreSQL) |
 | Port (prod) | :9000 |

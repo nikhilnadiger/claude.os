@@ -93,18 +93,24 @@ brand-positioned as Tripadvisor — positive, discovery-oriented.
 - Designing a new feature or critiquing a UI → use product-design
 - Content strategy or brand questions → use content-strategy / brand-custodian
 
-## Key Product Numbers (Mar 2026 — verify against live metrics before use)
+## Key Product Numbers (Apr 22 2026 — verify against live metrics before use)
 
 | Metric | Value |
 |---|---|
-| Sign-ups | 2,905 |
-| Reviews submitted | 635 across 555 schools |
-| Schools with 3+ reviews | 15 |
-| Total searches | 1,408 (108 users searched 3+ times) |
-| Sessions — Clarity 30d | 2,351 |
-| Mobile sessions | 90% |
-| Bengaluru sessions | 44% |
-| Login page exits | 606 — primary drop-off |
+| Sign-ups | 3,272 |
+| WhatsApp verified | 1,520 (46.5% of sign-ups) |
+| Reviews submitted | 838 |
+| Reviews live | 531 |
+| Reviews fully complete | 336 (~40%) |
+| Median teacher salary | ₹30,000/month (from 418 salary reviews) |
+| Schools with 3+ live reviews | 7 (6 identified + 1 null-placeId group) |
+| Schools ever searched | 2,557 of 44,494 mapped |
+| Sessions — Clarity 30d | 3,703 |
+| Mobile sessions | ~90% |
+| Bengaluru sessions | ~31% (down from 44% — traffic diversifying) |
+| Login page exits | 662 — primary drop-off |
+| WhatsApp unverified | 1,752 of 3,272 accounts (53.5%) lack WhatsApp verification — includes pre-OTP-era Old Users (Type 3) who predate mandatory OTP, not purely a current funnel drop-off |
+| CAC (blended) | ~₹32/sign-up |
 | PMF threshold | ≥70% searches yield ≥3 reviews in 7 cities |
 
 ## Routing
@@ -124,6 +130,6 @@ brand-positioned as Tripadvisor — positive, discovery-oriented.
 
 1. Identify which routing path applies (table above)
 2. Load the relevant reference file or live reference
-3. For metrics: always note "refresh before use" — figures are Mar 2026 snapshots
+3. For metrics: always note "refresh before use" — figures are Apr 2026 snapshots
 4. If answering a question that spans both data flow and API: read both files
 5. **To update the user journey document:** load `references/user-journey-update.md` and follow the workflow there

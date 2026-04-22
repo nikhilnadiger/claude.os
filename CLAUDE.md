@@ -53,9 +53,9 @@ Full metrics: `knowledge/staffroom-product-metrics.md` (refresh before any decis
 
 Structural implications (always apply):
 - **90% mobile** — every UI/UX decision must be mobile-first, no exceptions
-- **Bengaluru is 44% of sessions** — primary city for content and product focus
-- **Login page is primary drop-off** (606 exits) — conversion priority
-- **~1,957 sessions untracked** — Instagram Ads traffic missing UTMs; fix on all paid links
+- **Bengaluru is ~31% of sessions** (down from 44% — traffic diversifying nationally) — primary city for content and product focus
+- **Login page is primary drop-off** (662 exits, Apr 2026) — conversion priority
+- **~3,309 of 3,703 sessions untracked** — Meta Ads traffic missing UTMs; fix on all paid links
 - **Instagram Ads is a primary traffic source** — WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
 
 Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 44×44pt touch targets, 360px mobile viewport, ≤0.6s animations, 2G-capable, no auto-play media.
@@ -90,7 +90,7 @@ Full competitive analysis: knowledge/staffroom-competitive-landscape.md
 
 GTM strategy is city-by-city. Full PMF definition: ≥70% searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density). 1-2 cities is the current step toward that goal.
 
-Current baseline (Mar 2026): 15 schools nationwide have 3+ reviews. 1,408 total searches logged, 108 users searched 3+ times. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
+Current baseline (Apr 2026): 7 schools nationwide have 3+ live reviews (the Mar 2026 figure of 15 was incorrect — Apr 22 2026 live Neon query is authoritative). 1,408 total school page visit events in D1, 108 users with 3+ visits. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
 
 ---
 

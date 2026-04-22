@@ -1,11 +1,11 @@
 ---
 skills: [product-context, codebase-context, engineering-review]
-last_updated: Mar 2026
-source: Neon pg_dump --schema-only (staffroom-schema.sql), NestJS codebase analysis (backend-nest/src/)
+last_updated: Apr 2026
+source: NestJS codebase analysis (backend-nest/src/) + full Neon pg_dump (Apr 2026, 180KB). Full dump covers all application tables including stepper_form_data, "User", stepper_form_approval, school_mapping, save_school_by_user, whatsapp_users, etc.
 staleness_note: >
-  Schema reflects production state as of Mar 2026. Verify against Neon and D1 before any
-  migration, column addition, or query change. For Neon: pg_dump --schema-only. For D1:
-  PRAGMA table_info(<table>) via Cloudflare MCP or wrangler.
+  Full pg_dump obtained Apr 2026 (180KB). All active table schemas (Section 1) have been
+  verified against both the live codebase and the full pg_dump. Column presence and types
+  are confirmed unless explicitly noted otherwise.
 ---
 
 # staffroom — Neon Schema
@@ -142,7 +142,7 @@ Moderation flags for each review field. Joined with `stepper_form_data` via `rev
 | `whatYouLikeApproved` | boolean | NOT NULL, default true | |
 | `whatToImproveApproved` | boolean | NOT NULL, default true | |
 | `highestQualificationApproved` | boolean | NOT NULL, default true | |
-| `workingWithManagementApproved` | boolean | NOT NULL, default true | (inferred — queried by schools.service.ts but not in schema listing; likely present) |
+| `workingWithManagementApproved` | **NOT IN SCHEMA** | — | Apr 2026 pg_dump confirms this column does NOT exist in stepper_form_approval. schools.service.ts may reference it but the column is absent from the actual table. Do not assume its presence. |
 | `createdAt` | timestamp(3) | NOT NULL, default NOW | |
 | `updatedAt` | timestamp(3) | NOT NULL | |
 
@@ -168,6 +168,8 @@ Maps Google Place IDs to UDISE school IDs. Central bridge table.
 | `district_name` | text | nullable | |
 | `state_name` | text | nullable | |
 | `pincode_source` | text | nullable | e.g. 'google', 'nominatim', 'udise' |
+| `first_searched_at` | timestamp | nullable | First time a teacher searched for this school. Confirmed in Apr 2026 pg_dump — not previously documented. |
+| `last_searched_at` | timestamp | nullable | Most recent time a teacher searched for this school. Confirmed in Apr 2026 pg_dump — not previously documented. |
 
 **Used by:** `schools.service.ts`, `teacher-counts.service.ts`, `places.service.ts`, `school-details.service.ts`, admin services.
 
@@ -242,20 +244,21 @@ UDISE infrastructure/facility data per school per year.
 ---
 
 ### `save_school_by_user` (Neon)
-Schools bookmarked by a user.
+Schools bookmarked by a user. Schema confirmed by Apr 2026 pg_dump.
 
 | Column | Type | Constraints |
 |---|---|---|
 | `id` | text | PK (UUID) |
-| `userId` | text | NOT NULL, FK → User.id |
-| `placeId` | text | nullable |
-| `schoolId` | integer | nullable |
-| `name` | text | NOT NULL |
-| `address` | text | NOT NULL |
+| `userId` | text | NOT NULL, FK → User.id — unique per user (userId_placeId composite unique index) |
+| `placeId` | text | NOT NULL — Google Maps Place ID |
+| `schoolId` | integer | nullable — UDISE school_id if resolved |
+| `name` | text | NOT NULL — denormalised school name |
+| `address` | text | NOT NULL — denormalised address |
 | `url` | text | nullable |
-| `savedAt` | timestamp(3) | NOT NULL, default NOW |
+| `savedAt` | timestamp(3) | NOT NULL, default CURRENT_TIMESTAMP |
 | `updatedAt` | timestamp(3) | NOT NULL |
 
+**Indexes:** `userId_placeId` (unique composite), `placeId_idx`, `userId_idx`.
 **Used by:** `saved-schools.service.ts`.
 
 ---
@@ -278,18 +281,6 @@ WhatsApp-verified user records. One row per verified phone number.
 **Used by:** `whatsapp.service.ts`, admin users service.
 
 ---
-
-### `searches` (Neon)
-Search query log. One row per search request from the `/search/resolve` endpoint.
-
-| Column | Type | Notes |
-|---|---|---|
-| `name` | text | The search term entered by the teacher — NOT the teacher's name |
-| *(additional columns — verify against pg_dump for full schema)* | | |
-
-**Key distinction:** `name` stores the search query string (e.g., "Delhi Public School Bengaluru"), not any personal identifier. Do not confuse with teacher name fields.
-
-**Used by:** `search.service.ts` (INSERT on every `/search/resolve` call). Referenced for search-count metrics in `staffroom-product-metrics.md`.
 
 ---
 
@@ -342,9 +333,9 @@ One row per pincode (DISTINCT ON pincode, preferring Delivery offices > HO > PO 
 | Enum | Values | Usage |
 |---|---|---|
 | `BadgeType` | FIRST_VOICE, ACTIVE_VOICE, GUIDE, COMMUNITY_BUILDER, MOVEMENT_LEADER | UserBadge table (inactive) |
-| `DeliveryStatus` | SENT, DELIVERED, OPENED, CLICKED, BOUNCED, UNSUBSCRIBED | EmailLog (legacy) |
-| `EmailType` | (various) | EmailLog (legacy) |
-| `FormVerificationStatus` | PENDING, APPROVED, REJECTED | FormReview (legacy) |
+| `DeliveryStatus` | SENT, DELIVERED, OPENED, CLICKED, BOUNCED, FAILED | EmailLog (legacy). Note: previous doc listed UNSUBSCRIBED — pg_dump Apr 2026 confirms FAILED. |
+| `EmailType` | WELCOME, WELCOME_REMINDER, SEARCH_CONFIRMATION, REVIEW_REMINDER, REVIEW_SUBMITTED, REVIEW_VERIFIED, SHARE_REMINDER, LEADERBOARD_MENTION, SCHOOL_OUTREACH | EmailLog (legacy) |
+| `FormVerificationStatus` | 'Null', 'True', 'False' (string literals, not SQL NULL) | FormReview (legacy). Note: previous doc listed PENDING/APPROVED/REJECTED — pg_dump Apr 2026 corrects this. |
 | `IssueType` | (various) | Issue table (inactive) |
 | `NextEmailType` | (various) | UserEmailState (inactive) |
 | `ReviewTag` | (various) | Review (legacy) |
@@ -373,8 +364,8 @@ These tables exist in the Neon schema but have **zero references** in `backend-n
 | `"EmailLog"` | Email pipeline (no longer in use) |
 | `"UserEmailState"` | Email state machine (no longer in use) |
 | `"UserBadge"` | Badge system (replaced by D1 badge_contributor) |
-| `"UserLocationPincode"` | Replaced by UserLoginSession.pincode |
-| `"UserSearch"` | Replaced by D1 user_tracking |
+| `"UserLocationPincode"` | Replaced by UserLoginSession.pincode. Schema confirmed by Apr 2026 pg_dump: `id` (text PK), `userId` (text NOT NULL, unique), `pincode` (text NOT NULL), `createdAt`/`updatedAt` (timestamp(3)). |
+| `"UserSearch"` | Replaced by D1 user_tracking. Schema confirmed Apr 2026 pg_dump: `id` (text PK), `userId` (text NOT NULL), `placeId` (text NOT NULL), `formattedAddress` (text NOT NULL), `name` (text NOT NULL — school name, not search query), `createdAt`/`updatedAt` (timestamp(3)). **Not a search query log** — each row records a teacher visiting a specific Place ID. Do not confuse with a text-search log. |
 | `"UnfoundSchoolSearch"` | Unused |
 | `"Issue"` | Internal issue tracking, unused |
 | `"AiSalaryData"`, `"IndeedSalaryData"`, `"NaukriSalaryData"` | Salary research data, not queried |
@@ -391,10 +382,11 @@ These tables exist in the Neon schema but have **zero references** in `backend-n
 | `short_form_section` | Old form structure, not queried |
 | `fetch_status` | UDISE data fetch status, not queried |
 | `phone_verified_users` | Pre-whatsapp_users table |
-| `place_location_cache` | Google place resolution cache (NOT D1 place_city_cache — different table entirely) |
+| `place_location_cache` | Google place resolution cache. Legacy — not referenced in backend-nest/src/. Note: a table named `place_location_cache` ALSO exists in D1 (active, documented in d1-schema.md) with the same purpose and similar schema. The Neon version is the old copy; the D1 version is active. |
 | `"schoolMails"` | School email outreach list, not queried |
 | `school_status_ok` | Not queried |
 | `"UserEmailState"` | Not queried |
+| `worker_user_jwt_data` | Legacy JWT session store from old Cloudflare Worker auth (backend-deprecated/). Not referenced in backend-nest/src/. **NOT present in the Apr 2026 full pg_dump (180KB)** — table was likely dropped. Do not assume it exists. Previous doc listed this with a "schema confirmed" note based on a partial dump — that was incorrect. |
 
 
 ---

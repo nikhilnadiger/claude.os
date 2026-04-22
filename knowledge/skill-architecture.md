@@ -1,5 +1,5 @@
 ---
-last_updated: Mar 2026 (31)
+last_updated: Apr 2026 (40+)
 maintained_by: Nikhil Nadiger
 purpose: >
   Structural standards for staffroom's claude.os skill ecosystem.
@@ -66,6 +66,7 @@ Current knowledge docs:
 - staffroom-competitive-landscape.md — competitor analysis
 - staffroom-ux-constraints.md — non-negotiable UX floors for all design/frontend work
 - staffroom-user-journey.md — screen-by-screen user journey: all screens, user types, entry points, error states, system behaviors, known limitations. Verified from production codebase. Update workflow: trigger "update user journey" with product-context skill → follows product-context/references/user-journey-update.md
+- refresh-protocol.md — step-by-step protocol for full claude.os refresh (analytics, metrics, content, schema, API). Excludes competitor landscape, LinkedIn, and user-journey (those have separate protocols).
 - skill-architecture.md — this file
 
 Skill reference docs (in skills/*/references/):
@@ -199,13 +200,14 @@ A file without a `last_updated` date should be treated as potentially stale.
 
 | Event | Files to update |
 |---|---|
-| New analytics data (Clarity, Neon) | staffroom-product-metrics.md, staffroom-ux-constraints.md |
-| New content published | staffroom-content-performance.md |
-| Codebase architecture change | stack-topology.md, deployment-guide.md |
-| Codebase behavior change (new screen, flow change, error change, feature removed) | staffroom-user-journey.md — trigger "update user journey" with product-context skill |
-| New competitor action | staffroom-competitive-landscape.md |
+| New analytics data (Clarity, Neon) | staffroom-product-metrics.md, staffroom-ux-constraints.md — see refresh-protocol.md for full procedure |
+| New content published | staffroom-content-performance.md — see refresh-protocol.md |
+| Codebase architecture change | stack-topology.md, deployment-guide.md, api-inventory.md, d1-schema.md — see refresh-protocol.md |
+| Codebase behavior change (new screen, flow change, error change, feature removed) | staffroom-user-journey.md — trigger "update user journey" with product-context skill (separate from refresh-protocol) |
+| New competitor action | staffroom-competitive-landscape.md — trigger separately, NOT part of refresh-protocol |
 | New teacher research | staffroom-teacher-insights.md |
 | New skill created | CLAUDE.md (Assets & References), skill-architecture.md (ecosystem table) |
+| Full claude.os refresh needed | Follow refresh-protocol.md — covers analytics, metrics, content, schema, API. Excludes competitor landscape, LinkedIn, user-journey. |
 
 ### Update Proposal Process
 
@@ -245,6 +247,16 @@ skill system but may still appear in other locations:
 | knowledge/staffroom-ux-constraints.md | "Staffroom's user base" — capitalised | Brand rule violation — changed to "staffroom's" | Fixed in Task 8 |
 | knowledge/skill-architecture.md | "The 7-Skill Ecosystem" — nikhil-linkedin omitted from table, count wrong | Table updated to 8 skills across 4 clusters with nikhil-linkedin added | Fixed in Task 8 |
 | knowledge/staffroom-teacher-insights.md | 30.7% completion rate appeared to contradict the 40% figure in product-metrics.md and ux-constraints.md | Added clarifying note: D1 measures all form-start attempts (broader denominator); Neon measures completions among submitted reviews | Fixed in Task 8 |
+| product-context/references/api-inventory.md | Auth module documented as `/auth/send-otp`, `/auth/verify`, `/auth/me` | All wrong. Correct: `/whatsapp/send-otp`, `/whatsapp/verify-otp`, `/whatsapp/update-profile`. No `/auth/me` endpoint — session verified via `GET /user/context`. Admin auth only is at `/admin/login`. | Fixed Apr 2026 |
+| product-context/references/api-inventory.md | 10+ modules entirely missing from the inventory | Added: WhatsApp Auth, User, Saved Schools, Places, Teacher Counts, Top Rated, Tracking, Insights, Referral, Nudge redirect. Expanded Admin routes. | Fixed Apr 2026 |
+| product-context/references/data-flow.md | Flow 3 step 4: "stepper_form_approval records created with 5 boolean approval fields — Approval is admin-reviewed" | stepper_form_approval exists in schema but is NEVER written to by any code. No moderation pipeline is implemented. | Fixed Apr 2026 |
+| product-context/references/data-flow.md | Flow 4 auth endpoints: `/auth/send-otp`, `/auth/verify`, `GET /auth/me` | All wrong — see api-inventory.md fix above. Also updated login exit count: 606 → 662. | Fixed Apr 2026 |
+| product-context/references/data-flow.md | Flow 5 nudge: "POST /nudge → nudge.service.ts → sends WhatsApp message directly" | Completely wrong. Nudges are queue-based: event → D1 queue table INSERT → cron triggers `POST /admin/cron/trigger` every 5 min → nudge-process.service.ts reads queue → nudge-send.service.ts dispatches. | Fixed Apr 2026 |
+| product-context/references/d1-schema.md | 4 D1 tables entirely undocumented: nudge_template_configs, place_location_cache, whatsapp_nudge_templates, referrals | Added all 4 with full PRAGMA schemas. Also documented full schema for place_city_cache and top_rated_cache (Section 3). | Fixed Apr 2026 |
+| codebase-context/references/stack-topology.md | Framework versions listed as "Next.js 16" and "React 19" (no patch versions) | Updated to Next.js 16.1.6 and React 19.2.3. Added note: @nestjs/typeorm is in package.json but 0 usages in source — ghost dependency. | Fixed Apr 2026 |
+| knowledge/staffroom-product-metrics.md | All Mar 2026 figures outdated (2,905 sign-ups, 635 submitted, 255 full_complete, 15 schools with 3+ reviews, Bengaluru 44%) | Updated to Apr 2026: 824 submitted, 521 live, 329 full_complete, Bengaluru ~31%. Flagged 15→6 schools discrepancy for Nikhil to verify. | Fixed Apr 2026 |
+| knowledge/staffroom-ux-constraints.md | Mar 2026 figures throughout; no recording-based behavioural evidence | Updated to Apr 2026 figures. Added recording-confirmed patterns for login drop-off (WebView/dead click), school page dead clicks (non-interactive elements that look clickable), and review form Back/Next button junction. | Fixed Apr 2026 |
+| knowledge/staffroom-content-performance.md | Mar 2026 data; 261 videos, 133K views, 7,563 hours; Bengaluru 44% | Updated to Apr 2026: 260 videos, 242,089 views (3,807 hours — different time window, noted). IG: 1,072,202 total views, 12,086 shares (full Jan–Dec 2025). City concentration note updated. | Fixed Apr 2026 |
 
 ---
 
