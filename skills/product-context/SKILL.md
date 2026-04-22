@@ -26,12 +26,22 @@ triggers:
   - "what is the review submission flow"
   - "how does search work"
   - "API inventory"
+  - "update user journey"
+  - "refresh user journey"
+  - "what does the user see on"
+  - "screen behaviour"
+  - "OTP flow"
+  - "nudge system"
+  - "career insights flow"
+  - "unreachable features"
+  - "error message on"
 
 uses_references:
   - references/data-flow.md
   - references/api-inventory.md
   - references/neon-schema.md
   - references/d1-schema.md
+  - references/user-journey-update.md
 
 related_skills:
   - product-design
@@ -44,6 +54,9 @@ live_references:
     tool: read_file
   - label: Product Metrics (platform counts, Clarity analytics — refresh before use)
     path: claude.os/knowledge/staffroom-product-metrics.md
+    tool: read_file
+  - label: User Journey (all screens, entry points, error states, system behaviors — verified from codebase)
+    path: claude.os/knowledge/staffroom-user-journey.md
     tool: read_file
 ---
 
@@ -98,12 +111,14 @@ brand-positioned as Tripadvisor — positive, discovery-oriented.
 
 | Question type | Where to look |
 |---|---|
-| User journey / data flow | `references/data-flow.md` |
+| User journey / screen behaviour / entry points / error states / known limitations | Live reference: `knowledge/staffroom-user-journey.md` |
+| Technical data flows (auth, search, nudge, review) | `references/data-flow.md` |
 | API endpoints / contracts | `references/api-inventory.md` |
 | Neon DB tables / columns / schema | `references/neon-schema.md` |
 | D1 tables / dual-DB / cross-DB relationships | `references/d1-schema.md` |
-| User research / teacher segments | Live reference: staffroom-teacher-insights.md |
-| Platform metrics / Clarity data | Live reference: staffroom-product-metrics.md |
+| User research / teacher segments | Live reference: `knowledge/staffroom-teacher-insights.md` |
+| Platform metrics / Clarity data | Live reference: `knowledge/staffroom-product-metrics.md` |
+| Update user journey to latest codebase | `references/user-journey-update.md` |
 
 ## Workflow
 
@@ -111,3 +126,4 @@ brand-positioned as Tripadvisor — positive, discovery-oriented.
 2. Load the relevant reference file or live reference
 3. For metrics: always note "refresh before use" — figures are Mar 2026 snapshots
 4. If answering a question that spans both data flow and API: read both files
+5. **To update the user journey document:** load `references/user-journey-update.md` and follow the workflow there

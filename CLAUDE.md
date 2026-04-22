@@ -196,6 +196,7 @@ Key knowledge files:
 - knowledge/staffroom-content-performance.md — YouTube, Instagram, Meta Ads performance data
 - knowledge/staffroom-ux-constraints.md — non-negotiable UX floors for all design and frontend work
 - knowledge/staffroom-whatsapp-community.md — WhatsApp community analysis: group structure, user profiles, engagement patterns, content strategy evolution (Oct 2024 – Apr 2026). Load when discussing community strategy, teacher engagement, WhatsApp content, or user behavior. Raw chat exports in knowledge/staffroom-whatsapp-community/
+- knowledge/staffroom-user-journey.md — screen-by-screen user journey: all screens, user types, entry points, error states, system behaviors, known limitations. Verified from production codebase. Load for any product, design, engineering, or content task requiring precise user-PoV context. To update to latest codebase: trigger "update user journey" with product-context skill loaded.
 - knowledge/skill-architecture.md — read before creating any new skill
 
 Key skill reference files:

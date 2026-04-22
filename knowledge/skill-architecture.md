@@ -65,6 +65,7 @@ Current knowledge docs:
 - staffroom-product-metrics.md — platform counts, Clarity analytics
 - staffroom-competitive-landscape.md — competitor analysis
 - staffroom-ux-constraints.md — non-negotiable UX floors for all design/frontend work
+- staffroom-user-journey.md — screen-by-screen user journey: all screens, user types, entry points, error states, system behaviors, known limitations. Verified from production codebase. Update workflow: trigger "update user journey" with product-context skill → follows product-context/references/user-journey-update.md
 - skill-architecture.md — this file
 
 Skill reference docs (in skills/*/references/):
@@ -201,6 +202,7 @@ A file without a `last_updated` date should be treated as potentially stale.
 | New analytics data (Clarity, Neon) | staffroom-product-metrics.md, staffroom-ux-constraints.md |
 | New content published | staffroom-content-performance.md |
 | Codebase architecture change | stack-topology.md, deployment-guide.md |
+| Codebase behavior change (new screen, flow change, error change, feature removed) | staffroom-user-journey.md — trigger "update user journey" with product-context skill |
 | New competitor action | staffroom-competitive-landscape.md |
 | New teacher research | staffroom-teacher-insights.md |
 | New skill created | CLAUDE.md (Assets & References), skill-architecture.md (ecosystem table) |
