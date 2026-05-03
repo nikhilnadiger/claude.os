@@ -24,7 +24,7 @@ belongs to admin login only (see Admin Routes below).
 |---|---|---|---|
 | POST | `/whatsapp/send-otp` | None | Sends OTP to teacher's phone via WhatsApp. Body: `{ phone: string }` |
 | POST | `/whatsapp/verify-otp` | None | Verifies OTP. Body: `{ phone: string, otp: string }`. Returns JWT in response body. |
-| POST | `/whatsapp/update-profile` | JWT required | Updates teacher's name, designation, or other profile fields post-login. |
+| POST | `/whatsapp/update-profile` | JWT required | Updates teacher's pincode and occupation post-login (profile completion step). |
 
 > There is **no `/auth/send-otp`**, **no `/auth/verify`**, and **no `/auth/me`** endpoint
 > for teachers. Session verification is done via `GET /user/context` (see User Module below).
@@ -169,7 +169,7 @@ endpoints in any public-facing frontend code.
 **Cron:**
 | Path | Description |
 |---|---|
-| `POST /admin/cron/trigger` | Manually triggers the nudge processing pipeline. |
+| `POST /admin/cron/trigger` | Manually triggers the nudge processing pipeline (admin use only). The automated nudge schedule runs on an internal NestJS `@Cron('*/5 * * * *')` — this endpoint is not the scheduled mechanism. |
 | `GET /admin/cron/status` | Returns cron job status. |
 | `GET /admin/cron/history` | Returns recent cron run history. |
 

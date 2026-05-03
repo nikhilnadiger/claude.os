@@ -1,8 +1,8 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 22 April 2026  
+**Codebase last verified:** 03 May 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
 
 ---
@@ -32,7 +32,7 @@ Has never used staffroom. No account exists.
 
 - Arrives at the public landing page
 - Must verify their phone number via WhatsApp OTP to create an account
-- After OTP verification: must fill in a short profile (name, pincode, occupation) — all three required, none can be skipped
+- After OTP verification: must fill in a short profile (pincode and occupation) — both required, neither can be skipped
 - Gets full access to all features once profile is saved
 - First thing they see after profile: the home page, all Career Insight cards locked
 
@@ -266,10 +266,9 @@ A banner above the phone input:
 
 **State E — Profile step (appears for New Users, or users with incomplete profiles):**
 - Heading: *"Almost There!"*
-- Name field (text, required)
 - Pincode field (6 digits, required)
 - Occupation: four radio buttons — Teaching staff / Non-Teaching staff / Principal / Others
-- **Continue** button — disabled until all three fields are filled and valid
+- **Continue** button — disabled until both fields are filled and valid
 
 **State F — Loading overlay:**
 - Spinner animation
@@ -324,7 +323,7 @@ A banner above the phone input:
 
 | Action | What happens |
 |--------|-------------|
-| Fill name + pincode + select occupation, then click **Continue** | Loading state, then profile saved, then Home page (or original destination). |
+| Fill pincode + select occupation, then click **Continue** | Loading state, then profile saved, then Home page (or original destination). |
 | Leave any field blank or invalid | Continue button stays disabled — cannot proceed |
 | Enter invalid pincode (not exactly 6 digits) | Error: *"Please enter a valid 6-digit pincode"* |
 | Close browser mid-profile | Account was created during OTP verification, but profile is incomplete. Next time this phone signs in, the profile step will appear again. |
@@ -363,7 +362,7 @@ A banner above the phone input:
 9. If a referral code was stored in the browser (from Entry 5): links the new user to the referrer and increments the referrer's count. This runs in the background and does not slow down the login response.
 
 **When "Continue" (Profile step) is clicked:**
-1. Validates name (must not be empty), pincode (must be exactly 6 digits), occupation (must be selected)
+1. Validates pincode (must be exactly 6 digits) and occupation (must be selected)
 2. Saves pincode and occupation to the user's record in the database
 3. Generates a fresh login session and stores it
 4. Fires a **"Complete Registration" event** to Meta's advertising platform — includes the phone number in a one-way hashed form (for privacy compliance). This is used to measure ad conversion. Runs server-side in addition to the browser-side pixel.
@@ -430,7 +429,7 @@ Three items — Schools | Your Experience | Community
 | Click a locked insight card | Prompt to continue or start the review form |
 | Click an unlocked insight card | Shows the user's data for that card |
 | Click **Invite Colleague** (visible only when all 5 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
-| Click hamburger menu | Dropdown opens: **Help a Friend** / **Your Profile** / **Sign out** |
+| Click hamburger menu | Dropdown opens: **Help a Friend** / **Your Profile** / **Sign out** — with a footer below the menu items showing "staffroom powered WIP Technology Solutions Private Limited" and Instagram + YouTube icons |
 | Click **Help a Friend** | Share dialog for the staffroom platform (not school-specific) |
 | Click **Your Profile** | Profile page |
 | Click **Sign out** | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
@@ -649,7 +648,7 @@ User must search for and select a school before the form appears.
 
 **The review form — full sequence:**
 
-The form has a gate question, then six steps, with two insight reveal screens appearing between steps. Progress bar shows *"Section N/6"* at the top.
+The form has a gate question, then six steps, with two insight reveal screens appearing between steps. Progress bar shows *"N/6"* at the top (e.g., "1/6", "2/6").
 
 **Gate — "Have you worked here recently?"**
 Three options: Yes / No / No, but recently worked. Single selection required.
@@ -753,9 +752,9 @@ Two required free-text fields: what you like about working here; what needs impr
 | State label | Condition |
 |------------|-----------|
 | `s0_only` | Gate question answered |
-| `s1_complete` | Gate + Steps 1–2 fully answered |
-| `s2_step2_complete` | Gate + Steps 1–4 fully answered |
-| `full_complete` | Gate + Steps 1–6 fully answered |
+| `s1_complete` | Gate + Step 1 fully answered (Overall Experience rating) |
+| `s2_step2_complete` | Gate + Step 1 + Step 2 fully answered (salary and work-from-home days) |
+| `full_complete` | Gate + all steps fully answered (qualitative comments in Step 6 filled) |
 
 This completion state drives which Career Insight cards are unlocked.
 
@@ -820,6 +819,9 @@ The *"Saving..."* indicator disappears silently. No error is shown to the user. 
 - Dialog shows: all review details, benefits (up to 4 shown), salary on time, written contract status
 - Dialog has one action button: **Visit School Page**
 
+**Sign Out button:**
+A dedicated "Sign out" button at the bottom of the page (red tinted, below all other content). Signs the user out immediately.
+
 **Career Insights card (always shown below My Experiences — three states):**
 
 | User's review state | Card shown | What it says | Tapping goes to |
@@ -844,6 +846,7 @@ When no reviews exist, this card is the primary content of the My Experiences se
 | Tap *"Share your experience and find out"* (insight card) | Share Experience page |
 | Tap *"Continue →"* (partial insights card) | Share Experience page, pre-filled with that school's answers |
 | Tap *"See your career insights"* (completed card) | Home page, Career Insights tab |
+| Tap **Sign out** (button at bottom of page) | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
 
 **What users CANNOT do on this page:**
 - Edit their name, pincode, or occupation — no edit profile feature exists
@@ -888,7 +891,7 @@ When no reviews exist, this card is the primary content of the My Experiences se
 #### What happens (fully invisible to user)
 
 1. Server reads the referral code from the URL
-2. Validates the code format (must be 4–32 characters, letters and numbers only)
+2. Validates the code format (must be 4–32 characters: letters, numbers, underscores, and hyphens allowed)
 3. Checks for a destination in the `redirect` URL parameter
 
 **Redirect logic:**
@@ -949,7 +952,7 @@ SCREEN 2: Login Page (/login)
     [WAIT: 1–3 seconds verification]
     ↓ OTP verified — New User detected
     ↓ Profile step appears
-    ↓ User enters name, pincode, occupation, clicks Continue
+    ↓ User enters pincode, selects occupation, clicks Continue
     [WAIT: 1–2 seconds save]
     → Meta "CompleteRegistration" event fired
 SCREEN 3: Home Page (/home)
@@ -978,7 +981,7 @@ SCREEN 2: Login Page (/login)
     ↓ Phone step → OTP step
     [WAIT: WhatsApp message, 60s countdown, OTP entry]
     ↓ OTP verified — New User
-    ↓ Profile step → fills name, pincode, occupation
+    ↓ Profile step → fills pincode, occupation
     [WAIT: save, 1–2 seconds]
     → User returned to original school page
 SCREEN 4: School Profile (/school/...)
@@ -1045,7 +1048,7 @@ SCREEN 3: Home Page (/home) [or original destination]
 
 ### Journey F — Returning User via WhatsApp Nudge
 
-Scenario: user started the review gate but didn't complete Step 1. staffroom sends an "abandonment" nudge.
+Scenario: user started the review gate but didn't complete Step 1. staffroom sends a `ratings1_nudge_042026` message.
 
 ```
 User receives WhatsApp message from staffroom
@@ -1096,7 +1099,7 @@ SCREEN 3: Home Page (/home)
 
 [If profile incomplete:]
 SCREEN 2: Login Page — Profile step
-    ↓ User fills pincode + occupation + name → Continue
+    ↓ User fills pincode + occupation → Continue
 SCREEN 3: Home Page (/home)
 ```
 
@@ -1164,9 +1167,9 @@ Cards unlock progressively as the user completes more of the review form. There 
 | What the user has completed | Backend state | Cards unlocked |
 |----------------------------|--------------|---------------|
 | Nothing, or gate only answered | `s0_only` | None — all 5 cards show *"Share your experience to unlock"* |
-| Gate + Steps 1–2 answered (Overall Experience + Salary) | `s1_complete` | Card A (school quality percentile) |
-| Gate + Steps 1–4 answered (+ Benefits + Deductions) | `s2_step2_complete` | Card A + Card B (salary percentile) |
-| Gate + Steps 1–6 fully answered (all steps complete) | `full_complete` | All 5 cards. *"Invite Colleague"* card also appears. |
+| Gate + Step 1 answered (Overall Experience rating submitted) | `s1_complete` | Card A (school quality percentile) |
+| Gate + Step 1 + Step 2 answered (salary and work-from-home days added) | `s2_step2_complete` | Card A + Card B (salary percentile) |
+| Gate + all steps fully answered (including qualitative comments in Step 6) | `full_complete` | All 5 cards. *"Invite Colleague"* card also appears. |
 
 ---
 
@@ -1210,22 +1213,32 @@ staffroom automatically sends WhatsApp messages to users to encourage them to co
 
 Not all nudge types in the codebase are actually sent automatically. The distinction matters:
 
-**Active nudges** — have a dedicated queue table and are processed every 5 minutes:
+**5 live WhatsApp messages** staffroom sends to users:
 
-| Nudge type | Exact trigger condition | Where the link goes |
-|-----------|------------------------|-------------------|
-| `abandonment` | Gate answered (`section_zero_completed = 1`) AND Step 1 not yet completed (`section_one_completed = 0`) | `/share-experience` (pre-filled form) |
-| `update_is_live` | Step 1 completed (`section_one_completed = 1`) AND form not fully done (`is_full_complete = 0`) | `/share-experience` (to continue) |
-| `full_completion` | Form fully complete (`is_full_complete = 1`) | Home or career insights |
-| `search_intent` | Entry exists in `search_intent_queue` with unprocessed status | School page or home |
+| WhatsApp message sent | Queue table processed | Trigger condition | Where the link goes |
+|----------------------|----------------------|------------------|-------------------|
+| `otp` | — (not a nudge queue) | User requests login OTP | — (auth flow only, not a nudge) |
+| `initiation_nudge_042026` | `initiation_nudge_queue` | User signed up but has not answered the gate question | `/share-experience` |
+| `ratings1_nudge_042026` | `abandonment_queue` | Gate answered but Step 1 not completed | `/share-experience` (pre-filled) |
+| `salary_nudge_042026` | `update_is_live_queue` | Step 1 completed but salary not yet added | `/share-experience` (to continue) |
+| `completion_nudge_042026` | `completion_nudge_queue` | Salary added but qualitative steps not complete | `/share-experience` (to continue) |
 
-**Stale nudges** — defined in code but have no queue processor. Can only be sent manually via the admin test tool. Never sent automatically:
+**Note on naming:** The queue table names (`abandonment_queue`, `update_is_live_queue`) are from an earlier version of the system and were reused in the April 2026 refactor. The message type strings actually sent to users are the `_042026` names above.
 
-`search_return`, `first_nudge`, `progress_nudge`, `completion_nudge`, `contributor_nudge`
+**Note on `otp`:** The OTP message is sent by the auth service during login — it is not part of the nudge queue system and is not processed by the nudge scheduler.
+
+**Delivery constraints:**
+- Maximum 2 nudges per user per school
+- Maximum 1 marketing message per user per 24 hours
+- Each nudge type has a kill switch: it is cancelled if the user has already progressed past the trigger condition by the time it is processed
+
+**Stale nudge types** — defined in code but have no active queue processor. Never sent automatically:
+
+`abandonment`, `update_is_live`, `full_completion`, `search_intent`, `search_return`, `first_nudge`, `progress_nudge`, `completion_nudge`, `contributor_nudge`
 
 **Message content:** The text of each WhatsApp message is configured in staffroom's WhatsApp Business account. School name and local teacher count are inserted dynamically. The exact message wording is not stored in the app's code.
 
-**Scheduling:** Every 5 minutes. The nudge processor is triggered externally (via a scheduled call to `POST /admin/cron/trigger`) — not by an internal NestJS timer. When it fires, it processes all four active queue tables and dispatches any pending WhatsApp messages.
+**Scheduling:** Every 5 minutes. The nudge processor runs on an internal NestJS scheduler (`@Cron('*/5 * * * *')`) — not triggered externally. When it fires, it calls `processAllQueuesWithPriorityAndCycle()`, which processes all four active queue tables and dispatches any pending WhatsApp messages.
 
 ---
 
@@ -1246,7 +1259,7 @@ User sees: only the destination page. The `/nudge/go` step is invisible (too fas
 
 ### Queue System
 
-Each active nudge type has its own queue table in staffroom's database. When a triggering event happens (e.g., user answers the gate question), a record is added to the relevant queue. The external cron trigger runs every 5 minutes, reads each queue for unprocessed records, sends the WhatsApp message, and marks the record as processed. Failed sends are marked as failed and not retried automatically.
+Each active nudge type has its own queue table in staffroom's database. When a triggering event happens (e.g., user answers the gate question), a record is added to the relevant queue. The internal NestJS cron runs every 5 minutes, reads each queue for unprocessed records, checks kill-switch conditions, sends the WhatsApp message, and marks the record as processed. Failed sends are marked as failed and not retried automatically.
 
 ---
 
@@ -1353,7 +1366,6 @@ All user-visible error messages, with exact wording where confirmed from code.
 | Login — OTP verify | Wrong code | *"Incorrect verification code. Please check the code and try again."* |
 | Login — OTP verify | Code already used | *"This code has already been used. Please sign in or request a new OTP."* |
 | Login — OTP verify | Code expired (5-min limit) | *"This verification code has expired. Please request a new OTP."* |
-| Login — profile step | Name not entered | *"Name is required"* |
 | Login — profile step | Pincode not 6 digits | *"Please enter a valid 6-digit pincode"* |
 | Login — profile step | Occupation not selected | *"Please select your occupation"* |
 | Login — profile step | API failure | *"Failed to update profile. Please try again."* |

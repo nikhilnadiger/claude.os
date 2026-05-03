@@ -97,7 +97,7 @@ Search count metrics come from D1 `user_tracking` (visit events), not a Neon que
 **Steps:**
 1. Teacher enters phone number → `POST /whatsapp/send-otp` → OTP sent via WhatsApp
 2. Teacher enters OTP → `POST /whatsapp/verify-otp` → JWT returned in response body
-3. Teacher optionally updates profile (name, role) → `POST /whatsapp/update-profile`
+3. Teacher optionally updates profile (pincode, occupation) → `POST /whatsapp/update-profile`
 4. JWT stored as auth token (httpOnly cookie or local storage depending on context)
 5. Protected pages: `getServerSideProps` reads token, calls `GET /user/context` to verify
    session and return current user profile, badge status, contribution history
@@ -117,25 +117,31 @@ Any OTP flow change must account for WebView behaviour — see `staffroom-ux-con
 **Entry:** System-triggered on specific user events. Queue-based. Not a direct API call
 from the frontend. Processed by a cron job every 5 minutes.
 
-**Queue population triggers:**
-- Teacher visits a school page → `tracking.service.ts` → INSERT into `search_intent_queue`
-  (delay: 8h, dedup: 24h window). Does not trigger if teacher has already reviewed this school.
+**Active queue population triggers (April 2026 system):**
+- User signs up but hasn't answered gate question → INSERT into `initiation_nudge_queue`
+  → sends `initiation_nudge_042026`
 - S0 answered but S1 not complete → `short-form-legacy.service.ts` → INSERT into
-  `abandonment_queue` (delay: 60min)
-- S1 answered but S2 not complete → `short-form-legacy.service.ts` → INSERT into
-  `update_is_live_queue` (delay: 60min)
-- Full review complete (S3) → `short-form-legacy.service.ts` → INSERT into
-  `full_completion_queue` (delay: 0min — immediate)
+  `abandonment_queue` (delay: 60min) → sends `ratings1_nudge_042026`
+- S1 answered but salary not yet added → `short-form-legacy.service.ts` → INSERT into
+  `update_is_live_queue` (delay: 60min) → sends `salary_nudge_042026`
+- Salary added but qualitative steps not complete → `short-form-legacy.service.ts` →
+  INSERT into `completion_nudge_queue` → sends `completion_nudge_042026`
+
+**Stale queue (no active processor):**
+- `search_intent_queue` — populated by school page visits via `tracking.service.ts` but has
+  no active processor in the current system. Never sends a WhatsApp message automatically.
 
 **Processing pipeline (every 5 minutes):**
-1. Cron job triggers `POST /admin/cron/trigger`
-2. `cron.service.ts` reads all four queue tables in D1 for unprocessed rows
-3. `nudge-process.service.ts` filters out duplicates and recently-nudged teachers
-   (dedup window per nudge type)
-4. For each eligible row: `nudge-send.service.ts` sends WhatsApp message via external
+1. Internal NestJS scheduler (`@Cron('*/5 * * * *')`) fires — not an external trigger.
+   `POST /admin/cron/trigger` still exists as a manual admin endpoint only.
+2. `nudge-process.service.ts` → `processAllQueuesWithPriorityAndCycle()` reads all four
+   active queue tables in D1 for unprocessed rows
+3. Kill-switch checks per nudge: cancelled if teacher has progressed past the trigger condition
+4. Delivery constraints: max 2 nudges per user per school; max 1 marketing message per user per 24h
+5. For each eligible row: `nudge-send.service.ts` sends WhatsApp message via external
    WhatsApp API using template from `nudge_template_configs` or `whatsapp_nudge_templates` in D1
-5. D1 `nudges` table updated: status `pending` → `sent` or `failed`
-6. Queue row marked `processed = 1`
+6. D1 `nudges` table updated: status `pending` → `sent` or `failed`
+7. Queue row marked `processed = 1`
 
 **Nudge link clicks:**
 - Nudge messages contain a link to `/nudge/go?to=<destination>&...`
