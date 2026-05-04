@@ -1,8 +1,8 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.2  
+**Version:** 1.3  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 03 May 2026  
+**Codebase last verified:** 04 May 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
 
 ---
@@ -152,40 +152,45 @@ Any staffroom link circulated outside the above channels.
 ### SCREEN 1 — Landing Page
 
 **URL:** `thestaffroom.in` or `thestaffroom.in/`  
-**Who reaches this screen:** Anyone who is not logged in, or whose session has expired  
-**Logged-in users:** Immediately redirected to the Home page before this page fully renders — they never see it
+**Who reaches this screen:** Anyone — logged in or not. Both authenticated and unauthenticated users see the same content.  
+**Logged-in users:** See the page like everyone else. After the page loads and auth state is confirmed, they are redirected to `/home` (or their original destination if they were sent here from a protected page). This happens client-side after render — they may briefly see the page before the redirect fires.
 
 ---
 
 #### What the user sees
 
-**At the top — hero section (dark green):**
-- staffroom logo
-- A search bar: *"Search for schools..."*
-- Two tab buttons: **Top Rated** | **Career Insights** (Top Rated is active by default)
+The landing page is a linear scroll with the following sections from top to bottom:
 
-**Below the hero — school list (Top Rated tab):**
-A ranked list of schools. Each school card shows:
-- School name and location
-- An overall rating (1–5 scale)
-- Key stats: approximate salary range, working conditions score
-- A ranked position badge (1st, 2nd, etc.)
+**1. Hero section (dark green):**
+- staffroom logo + search bar (*"Search for schools..."*) in the header
+- Headline: *"Know your school. Before you join."*
+- Subline: *"Compare your school and salary with N teachers nearby."*
+  - N only shows for authenticated users who have a pincode on file. Unauthenticated users (or auth users without pincode) see the subline without a number.
+- Hamburger menu icon (top right)
 
-Between school cards: **Career Insight teaser cards** appear — these show blurred/locked previews of platform salary and career data, with a prompt to share an experience to unlock.
+**2. Salary benchmarks section:**
+Platform-wide salary data for teachers across different experience bands.
 
-**Career Insights tab (if tapped):**
-Five data cards showing platform-wide teacher statistics. All five are locked behind a blur overlay with the message *"Share your experience to unlock."*
+**3. Career Insights section:**
+The user's five personal career insight cards (locked or partially/fully unlocked based on review progress). Accessible to all users — unauthenticated users see all five cards locked.
 
-**Sticky search bar:**
-When the user scrolls past the hero section, a compact search bar + tab switcher locks to the top of the screen.
+**4. Teacher Voices section:**
+Review excerpts and quotes from teachers who have used staffroom.
 
-**Header menu (top right):**
-A hamburger icon linking to the Login page.
+**5. City selector section:**
+A row of city buttons to filter the Top Schools list below.
+
+**6. Top Schools section:**
+A list of up to 15 ranked schools (filterable by city). Each school card shows name, location, rating, and salary/review data where available.
+
+**Sticky search navbar:**
+Appears when the user scrolls past the hero section — compact version with search bar locks to the top.
 
 **What is NOT on this page:**
+- No tabs (Top Rated / Career Insights tabs no longer exist)
 - No login popup on arrival
 - No forced redirect to login just for visiting
-- No auth overlay on this specific page (it is intentionally disabled here)
+- No auth overlay on this page (intentionally disabled)
 
 ---
 
@@ -195,30 +200,33 @@ A hamburger icon linking to the Login page.
 |--------|-------------|
 | Type in the header search bar (min 2 characters) | After a brief pause: a dropdown appears with matching schools. Results come from two sources: Google Places (India-wide school search) and staffroom's own manually curated school list. |
 | Select a school from the search dropdown | Brief loading screen, then School Profile page for that school. Behind the scenes: staffroom logs which school was selected. |
-| Click on a school card | School Profile page for that school |
-| Switch to Career Insights tab | Five locked insight cards are shown |
-| Scroll down | Sticky search bar and tab buttons lock to top of screen |
-| Click hamburger menu icon | Link to Login page |
+| Click on a school card (Top Schools section) | School Profile page for that school |
+| Tap a city button (City selector) | Top Schools list filters to that city |
+| Scroll down | Sticky search navbar locks to top of screen |
+| Click hamburger menu icon (unauthenticated) | Dropdown opens with a **Log In** button (routes to `/login?returnUrl=[current page]`) + footer with Instagram and YouTube icons |
+| Click **Log In** in the menu | Login page, with return URL set so user is sent back here after login |
 
 ---
 
 #### Wait states
-- School cards: skeleton placeholder cards shown while the list loads from staffroom's database (typically 1–2 seconds)
+- Top Schools section: loading state shown while the school list loads from staffroom's database (typically 1–2 seconds)
+- Career Insights section: loads unlock state for authenticated users (brief spinner)
 
 ---
 
 #### What staffroom does behind the scenes
 
 - **On every page load (once per browser session, 400ms after the page opens):** Records a session landing — full URL visited, whether the user is inside an in-app browser (WebView), and user identity if they are logged in. This is used to track traffic sources and WebView usage. Fires silently; no user-visible effect.
-- **School list:** Loaded from staffroom's database. Schools are ranked by a combination of review volume and average rating.
-- **Logged-in check:** If a valid session is detected in the browser, the user is redirected to `/home` before this page finishes loading — they never see the landing page.
+- **Top Schools list:** Loaded from staffroom's database (up to 150 schools fetched, filtered to max 15 per city view). Schools are ranked by a 6-tier system based on rating level and data completeness (salary + qualitative comments).
+- **Career Insights section:** For unauthenticated users, all 5 cards show as locked. For authenticated users, unlock state is fetched from the server.
+- **Logged-in redirect:** After auth state loads client-side, if the user is authenticated they are sent to `/home` (or their original destination) via `router.replace`. This is not a server-side redirect — the page has already rendered by this point.
 
 ---
 
 #### Exit points
-- Click a school → School Profile page
-- Click Login (menu) → Login page
-- Select a school via search → School Profile page
+- Click a school card or search result → School Profile page
+- Click Log In (hamburger menu, unauthenticated) → Login page
+- Authenticated user: auto-redirect to `/home` after auth state loads
 - Close browser
 
 ---
@@ -233,6 +241,8 @@ A hamburger icon linking to the Login page.
 - Any logged-out user who tries to access a protected page (they are redirected here with their original destination saved, so they return to it after login)
 - Exception: trying to access `/home` while logged out sends user to `/` (landing), not `/login`
 
+**Layout note:** On mobile, the login form is rendered as a **bottom sheet** — an animated panel that slides up from the bottom of the screen over a dark green full-page background with the staffroom logo. On desktop, it is a centered modal. The phone → OTP → profile flow is the same regardless of layout.
+
 **Note on another URL:** A separate page at `/whatsapp-verification` shows a similar OTP form, but no part of the app links to it or redirects to it — it is effectively unreachable through normal use. See Section 7 (Unreachable Features).
 
 ---
@@ -240,15 +250,18 @@ A hamburger icon linking to the Login page.
 #### States of this page
 
 **State A — WebView banner (shown if Instagram/WhatsApp/Facebook in-app browser detected):**
-A yellow banner at the top:
-> *"You're in an in-app browser. For best experience, open in Chrome or Safari."*
-
-Two buttons: **Copy link** | **×** (dismiss)
+A yellow banner inside the login panel:
+- Heading: *"You're in an in-app browser."*
+- Sub-text: *"For best experience, open in Chrome or Safari."*
+- An underlined *"Copy link"* text link below the sub-text — copies the current URL to clipboard
+- **×** dismiss button (top right of the banner)
+- The entire banner card is also tappable to copy the link
 
 **State B — Referral banner (shown if user arrived via a referral link):**
-A banner above the phone input:
+A dark green banner inside the login panel:
 > *"You are signing up via a referral link."*
 > The referral code shown in a monospace badge.
+> If a return destination is stored: *"After signup you'll be redirected to: [path]"* is also shown.
 
 **State C — Phone input step (default view):**
 - staffroom logo and branding
@@ -381,37 +394,40 @@ A banner above the phone input:
 ### SCREEN 3 — Home Page
 
 **URL:** `thestaffroom.in/home`  
-**Who sees this screen:** Logged-in users only  
-**Unauthenticated access:** User is redirected to the Landing page (`/`), not the Login page  
-**How you arrive here:** After login, after profile save, clicking "Schools" in bottom nav, or directly if session is active
+**Who sees this screen:** Anyone — logged in or not. No auth guard on this page.  
+**Unauthenticated access:** Page loads normally. No redirect, no auth overlay. Same content as the landing page.  
+**How you arrive here:** After login, after profile save, clicking "Schools" in bottom nav, or navigating directly
 
 ---
 
 #### What the user sees
 
-The Home page is visually near-identical to the Landing page — same layout, same school cards, same tabs — with two key differences:
-1. The user is authenticated, so all actions are available
-2. The header menu shows user options instead of a login link
+The Home page renders **identical content** to the Landing page — the same `HomePageContent` component is used for both `/` and `/home`. The only functional differences are in the header menu (authenticated users see profile options; unauthenticated users see a Log In button).
+
+**Content sections (top to bottom) — same as Landing page:**
+1. Hero section (dark green) — search bar, headline, teacher count subline
+2. Salary benchmarks section
+3. Career Insights section — 5 cards (locked/unlocked per this user's review progress if authenticated; all locked if unauthenticated)
+4. Teacher Voices section
+5. City selector section
+6. Top Schools section (up to 15 schools, filterable by city)
 
 **Header:**
 - staffroom logo (left)
 - Search bar (centre): *"Search for schools..."*
-- Hamburger menu icon (right) — opens a dropdown
+- Hamburger menu icon (right) — *"Menu"* label below icon
 
-**Tab navigation (below hero):**
-| Tab | What it shows |
-|-----|--------------|
-| Top Rated | Ranked list of schools with review data |
-| Career Insights | The user's 5 personal insight cards (locked or unlocked based on review progress) |
+**Hamburger menu — authenticated user:**
+Dropdown opens with:
+- User avatar + masked phone number + Contributor's Voice badge (if earned)
+- **Your Profile** item
+- **Sign out** item
+- Footer: *"staffroom powered WIP Technology Solutions Private Limited"* + Instagram + YouTube icons
 
-**Top Rated tab — school list:**
-Same ranked school cards as the landing page. Career Insight teaser cards appear between school cards (locked or unlocked based on this user's review history).
-
-**Career Insights tab:**
-Five data cards showing the user's personal career position relative to platform data. Cards unlock progressively as the user fills in more of their review form. See Section 5 for full detail.
-
-**Sticky search bar:**
-Appears when user scrolls past the hero section — compact version with logo, search bar, and tab buttons.
+**Hamburger menu — unauthenticated user:**
+Dropdown opens with:
+- **Log In** button (routes to `/login?returnUrl=[current page]`)
+- Footer: same as above
 
 **Bottom navigation bar (always visible):**
 Three items — Schools | Your Experience | Community
@@ -422,17 +438,17 @@ Three items — Schools | Your Experience | Community
 
 | Action | What happens |
 |--------|-------------|
-| Search in header bar (min 2 characters) | Dropdown appears after a brief pause. Shows schools from Google Places + staffroom manual list. Expanding on focus to full width. |
+| Search in header bar (min 2 characters) | Dropdown appears after a brief pause. Shows schools from Google Places + staffroom manual list. |
 | Select school from search results | Brief loading screen → School Profile page. staffroom logs the search. |
-| Click a school card | School Profile page |
-| Switch to Career Insights tab | 5 insight cards shown in their current state (locked/partially unlocked/fully unlocked) |
+| Click a school card (Top Schools section) | School Profile page |
+| Tap a city button (City selector) | Top Schools list filters to that city |
 | Click a locked insight card | Prompt to continue or start the review form |
 | Click an unlocked insight card | Shows the user's data for that card |
 | Click **Invite Colleague** (visible only when all 5 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
-| Click hamburger menu | Dropdown opens: **Help a Friend** / **Your Profile** / **Sign out** — with a footer below the menu items showing "staffroom powered WIP Technology Solutions Private Limited" and Instagram + YouTube icons |
-| Click **Help a Friend** | Share dialog for the staffroom platform (not school-specific) |
+| Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **Sign out** + footer |
 | Click **Your Profile** | Profile page |
 | Click **Sign out** | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
+| Click hamburger menu (unauthenticated) | Dropdown opens with **Log In** button |
 | Click **Schools** (bottom nav) | Already on Home — no change |
 | Click **Your Experience** (bottom nav) | Share Experience page |
 | Click **Community** (bottom nav) | Opens staffroom's WhatsApp community group in a new tab or the WhatsApp app |
@@ -448,9 +464,9 @@ Three items — Schools | Your Experience | Community
 
 #### What staffroom does behind the scenes
 
-- **Auth check on page load:** Checks whether a valid session exists in the browser. If not, redirects to Landing page immediately.
-- **Top Rated list:** Loaded from staffroom's database. Ranking is based on review completeness and average rating — recomputed daily, not per-visit.
-- **Career Insights data:** Checks the user's review completion state to determine which of the 5 cards to show as locked or unlocked. Platform-wide statistics (what the user's data is compared against) are recomputed daily and cached.
+- **No auth check on page load:** `/home` has no auth guard. All users see the same page content. The auth state determines what the Career Insights section shows (locked vs unlocked), not whether the page is accessible.
+- **Top Schools list:** Loaded from staffroom's database. Up to 150 schools are fetched; max 15 displayed. Ranked by a 6-tier system based on rating and data completeness. Filterable by city.
+- **Career Insights data:** For authenticated users, checks the user's review completion state to determine which of the 5 cards to show as locked or unlocked. For unauthenticated users, all 5 cards show as locked. Platform-wide statistics are recomputed daily and cached.
 - **After each sign-in:** Fetches and stores the user's context — city, pincode, list of reviews submitted, badge status.
 
 ---
@@ -459,12 +475,13 @@ Three items — Schools | Your Experience | Community
 
 | Feature | Landing `/` | Home `/home` |
 |---------|-------------|-------------|
-| Auth required | No | Yes |
-| If logged in | Redirects to /home | Stays here |
+| Auth required | No | No |
+| If logged in | Redirects to /home after auth state loads | Stays here |
 | Bottom nav | Shown | Shown |
+| Referral code handling | Yes — plants referral code + returnUrl into browser storage | No |
 | Content | Identical | Identical |
 
-Both pages show the same school content. `/` is the pre-login version; `/home` is the post-login version.
+Both pages render the exact same `HomePageContent` component. The only differences are referral code handling on `/` and the post-auth redirect. Both pages are open to all users.
 
 ---
 
@@ -795,10 +812,11 @@ The *"Saving..."* indicator disappears silently. No error is shown to the user. 
 - Masked phone number: shown as `******XXXX` (last 4 digits only)
 - *"Verified Account"* label
 
-**Stats row:**
-- Reviews Written: number of reviews the user has submitted
-- Teacher Count: total teachers in the user's area (from national dataset — not staffroom users)
-- Member Since: hardcoded placeholder — every user sees *"Member since 2024"* regardless of when they actually joined. No date is retrieved from the database for this field. Non-functional.
+**Stats row (2 cards):**
+- **Experiences shared by you** (right card): number of reviews the user has submitted
+- **You are a member since** (left card): hardcoded placeholder — every user sees *"January 2024"* regardless of when they actually joined. No date is retrieved from the database for this field. Non-functional.
+
+Note: A "Teacher Count" stat was previously shown in this row. It has been removed. Teacher count data is still used elsewhere on the page (in the Career Insights card) but is no longer displayed as a stat card.
 
 **Referral section:**
 - The user's personal referral link
@@ -1271,8 +1289,7 @@ These pages and features exist in the live codebase but have **no navigation pat
 
 | Feature | URL | What it is | Status |
 |---------|-----|-----------|--------|
-| **Nearby Schools (pincode search)** | No dedicated URL — tab value `nearby` | A pincode-based school search showing up to 50 schools sharing an exact 6-digit pincode. The `NearbySchoolsSection` component is fully built and functional. The "Nearby" tab was removed from the tab navigation bar. Any stored `nearby` tab preference is silently overridden to `top-rated` on page load (confirmed by code comment: *"legacy: redirect hidden Near You tab to Top Rated"*). | Dead — tab removed from navigation. Component exists, works, but is unreachable from any current UI path. |
-| **`/secondhome`** | `thestaffroom.in/secondhome` | A page functionally identical to `/home`. Same components, same data. No links or redirects anywhere in the codebase point to it. | Likely a development test page. Dead. |
+| **Nearby Schools (pincode search)** | No dedicated URL | A pincode-based school search. Previously existed as a "Nearby" tab in the old tab navigation system. The entire tab system (Top Rated / Career Insights / Nearby) has since been replaced by the current linear section layout. | Dead — the tab infrastructure it belonged to no longer exists. |
 | **`/whatsapp-verification`** | `thestaffroom.in/whatsapp-verification` | An alternate WhatsApp OTP login page using a different component. Same API endpoints as `/login`. No auth guard, overlay, nav item, or redirect in the entire codebase points to it. | Orphaned — was never wired into the app's routing. Accessible by URL only. |
 | **`/about`** | `thestaffroom.in/about` | A real, complete About page — team bios, platform values, podcast embed, CTA. Well designed. Only included in the sitemap (priority 0.7). Not linked from any nav element or component. | Real content, unreachable from the app. |
 | **`/blogs`** and **`/blogs/[id]`** | `thestaffroom.in/blogs` | Real content — 9 podcast episode transcripts with embedded YouTube videos. Titles of named guests. Long-form interview format. Not included in the sitemap. Not linked from any navigation. | Real content, completely orphaned. |
@@ -1363,6 +1380,7 @@ All user-visible error messages, with exact wording where confirmed from code.
 | Login — OTP send | Too many OTP requests (rate limit: 5 per 5 min) | *"You've requested too many OTPs. Please try again after 5 minutes."* |
 | Login — OTP send | WhatsApp service unavailable | *"We couldn't send your OTP. Please try again."* |
 | Login — OTP send | Unexpected server error | *"We couldn't send your OTP. Please check your number and try again."* |
+| Login — OTP verify | No OTP record found for this phone (e.g. user skipped the send step, or old record was deleted) | *"No verification code found for this number. Please request a new OTP first."* |
 | Login — OTP verify | Wrong code | *"Incorrect verification code. Please check the code and try again."* |
 | Login — OTP verify | Code already used | *"This code has already been used. Please sign in or request a new OTP."* |
 | Login — OTP verify | Code expired (5-min limit) | *"This verification code has expired. Please request a new OTP."* |
@@ -1384,8 +1402,8 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 | Page | URL | Public access | Login required | Reachable from nav | In sitemap |
 |------|-----|--------------|---------------|-------------------|-----------|
 | Landing | `/` | Yes | No | — (entry point) | Yes |
-| Login | `/login` | Yes | No | Via auth overlay / Login button | No |
-| Home | `/home` | No | Yes | Bottom nav "Schools" | No |
+| Login | `/login` | Yes | No | Via hamburger menu / auth overlay | No |
+| Home | `/home` | Yes | No | Bottom nav "Schools" | No |
 | School Profile | `/school/[slug]` | Yes | No (read) / Yes (write/save) | Via search & school cards | Yes |
 | Share Experience | `/share-experience` | No | Yes | Bottom nav "Your Experience" | Yes |
 | Profile | `/profile` | No | Yes | Header menu "Your Profile" | No |
@@ -1394,10 +1412,9 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 | About | `/about` | Yes | No | **No — URL only** | Yes |
 | Blogs | `/blogs` | Yes | No | **No — URL only** | No |
 | Blog Post | `/blogs/[id]` | Yes | No | **No — URL only** | No |
-| Second Home | `/secondhome` | No | Yes | **No — dead page** | No |
 | WhatsApp Verify | `/whatsapp-verification` | Yes | No | **No — orphaned** | No |
 | Dashboard | `/dashboard` | No | Admin only | **No — admin only** | No |
 
 ---
 
-*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 22 April 2026. All content verified from code.*
+*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 04 May 2026. All content verified from code.*

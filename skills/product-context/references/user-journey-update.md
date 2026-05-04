@@ -49,8 +49,9 @@ a full update.
 **Files to check:**
 - `pages/index.tsx` — landing page component
 - School list query / ranking logic (backend)
-- Check: auth redirect behavior, tab structure, search bar behavior,
-  Career Insight teaser cards, skeleton states
+- Check: auth redirect behavior (now client-side via useEffect, not server-side),
+  homepage section structure (linear sections replaced the old tab layout),
+  search bar behavior, Top Schools ranking logic, sticky navbar
 
 ### Screen 2 — Login Page (`/login`)
 **Files to check:**
@@ -63,8 +64,8 @@ a full update.
 ### Screen 3 — Home Page (`/home`)
 **Files to check:**
 - `pages/home.tsx` — home page component
-- Check: auth guard behavior (redirects to `/` not `/login`),
-  Career Insights tab unlock states, bottom nav items, hamburger menu options
+- Check: auth guard behavior (`/home` has no auth guard as of May 2026 — `hideAuthOverlay={true}`),
+  Career Insights section unlock states, bottom nav items, hamburger menu options
 
 ### Screen 4 — School Profile (`/school/[slug]`)
 **Files to check:**
@@ -120,8 +121,8 @@ a full update.
 - `pages/` — scan all page files for existence
 - Navigation components — confirm which pages are linked from nav
 - Sitemap config — confirm which pages are included
-- Check: `nearby` tab status, `/secondhome`, `/whatsapp-verification`,
-  `/about`, `/blogs`, `/dashboard` — still unreachable? Any new orphans?
+- Check: `/whatsapp-verification`, `/about`, `/blogs`, `/dashboard` — still unreachable? Any new orphans?
+- Note: `nearby` tab and `/secondhome` were removed as of May 2026 — do not expect them in the pages directory
 
 ### Section 8 — System Behaviors & Known Limitations
 **Files to check:**
