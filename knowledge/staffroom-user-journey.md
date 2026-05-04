@@ -1,6 +1,6 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.3  
+**Version:** 1.4  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
 **Codebase last verified:** 04 May 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
@@ -668,12 +668,14 @@ User must search for and select a school before the form appears.
 The form has a gate question, then six steps, with two insight reveal screens appearing between steps. Progress bar shows *"N/6"* at the top (e.g., "1/6", "2/6").
 
 **Gate — "Have you worked here recently?"**
-Three options: Yes / No / No, but recently worked. Single selection required.
+A single **Yes** button (checkmark circle). There is no "No" option. Tapping Yes saves the answer and advances immediately to the S0 Gate Screen. The user cannot proceed without tapping Yes — they can only navigate away.
+
+If a user returns to a school where they previously saved a non-"Yes" answer (legacy data only), the form shows a static message instead of the gate: *"We only collect reviews from people who have worked here recently."* No action is available from this state.
 
 **After gate "Yes" — S0 Gate Screen (interstitial before Step 1):**
 A full-screen card appears before the form begins:
 - Heading: *"See your career insights."*
-- Body: *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."*
+- Body: *"Understand and compare your school and salary with [N] teachers near you. It will take you <2 mins."*
 - Subtext: *"Share your experience and get your career insights."*
 - Button: *"Let's start"*
 - Footer: *"Your name will never be shared with any school."*
@@ -821,7 +823,7 @@ Note: A "Teacher Count" stat was previously shown in this row. It has been remov
 **Referral section:**
 - The user's personal referral link
 - **Copy** button
-- Two stats: "Successful sign-ups" (how many people signed up via this link) and "Reviews from referrals"
+- Two stats: *"Successful teacher sign-ups from your referral"* (count of sign-ups via this link) and *"Verified teacher experiences from your referral"* (count of reviews submitted by referred users)
 
 **Saved Schools:**
 - Section heading: *"My Saved Schools"*
@@ -1005,7 +1007,7 @@ SCREEN 2: Login Page (/login)
 SCREEN 4: School Profile (/school/...)
     ↓ Review form opens as overlay
 SCREEN 5: Review Form (overlay on school page)
-    ↓ Completes Gate + 5 Steps (auto-saves after each answer)
+    ↓ Completes Gate + 6 Steps (auto-saves after each answer)
     ↓ Success screen
     → Button: "See your career insights"
 SCREEN 3: Home Page (/home) — Career Insights tab, showing this school
@@ -1379,13 +1381,15 @@ All user-visible error messages, with exact wording where confirmed from code.
 | Login — OTP send | Phone number not 10 digits | *"Please enter a valid 10-digit phone number"* |
 | Login — OTP send | Too many OTP requests (rate limit: 5 per 5 min) | *"You've requested too many OTPs. Please try again after 5 minutes."* |
 | Login — OTP send | WhatsApp service unavailable | *"We couldn't send your OTP. Please try again."* |
-| Login — OTP send | Unexpected server error | *"We couldn't send your OTP. Please check your number and try again."* |
+| Login — OTP send | Server returns non-parseable response | *"We couldn't send your OTP. Please check your number and try again."* |
+| Login — OTP send | Network / connection failure (catch block) | *"Connection error. Please check your internet and try again."* |
 | Login — OTP verify | No OTP record found for this phone (e.g. user skipped the send step, or old record was deleted) | *"No verification code found for this number. Please request a new OTP first."* |
 | Login — OTP verify | Wrong code | *"Incorrect verification code. Please check the code and try again."* |
 | Login — OTP verify | Code already used | *"This code has already been used. Please sign in or request a new OTP."* |
 | Login — OTP verify | Code expired (5-min limit) | *"This verification code has expired. Please request a new OTP."* |
 | Login — profile step | Pincode not 6 digits | *"Please enter a valid 6-digit pincode"* |
 | Login — profile step | Occupation not selected | *"Please select your occupation"* |
+| Login — OTP verify | Network failure during verification (catch block) | *"Failed to verify OTP. Please check your internet connection."* |
 | Login — profile step | API failure | *"Failed to update profile. Please try again."* |
 | School profile | Page fails to load (any reason) | *"Failed to load school data. There might be a temporary issue. Please try again later."* |
 | Search (all search bars) | No matching schools | *"No schools found."* |
