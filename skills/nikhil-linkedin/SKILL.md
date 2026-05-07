@@ -32,6 +32,14 @@ live_references:
   - name: "LinkedIn KPI Sheet"
     url: "https://docs.google.com/spreadsheets/d/1eBrZr6LVgbIyzcvQTvjWVQCXSDtK_P-R4feUQIyP8vI"
     when: "Fetch when analysing post performance, choosing post type by audience, or reviewing what has worked. Always fetch before making claims about specific post data."
+  - name: "Company Journey Narrative"
+    path: "claude.os/knowledge/staffroom-journey.md"
+    tool: read_file
+    when: "Load when writing posts about staffroom's origin story, early experiments, founder journey, or 'why we built this'. Data caution: platform metrics in this file may be outdated — verify figures against staffroom-product-metrics.md before using in a post."
+  - name: "Strategic Narrative (Feb 2026)"
+    path: "claude.os/knowledge/staffroom-strategic-narrative.md"
+    tool: read_file
+    when: "Load when writing posts referencing market size, GTM strategy, competitive positioning, monetisation thinking, or investor-facing content. Data caution: traction figures and projections may be outdated — verify against live sources before committing to specific numbers."
 related_skills: []
 ---
 

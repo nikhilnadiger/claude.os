@@ -3,6 +3,13 @@ source: distilled-from: https://docs.google.com/document/d/1lTkYH9gL9yd-ebTjw37L
 last_updated: Mar 2026
 skills: [brand-custodian, content-strategy, visual-asset-creation]
 update-frequency: When brand positioning, tagline, or voice system changes
+data-freshness: >
+  This file captures brand positioning, voice, and values as of Mar 2026.
+  It does not contain platform metrics or traction data and is relatively
+  stable. However, if tagline, signature analogy, or positioning has evolved
+  since Mar 2026, verify with Nikhil before using in external-facing output.
+  For platform-specific data or statistics, always use knowledge/staffroom-product-metrics.md
+  and other live sources — never pull figures from this file.
 ---
 
 # staffroom — Brand Narrative

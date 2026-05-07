@@ -24,6 +24,16 @@ triggers:
 
 uses_references:
   - references/deliberation-process.md
+  - knowledge/staffroom-journey.md         # load for brand-marketing or product-design councils — origin story and founder intent
+  - knowledge/staffroom-strategic-narrative.md  # load for any council requiring full strategic context — GTM, positioning, monetisation, competitive landscape
+
+context_loading_note: >
+  Load knowledge/staffroom-journey.md and knowledge/staffroom-strategic-narrative.md
+  before council deliberation when the question involves brand positioning, GTM, product
+  direction, or competitive strategy. Data caution: both files may contain outdated
+  platform metrics and projections — councils must treat these as narrative context, not
+  live data. Verify any figures cited in deliberation against knowledge/staffroom-product-metrics.md
+  and knowledge/staffroom-competitive-landscape.md before presenting as fact.
 
 related_skills:
   - brand-custodian

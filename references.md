@@ -1,6 +1,6 @@
 # staffroom — URL References
 
-All files that exist in assets/ are not listed here. This file only contains URLs for sources that have no local file equivalent.
+All files that exist in assets/ are not listed here. This file only contains URLs for sources that have no local file equivalent or where a local copy exists alongside the live Google Doc.
 
 Access method is noted for each — use the appropriate MCP tool.
 
@@ -8,11 +8,13 @@ Access method is noted for each — use the appropriate MCP tool.
 
 ## Strategic Documents
 
-| Document | URL | Access |
-|---|---|---|
-| Strategic Narrative | https://docs.google.com/document/d/1K_kqad4uP8JP8DUrixBCq8K2y8u0ZWkpguS_Dmuf-UI/edit | Google Drive MCP |
-| Brand Narrative & Behaviour | https://docs.google.com/document/d/1lTkYH9gL9yd-ebTjw37LwrsvhLrBEpzJFDSqYPQ96b0/edit | Google Drive MCP |
-| Journey Narrative | https://docs.google.com/document/d/19jIOrYVoXV455HV-OMCZ5fw7qT4nt9IACSX7r294kfg/edit | Google Drive MCP |
+| Document | Local path | Google Doc (edit source) | Read via |
+|---|---|---|---|
+| Strategic Narrative | `knowledge/staffroom-strategic-narrative.md` | https://docs.google.com/document/d/1K_kqad4uP8JP8DUrixBCq8K2y8u0ZWkpguS_Dmuf-UI/edit | Local file (read); Google Drive MCP (edit) |
+| Brand Narrative & Behaviour | `skills/brand-custodian/references/brand-narrative.md` | https://docs.google.com/document/d/1lTkYH9gL9yd-ebTjw37LwrsvhLrBEpzJFDSqYPQ96b0/edit | Local file (read); Google Drive MCP (edit) |
+| Journey Narrative | `knowledge/staffroom-journey.md` | https://docs.google.com/document/d/19jIOrYVoXV455HV-OMCZ5fw7qT4nt9IACSX7r294kfg/edit | Local file (read); Google Drive MCP (edit) |
+
+**Note:** Local copies are snapshots — see each file's `data-freshness` frontmatter before using any figures. Google Docs are the live edit sources.
 
 ---
 

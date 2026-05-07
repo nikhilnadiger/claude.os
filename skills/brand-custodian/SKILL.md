@@ -29,6 +29,7 @@ uses_references:
   - references/brand-narrative.md
   - references/visual-identity.md
   - references/output-playbook.md
+  - knowledge/staffroom-strategic-narrative.md  # load only for investor/partner output type (section 4 of output-playbook)
 
 related_skills:
   - content-strategy
@@ -38,6 +39,10 @@ live_references:
   - label: Brand Guidelines (PDF)
     path: claude.os/assets/brand-guidelines.pdf
     tool: read_file
+  - label: Strategic Narrative (investor/partner context)
+    path: claude.os/knowledge/staffroom-strategic-narrative.md
+    tool: read_file
+    when: "Load only when output type is investor/partner materials (pitch decks, one-pagers, partner proposals). Data caution: traction figures and projections may be outdated — verify all claims against staffroom-product-metrics.md and live sources before including in any deliverable."
 ---
 
 # brand-custodian
@@ -104,7 +109,12 @@ and values. Single checkpoint before any brand-facing content is delivered.
    facing communication, **3** School-facing communication, **4** Investor/
    partner materials, **5** Social media spotlights, **6** Community management,
    **7** Email and WhatsApp broadcasts, **8** Internal docs with external reach,
-   **9** Before/After common violations, **10** Moderation rules
+   **9** Before/After common violations, **10** Moderation rules.
+   **If output type is section 4 (investor/partner materials):** also read
+   `knowledge/staffroom-strategic-narrative.md` for pitch framing, market
+   data, and competitive context. Data caution: figures in that file may be
+   outdated — verify all claims against `knowledge/staffroom-product-metrics.md`
+   and live sources before including in any deliverable.
 3. **Read `references/visual-identity.md`** — mandatory whenever the output
    involves any visual element: email headers, deck slides, in-app UI,
    asset descriptions, or any copy that will appear alongside a visual.

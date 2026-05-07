@@ -47,6 +47,10 @@ live_references:
   - label: Content Performance Data
     path: claude.os/knowledge/staffroom-content-performance.md
     tool: read_file
+  - label: Company Journey Narrative
+    path: claude.os/knowledge/staffroom-journey.md
+    tool: read_file
+    when: Load when writing content about staffroom's origin story, founder journey, or 'why we built this'. Data caution: platform metrics in this file may be outdated — verify figures against staffroom-product-metrics.md before scripting any specific numbers.
 ---
 
 # content-strategy
