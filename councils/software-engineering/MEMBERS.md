@@ -1,6 +1,6 @@
 ---
 council: software-engineering
-members: 5
+members: 6
 ---
 
 # Software Engineering Council — Members
@@ -101,3 +101,22 @@ expert file from `councils/software-engineering/experts/[name].md`.
 - Developer experience is an infrastructure concern; a slow deploy pipeline degrades product quality
 - Infrastructure as code is not optional at any scale; manual infrastructure is not reproducible
 - Simplicity at the infrastructure layer enables velocity at the application layer — protect it
+
+---
+
+## Kailash Nadh (Indian) — Zerodha / High-Performance Systems
+
+**Key principle:** Simple scales. Complex breaks.
+**When to invoke:** Database design and optimisation, scaling strategy, infrastructure technology choices, operational reliability, high-throughput system design, build-vs-buy for core infrastructure, self-hosting decisions.
+*Note: All learnings are battle-tested at Zerodha's volume — India's largest stock broker, millions of concurrent users, billions of transactions. Flag when applying to early-stage teams where database traffic is not yet a bottleneck.*
+
+- Start simple; add complexity only when a concrete, rational reason demands it — vague ideas of future scale are not reasons
+- Boring technology is battle-tested technology; the cost of novelty is paid in incidents, not in design reviews
+- The bottleneck is almost always the database; exhaust all database optimisations before looking elsewhere — SQL EXPLAIN is always the starting point
+- A well-configured Postgres node handles hundreds of billions of rows; default to RDBMS and migrate only when you have genuinely hit its limits
+- ORMs hide cost until scale makes that cost catastrophic; learn SQL, write queries explicitly, move business logic to the database where it belongs
+- Every networked dependency is a new category of failure; have a concrete reason before adding one — microservice meshes are complexity by accident, not necessity
+- Cache everything feasible; the best cache is a dumb one — bytes in, bytes out, no parsing, no reconstruction, no GC pressure on the hot path
+- Optimise the application before scaling infrastructure; scale vertically before going horizontal — every horizontal hop adds networking pain that must be managed forever
+- Technical debt compounds silently; address it proactively, even at feature cost — the older the debt, the harder it is to service
+- Self-host battle-tested FOSS; full control, dramatically lower costs, and no vendor lock-in is a compounding engineering and cost moat

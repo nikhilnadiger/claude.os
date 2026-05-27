@@ -1,8 +1,8 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.4  
+**Version:** 1.5  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 04 May 2026  
+**Codebase last verified:** 26 May 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
 
 ---
@@ -321,7 +321,7 @@ A dark green banner inside the login panel:
 | What the system finds | What the user sees next |
 |----------------------|------------------------|
 | Phone not in staffroom's system | Profile step (State E) |
-| Phone found, profile complete | Loading → Home page (or original destination if redirected from a protected page) |
+| Phone found, profile complete | Loading → Share Experience page (`/share-experience`), or original destination if a returnUrl was set |
 | Phone found (Old User), profile complete | Same as above — seamless |
 | Phone found (any user), profile incomplete | Profile step (State E) |
 | Wrong OTP code entered | Error: *"Incorrect verification code. Please check the code and try again."* OTP boxes cleared |
@@ -336,7 +336,7 @@ A dark green banner inside the login panel:
 
 | Action | What happens |
 |--------|-------------|
-| Fill pincode + select occupation, then click **Continue** | Loading state, then profile saved, then Home page (or original destination). |
+| Fill pincode + select occupation, then click **Continue** | Loading state, then profile saved, then Share Experience page (`/share-experience`), or original destination if a returnUrl was set. |
 | Leave any field blank or invalid | Continue button stays disabled — cannot proceed |
 | Enter invalid pincode (not exactly 6 digits) | Error: *"Please enter a valid 6-digit pincode"* |
 | Close browser mid-profile | Account was created during OTP verification, but profile is incomplete. Next time this phone signs in, the profile step will appear again. |
@@ -383,9 +383,12 @@ A dark green banner inside the login panel:
 ---
 
 #### Exit points
-- Successful login → Home page (or original page user was trying to reach)
+- Successful login with no returnUrl → Share Experience page (`/share-experience`)
+- Successful login with a returnUrl → original page user was trying to reach
 - Close browser mid-flow → exit (OTP expires in 5 minutes; profile is saved if OTP was verified)
 - Any error → stays on Login page, user can retry
+
+**Note on returnUrl:** Clicking "Log In" from the hamburger menu always passes the current page as returnUrl. Users who reach `/login` directly (e.g., via a locked Career Insights card, or typing the URL directly) have no returnUrl and are sent to `/share-experience` after login. This routing was changed in May 2026 to reduce the drop between signup and first form interaction.
 
 ---
 
@@ -652,7 +655,7 @@ All share actions are silently recorded by staffroom (platform used, school shar
 ### SCREEN 5 — Share Experience (Review Submission)
 
 **URL:** `thestaffroom.in/share-experience`  
-**Who sees this:** Logged-in users only. Logged-out users are redirected to Login, then brought back here.  
+**Who sees this:** Anyone — logged in or not. Unauthenticated users can land on the page and search for a school. Once a school is selected, they see a login prompt card ("Log in to see your career insights") with a CTA that routes to `/login?returnUrl=[share-experience-url-with-school]` — the form itself requires authentication.  
 **How you arrive:** Bottom nav "Your Experience", or the *"Share your experience at this school"* / *"Continue your review"* CTA on a school profile page (which opens an overlay version of the same form)
 
 ---
@@ -743,7 +746,7 @@ Two required free-text fields: what you like about working here; what needs impr
 | Close browser or navigate away mid-form | Progress is saved (up to the last auto-save). On return, the form resumes from the first unanswered section. |
 | Return to this school after previously starting | Form loads with all previous answers pre-filled. Starts at the first unanswered question. |
 | Complete all steps (Gate + Steps 1–6) | Completion screen: *"All insights unlocked"* / *"Your experience has been noted. Your name will never be shared with the school."* / button *"See your career insights"* |
-| Click **See your career insights** | Goes to `/home?tab=know-your-career&school=[school-id]` — the Career Insights tab, showing this school's data |
+| Click **See your career insights** | Goes to `/home?school=[placeId]#career-insights` — scrolls to the Career Insights section, showing this school's data |
 
 ---
 
@@ -848,7 +851,7 @@ A dedicated "Sign out" button at the bottom of the page (red tinted, below all o
 |--------------------|-----------|-------------|----------------|
 | No reviews submitted | `SeeYourInsightsCard` | *"See your career insights."* / *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* / Button: *"Share your experience and find out"* | `/share-experience` |
 | At least one review exists but not fully complete | `PartialInsightsCard` | *"[N] insights unlocked."* / *"Complete sharing your experience and unlock all five insights."* / Button: *"Continue →"* | `/share-experience?placeId=...` (most recently updated incomplete review) |
-| All reviews fully complete | `AllInsightsUnlockedCard` | *"All insights unlocked"* / *"Your experience has been noted. Your name will never be shared with the school."* / Button: *"See your career insights"* | `/home?tab=know-your-career` |
+| All reviews fully complete | `AllInsightsUnlockedCard` | *"All insights unlocked"* / *"Your experience has been noted. Your name will never be shared with the school."* / Button: *"See your career insights"* | `/home#career-insights` |
 
 When no reviews exist, this card is the primary content of the My Experiences section.
 
@@ -975,11 +978,9 @@ SCREEN 2: Login Page (/login)
     ↓ User enters pincode, selects occupation, clicks Continue
     [WAIT: 1–2 seconds save]
     → Meta "CompleteRegistration" event fired
-SCREEN 3: Home Page (/home)
-    — All Career Insight cards locked —
-    ↓ User browses Top Rated schools
-    ↓ Clicks a school card
-SCREEN 4: School Profile (/school/...)
+SCREEN 5: Share Experience (/share-experience)
+    — No returnUrl was set for this journey; new post-login default —
+    ↓ User searches for and selects a school, starts the review form
 ```
 
 **Key notes:** WebView banner is advisory — OTP works normally inside Instagram's browser. No functional difference from a direct URL visit.
@@ -1061,7 +1062,8 @@ SCREEN 2: Login Page (/login)
     [No profile step — profile is already complete]
     [WAIT: WhatsApp OTP delivery and entry]
     ↓ OTP verified → existing account found
-SCREEN 3: Home Page (/home) [or original destination]
+SCREEN 5: Share Experience (/share-experience)
+    [or original destination if the user was redirected from a specific page]
 ```
 
 ---
@@ -1114,13 +1116,13 @@ SCREEN 2: Login Page (/login)
     → If old profile was missing those fields: treated as New User (profile step shown)
 
 [If profile complete:]
-SCREEN 3: Home Page (/home)
-    — Identical to any returning user —
+SCREEN 5: Share Experience (/share-experience)
+    — Identical to any returning user with no returnUrl —
 
 [If profile incomplete:]
 SCREEN 2: Login Page — Profile step
     ↓ User fills pincode + occupation → Continue
-SCREEN 3: Home Page (/home)
+SCREEN 5: Share Experience (/share-experience)
 ```
 
 The user sees no indication that anything special happened. The account linking is completely silent.
@@ -1208,8 +1210,8 @@ If a user has reviewed multiple schools, a school switcher appears above the car
 ### After Form Completion: What Happens
 
 When user taps "See your career insights" from the review success screen:
-- Taken to `/home?tab=know-your-career&school=[school-id]`
-- Career Insights tab is active
+- Taken to `/home?school=[placeId]#career-insights`
+- Page scrolls to the Career Insights section automatically
 - The completed school's data is pre-selected in the switcher
 
 ---
@@ -1332,8 +1334,9 @@ staffroom checks the browser's identity string on every page load to detect in-a
 **External analytics tools running at all times:**
 - Microsoft Clarity — session recordings and heatmaps (production only)
 - Meta Pixel — page views + registration conversion events
-- Google Ads tracking tag
-- Umami — privacy-focused page analytics
+- Google Ads tracking tag (gtag — AW-17177065793)
+
+Note: Umami was removed in May 2026 and is no longer active.
 
 ---
 

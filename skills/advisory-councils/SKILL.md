@@ -77,7 +77,7 @@ a structured advisory output. They do not implement — they advise.
 | brand-marketing | councils/brand-marketing/ | Piyush Pandey, Prasoon Joshi, Santosh Desai, Rory Sutherland |
 | visual-design | councils/visual-design/ | Sudhir Sharma, Sujata Keshavan, Michael Bierut |
 | product-design | councils/product-design/ | Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug |
-| software-engineering | councils/software-engineering/ | Pramod Varma, Venkat Subramaniam, Martin Fowler, Kent Beck, Kelsey Hightower |
+| software-engineering | councils/software-engineering/ | Pramod Varma, Venkat Subramaniam, Martin Fowler, Kent Beck, Kelsey Hightower, Kailash Nadh |
 
 ---
 
