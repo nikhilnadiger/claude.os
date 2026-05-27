@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 20-04-2026
+> Last updated: 27-05-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -52,10 +52,10 @@ The following rules are non-negotiable and must always be in context:
 Full metrics: `knowledge/staffroom-product-metrics.md` (refresh before any decision).
 
 Structural implications (always apply):
-- **90% mobile** — every UI/UX decision must be mobile-first, no exceptions
-- **Bengaluru is ~31% of sessions** (down from 44% — traffic diversifying nationally) — primary city for content and product focus
-- **Login page is primary drop-off** (662 exits, Apr 2026) — conversion priority
-- **~3,309 of 3,703 sessions untracked** — Meta Ads traffic missing UTMs; fix on all paid links
+- **95.6% mobile** (May 2026, up from 90%) — every UI/UX decision must be mobile-first, no exceptions
+- **Bengaluru is ~15% of sessions** (May 2026, down sharply from 31% — Delhi/NCR now matches it at ~15%). Traffic is now genuinely national. No single city dominates.
+- **Login page exits: 552 (May 2026)**, down from 662 in Apr — improvement from mobile OTP fix (PR #113). Share-experience page (968 exits) is now a bigger drop-off than login.
+- **~4,836 of 5,153 sessions untracked (May 2026)** — Meta Ads traffic still missing UTMs. Fix on all paid links.
 - **Instagram Ads is a primary traffic source** — WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
 
 Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 44×44pt touch targets, 360px mobile viewport, ≤0.6s animations, 2G-capable, no auto-play media.
@@ -90,7 +90,7 @@ Full competitive analysis: knowledge/staffroom-competitive-landscape.md
 
 GTM strategy is city-by-city. Full PMF definition: ≥70% searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density). 1-2 cities is the current step toward that goal.
 
-Current baseline (Apr 2026): 7 schools nationwide have 3+ live reviews (the Mar 2026 figure of 15 was incorrect — Apr 22 2026 live Neon query is authoritative). 1,408 total school page visit events in D1, 108 users with 3+ visits. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
+Current baseline (May 27 2026, Neon): 10 schools nationwide have 3+ live reviews (up from 7 in Apr — 3 new schools crossed the threshold). ⚠ D1 user_tracking is STALE — frozen at Feb 15 2026 (search) and Jan 31 2026 (visit). The 266 visits and 35 high-intent users figures are from Jan–Feb 2026, not current. Do not use user_tracking for current school discovery metrics — see staffroom-product-metrics.md School Discovery section. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
 
 ---
 
@@ -115,6 +115,7 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
   `nikhilnadiger@gmail.com` profile first. Do not attempt to connect until confirmed.
 - **Cloudflare MCP:** Account access is live. D1 changes affect production.
   Do not create new D1 tables or modify D1 schema without explicit approval.
+  **D1 data reliability — check before using any D1 table for metrics:** Not all D1 tables are live. `user_tracking` and `search_intent_queue` are STALE (frozen Feb 2026, tracking pipeline broke). All nudge pipeline tables, form tracking, and share tables are live (May 2026). Authoritative live/stale list: `skills/product-context/references/d1-schema.md` → "D1 Table Freshness Status" section.
   Do not create new KV namespaces, R2 buckets, or Workers without explicit approval.
 - **Figma MCP:** Read-only — can view existing designs, get metadata,
   screenshots, and variable definitions. Cannot create new files or edit
@@ -130,8 +131,6 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
 ## Key People
 
 - Nikhil Nadiger: co-founder, all decisions
-- Nilangshu: engineering consultant
-- Krishnan: developer working under Nilangshu
 
 ---
 

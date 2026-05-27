@@ -132,18 +132,32 @@ ORDER BY review_count DESC;
 SELECT COUNT(*) FROM "User";
 ```
 
-From D1 (search/visit counts — no Neon searches table):
-```sql
--- Total school page visits (search intent signal)
-SELECT COUNT(*) FROM user_tracking WHERE event_type = 'visit';
+From D1 (school visit/search counts):
 
--- High-intent visitors (3+ visits)
+⚠ **user_tracking is STALE as of May 27 2026.** The table stopped being written to in Feb 2026 (latest search: Feb 15 2026, latest visit: Jan 31 2026). Do not query it for current visit metrics — the figures reflect Jan–Feb 2026 state only. `search_intent_queue` is similarly frozen at Feb 14 2026.
+
+Before querying any D1 table for metrics, verify it is live:
+```sql
+-- Check freshness of a table (adjust column name per table)
+SELECT COUNT(*), MAX(searched_at_ist), MAX(visited_at_ist) FROM user_tracking;
+-- If latest timestamps are months old, the table is stale.
+```
+
+If user_tracking were live (it is not), the correct queries would be:
+```sql
+-- ⚠ event_type column does NOT exist — use visited_at_ist instead
+-- Total school page visits
+SELECT COUNT(*) FROM user_tracking WHERE visited_at_ist IS NOT NULL;
+
+-- High-intent visitors (3+ school page visits)
 SELECT COUNT(*) FROM (
   SELECT user_id FROM user_tracking
-  WHERE event_type = 'visit'
+  WHERE visited_at_ist IS NOT NULL AND user_id IS NOT NULL
   GROUP BY user_id HAVING COUNT(*) >= 3
 ) subq;
 ```
+
+For current activity, use live D1 tables: `nudges`, `question_completion_tracking`, `nudge_link_clicks`, `share_events` (see d1-schema.md freshness table for full list).
 
 From Clarity: update Sessions, Users, avg pages/session, bounce rate, device split, top cities, login exits.
 

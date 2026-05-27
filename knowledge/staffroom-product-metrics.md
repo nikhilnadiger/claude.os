@@ -1,34 +1,35 @@
 ---
-last_updated: Apr 2026
-source: Neon PostgreSQL (live queries Apr 22 2026), Microsoft Clarity dashboard (Apr 2026), Meta Ads CSV (Apr 22 2026)
+last_updated: May 2026
+source: Neon PostgreSQL (live queries Apr 22 2026), Microsoft Clarity dashboard (Apr 2026, May 2026 via MCP May 27 2026), Meta Ads CSV (Apr 22 2026)
 skills: [content-strategy, codebase-context, brand-custodian, product-context]
 staleness_note: >
-  All figures are point-in-time snapshots. Refresh before using in any
-  investor/partner material, content, or product decision. For live platform
-  data, query Neon PostgreSQL directly. For Clarity data, export from the
-  Clarity dashboard. For Meta Ads data, see staffroom-content-performance.md.
+  Partially refreshed May 27 2026. Neon: sign-ups, reviews, schools with 3+ are current.
+  D1: user_tracking discrepancy documented (see School Discovery section). Clarity: fully
+  refreshed May 2026. Pending: WhatsApp verified count, full completion count, salary data
+  re-query, school search count.
 ---
 
 # staffroom — Product Metrics
 
 ---
 
-## Platform Metrics (Apr 22 2026)
+## Platform Metrics (May 27 2026)
+
+⚠ **Partially refreshed May 27 2026.** Sign-ups, reviews submitted, live reviews, and schools with 3+ reviews are current from Neon. WhatsApp verified, full completions, salary, school search counts, and saved schools are Apr 22 2026 figures pending re-query.
 
 | Metric | Value | Source |
 |---|---|---|
-| Sign-ups | 3,272 | `SELECT COUNT(*) FROM "User"` — Apr 22 2026 |
-| WhatsApp verified | 1,520 | `whatsapp_users` table — 46.5% of sign-ups completed OTP. Note: remaining 1,752 unverified accounts include pre-OTP-era Old Users (Type 3) who predate mandatory WhatsApp OTP — not all are current funnel dropoffs |
-| Reviews submitted | 838 | `stepper_form_data` — Apr 22 2026 |
-| Reviews live | 531 | workedRecently IS NOT NULL AND overallExperience IS NOT NULL |
-| Reviews fully complete (S3) | 336 | whatToImprove IS NOT NULL — 40% of submitted |
-| Schools with 3+ live reviews | 7 | 6 with identified placeId + 1 null-placeId group |
-| Median teacher salary (live reviews) | ₹30,000/month | 418 reviews with salary data |
-| Salary range | ₹4,500 – ₹1,50,000/month | From `salaryPerMonth` on S2-complete reviews |
-| Schools searched (ever) | 2,557 | `school_mapping.first_searched_at IS NOT NULL` of 44,494 mapped |
+| Sign-ups | 3,664 | `SELECT COUNT(*) FROM "User"` — May 27 2026 |
+| WhatsApp verified | not re-queried | pending — run `SELECT COUNT(*) FROM whatsapp_users` |
+| Reviews submitted | 1,106 | `SELECT COUNT(*) FROM stepper_form_data` — May 27 2026 |
+| Reviews live | 740 | workedRecently IS NOT NULL AND overallExperience IS NOT NULL — May 27 2026 |
+| Reviews fully complete (S3) | not re-queried | pending — run `WHERE whatToImprove IS NOT NULL` |
+| Schools with 3+ live reviews | 10 | 9 with identified placeId + 1 null-placeId group — May 27 2026 |
+| Median teacher salary (live reviews) | ₹30,000/month | 418 reviews with salary data — Apr 22 2026, not re-queried |
+| Schools searched (ever) | not re-queried | pending — run `WHERE first_searched_at IS NOT NULL` |
 | Community size | 12,000+ | WhatsApp + Instagram + YouTube (Mar 2026) |
-| CAC (blended, Meta Ads) | ~₹32/sign-up | ₹1,03,250 all-time Meta spend ÷ 3,272 sign-ups |
-| Saved schools | 21 saves by 20 users | Near-zero feature adoption |
+| CAC (blended, Meta Ads) | ~₹36/sign-up | ₹1,31,289 all-time Meta spend ÷ 3,664 sign-ups — May 27 2026 |
+| Saved schools | not re-queried | pending |
 
 ⚠ **stepper_form_data has no `is_live` or `completion_stage` columns.** Both are computed from field presence. See queries below.
 
@@ -46,23 +47,28 @@ staleness_note: >
 **Key insight:** S0 is answered on 100% of submissions — it is the entry gate, not a drop-off point. The meaningful drop-offs are S1→S2 (531→418, 79% continue) and the 37% of live reviews that don't reach full completion.
 
 **PMF definition:** ≥70% of searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density).
-**Current baseline:** 7 schools with 3+ live reviews (nationwide). The Mar 2026 figure of 15 was incorrect — the Apr 22 2026 live Neon query is the authoritative count.
+**Current baseline:** 10 schools with 3+ live reviews (nationwide, May 27 2026). The Mar 2026 figure of 15 was incorrect — the Apr 22 2026 live Neon query is the authoritative count.
 
 ---
 
-## Schools with 3+ Live Reviews (Apr 22 2026)
+## Schools with 3+ Live Reviews (May 27 2026)
+
+10 schools nationwide with 3+ live reviews: 9 identified schools + 1 null-placeId group.
 
 | placeId | Live Reviews |
 |---|---|
 | null (unmatched submissions) | 7 |
+| ChIJbVQ_C1URrjsRGY86qFLdpaY | 4 |
 | ChIJ67pnXv4NrjsRWrOt7C7itZM | 4 |
 | ChIJ2Y6vPxJurjsRGrLie_FUs4c | 4 |
-| ChIJbVQ_C1URrjsRGY86qFLdpaY | 4 |
+| ChIJFREQiDQ-rjsRollG9KpOgYg | 3 ← new since Apr 2026 |
+| ChIJi3j6F0FdUjoRnU-NllN4RK8 | 3 ← new since Apr 2026 |
 | ChIJV1Xl77JNGzkReZLxofYzBR0 | 3 |
 | ChIJndiJc5G25zsRHerkokRkR1E | 3 |
 | ChIJkeKlkmiZyzsRQRz0MC4EdR4 | 3 |
+| ChIJTx9TmSgUrjsRnJrZD_xn6Ow | 3 ← new since Apr 2026 |
 
-The 7-review null group is reviews where `placeId` was not captured — likely early form submissions or edge cases in school resolution. The 6 identified schools are all Bengaluru-area (ChIJ prefix pattern).
+The 7-review null group is reviews where `placeId` was not captured — likely early form submissions or edge cases in school resolution. The 9 identified schools are all Bengaluru-area (ChIJ prefix pattern).
 
 ---
 
@@ -96,6 +102,7 @@ Bengaluru Urban (116) accounts for ~22% of all live reviews — dominant but the
 
 | Month | New Sign-ups | Notes |
 |---|---|---|
+| May 2026 | 392 | Apr 23 – May 27 (~35 days) — not a full calendar month |
 | Apr 2026 | 331 | Partial month (~22 days) — run rate ~450/month |
 | Mar 2026 | 349 | |
 | Feb 2026 | 563 | Peak month — likely campaign push |
@@ -111,7 +118,7 @@ Bengaluru Urban (116) accounts for ~22% of all live reviews — dominant but the
 
 Effective launch: Jul–Aug 2025. Trailing 6-month average (Nov 2025 – Apr 2026): ~335/month. Feb 2026 spike (563) correlates with the period of highest Meta Ads spend.
 
-**WhatsApp verification note:** 1,520 of 3,272 accounts are WhatsApp-verified (46.5%). The remaining 1,752 unverified accounts include Type 3 Old Users (accounts created before WhatsApp OTP was made mandatory) who have not returned to verify — they are not purely a current funnel loss. The split between Old Users and genuine new-signup dropoffs is not queryable from Neon alone.
+**WhatsApp verification note:** 1,520 of 3,664 accounts are WhatsApp-verified (Apr 22 2026 figure — not re-queried). The remaining 1,752 unverified accounts include Type 3 Old Users (accounts created before WhatsApp OTP was made mandatory) who have not returned to verify — they are not purely a current funnel loss. The split between Old Users and genuine new-signup dropoffs is not queryable from Neon alone.
 
 ---
 
@@ -130,15 +137,25 @@ Median ₹30K/month = ₹3.6L/year. Consistent with Indian private school teache
 
 ---
 
-## School Discovery (Apr 22 2026)
+## School Discovery (D1 user_tracking — STALE, frozen Feb 2026)
 
-| Metric | Value |
-|---|---|
-| Total schools in school_mapping | 44,494 |
-| Schools ever searched (first_searched_at populated) | 2,557 (5.7%) |
-| Most recent search | Apr 14 2026 |
+⚠ **user_tracking is STALE.** The table stopped being written to in Feb 2026. Latest search timestamp: Feb 15, 2026. Latest visit timestamp: Jan 31, 2026. All figures below are from Jan–Feb 2026, NOT current.
 
-2,557 schools have been looked up via the platform — a small fraction of the 44,494 mapped, indicating large untapped discovery potential. Search/visit counts are tracked in D1 `user_tracking`, not Neon.
+Live D1 query (May 27 2026) confirmed the following Jan–Feb 2026 snapshot:
+
+| Metric | Value | Data date | Notes |
+|---|---|---|---|
+| Total rows in user_tracking | 1,408 | Jan–Feb 2026 | All rows have searched_at_ist (search events) |
+| Rows with visited_at_ist (actual school page visits) | 266 | up to Jan 31 2026 | Subset that converted from search to visit |
+| Users with 3+ visits | 35 | up to Jan 31 2026 | Based on visited_at_ist IS NOT NULL |
+
+**Why it's stale:** `search_intent_queue` also stopped at Feb 14 2026 (1,125 rows). Both tables are populated by the `/tracking/search` and `/tracking/visit` endpoints. These endpoints likely stopped writing to D1 user_tracking at some point in Feb 2026 — root cause not confirmed. Do not query these tables for current school discovery numbers.
+
+**What IS live in D1 (May 2026):** nudge pipeline tables (nudges, nudge_link_clicks, question_completion_tracking, full_completion_queue, abandonment_queue, share_events, share_clicks) are all actively written. See d1-schema.md for full freshness table.
+
+**Discrepancy vs old figures:** The Apr 22 2026 metric of "1,408 total school page visit events" was incorrect — all 1,408 rows are search events, not visit events. The "108 users with 3+ visits" cannot be reproduced. The `event_type` column referenced in old queries does not exist.
+
+Note: Neon `school_mapping.first_searched_at` is a separate, independent school search count. Run `SELECT COUNT(*) FROM school_mapping WHERE first_searched_at IS NOT NULL` for current schools-ever-searched figure.
 
 ---
 
@@ -148,61 +165,65 @@ Median ₹30K/month = ₹3.6L/year. Consistent with Indian private school teache
 - **Referrals:** Tracked via `User.referredById` FK and `User.referralCount` column. No separate `referrals` table in Neon (a `referrals` table exists in D1 — see d1-schema.md). Referral volume not queried in this refresh.
 - **Career Insights:** `GET /insights/career-stats` is a public endpoint returning salary aggregates. Usage not tracked server-side.
 - **"Member since 2024" on Profile:** Hardcoded — always displays 2024 regardless of actual account creation date. Known product gap, documented in user journey Section 6 (Profile page).
-- **CAC denominator note:** The ₹32 blended CAC uses all 3,272 sign-ups as denominator. Type 3 Old Users who predate paid acquisition are included — this underestimates true paid CAC for new-era sign-ups.
+- **CAC denominator note:** The ₹36 blended CAC uses all 3,664 sign-ups as denominator (₹1,31,289 all-time Meta spend ÷ 3,664 sign-ups). Type 3 Old Users who predate paid acquisition are included — this underestimates true paid CAC for new-era sign-ups.
 
 ---
 
-## Clarity Analytics (Apr 2026 — last 30 days)
+## Clarity Analytics (May 2026 — last 30 days)
 
 **Traffic:**
 
-| Metric | Value | Change vs Mar 2026 |
+| Metric | Value | Change vs Apr 2026 |
 |---|---|---|
-| Sessions | 3,703 | ↑ from 2,351 (+57%) |
-| Users | 3,114 | ↑ from 1,682 (+85%) |
-| Avg pages/session | ~2.87 | Similar |
-| Avg session duration | ~138s | Similar |
-| Bounce rate | ~56% | Similar |
+| Sessions | 5,153 | ↑ from 3,703 (+39%) |
+| Users | 4,503 | ↑ from 3,114 (+45%) |
+| Avg pages/session | 2.33 | ↓ from ~2.87 |
+| Avg session duration | 97.6s | ↓ from ~138s |
+| Bounce rate | 65.7% | ↑ from ~56% |
 
-Note: ~100 sessions in the Clarity dataset are from staging/UAT environments
-(Clarity is installed on all three). These slightly inflate numbers.
+Note: Session and user counts include ~43 sessions from uat.thestaffroom.in (UAT environment — Clarity is installed on all three environments). These slightly inflate numbers, same as Apr.
 
 **Device split:**
 
 | Device | Sessions | % |
 |---|---|---|
-| Mobile | ~3,333 | ~90% |
-| Desktop | ~333 | ~9% |
-| Tablet | ~37 | ~1% |
+| Mobile | 4,927 | 95.6% |
+| Desktop | 194 | 3.8% |
+| Tablet | 32 | 0.6% |
 
-→ **Every UI/UX decision must be mobile-first.**
+→ **Mobile dominance increased further (90% → 95.6%). Every UI/UX decision must be mobile-first.**
 
-**Geography (top cities, Apr 2026):**
+**Geography (top cities, May 2026):**
 
-| City | Sessions | % | Change vs Mar 2026 |
+| City | Sessions | % | Change vs Apr 2026 |
 |---|---|---|---|
-| Bengaluru | ~1,164 | ~31.4% | ↓ from 44% — traffic diversifying |
-| Mumbai | ~259 | ~7% | Similar |
-| Chennai | ~185 | ~5% | Similar |
-| Pune | ~185 | ~5% | Similar |
-| Delhi | ~185 | ~5% | Similar |
-| Hyderabad | ~148 | ~4% | Similar |
-| Kolkata | ~148 | ~4% | Similar |
+| Bengaluru | 778 | 15.1% | ↓ dramatically from 31.4% |
+| New Delhi | 549 | 10.7% | new entrant in top 2 |
+| Kolkata | 335 | 6.5% | ↑ significantly |
+| Mumbai | 296 | 5.7% | Similar |
+| Pune | 241 | 4.7% | Similar |
+| Hyderabad | 240 | 4.7% | Similar |
+| Delhi | 237 | 4.6% | (note: "New Delhi" and "Delhi" are separate Clarity entries — combined NCR: ~786 sessions, ~15.3%) |
+| Chennai | 214 | 4.2% | Similar |
+| Ahmedabad | 105 | 2.0% | New in top 10 |
 
-→ **Bengaluru remains the primary city but its share is declining as traffic grows nationally.**
+→ **Major shift: Bengaluru no longer dominant.** Delhi/NCR (New Delhi + Delhi combined) at ~786 sessions (~15.3%) now equals Bengaluru. Traffic is genuinely national. Content and product decisions can no longer assume Bengaluru-first.
 
-**Funnel:**
+**Funnel / exit pages:**
 
-Homepage → Login → /home → Share Experience
+| Page | Exit Count |
+|---|---|
+| / (homepage) | 6,366 |
+| /home | 1,763 |
+| /share-experience | 968 |
+| /login | 552 |
+| /dashboard | 128 |
 
-- Login is the second-biggest exit page: **662 exits** (up from 606 in Mar 2026)
-- School pages: only 20–37 sessions each. Discovery/search is the bottleneck,
-  not school page quality.
+Exit note: Homepage exits are high because it has the most traffic (most sessions start and end there). Login exits: 552 (↓ from 662 in Apr) — the OTP/login friction improvement from May PR #113 (mobile keyboard/layout fix) may have helped. Share-experience exits: 968 — this is a new prominent exit point, up from not being in the top list in Apr.
 
 **UX friction:**
 
-- 18.8% of sessions have dead clicks (443/2,351 in last 30-day window) — users
-  tapping non-interactive elements. Primarily a mobile issue.
+- 14.9% of sessions have dead clicks (vs 18.8% in Apr — improvement). Primarily a mobile issue.
 - Dead click pattern analysis (from Clarity session recordings, Apr 2026):
   - **Login page:** Users tap blank areas before/between form elements — most common
     in login sessions entering from Instagram/WhatsApp WebView
@@ -213,10 +234,10 @@ Homepage → Login → /home → Share Experience
 
 **Channel attribution:**
 
-- Only ~394/3,703 sessions have UTM data (Direct ~222, Organic ~131, Social ~41)
-- ~3,309 sessions are untracked — almost certainly Meta Ads traffic without UTMs
-- Meta ecosystem (meta + ig + instagram.com + facebook combined) accounts for ~83% of traffic
-- Fix: ensure all paid creative links include UTM parameters
+- Organic: 175 sessions
+- Social: 108 sessions
+- Direct: 34 sessions
+- **Untracked: ~4,836 sessions (~93.9%)** — slightly worse than Apr (89.4% untracked). Meta Ads traffic still missing UTMs on most links. Fix required: ensure all paid creative links include UTM parameters.
 
 ---
 

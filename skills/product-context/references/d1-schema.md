@@ -1,10 +1,10 @@
 ---
 skills: [product-context, codebase-context, engineering-review]
-last_updated: Apr 2026
-source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/), PRAGMA table_info verified Apr 2026
+last_updated: May 2026
+source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/), PRAGMA table_info verified May 27 2026 via Cloudflare MCP
 staleness_note: >
-  Schema reflects production state as of Apr 2026. Verify against D1 before any
-  table change. Use PRAGMA table_info(<table>) via Cloudflare MCP or wrangler.
+  Schema reflects production state as of May 27 2026 (full table list + PRAGMA verified live).
+  Verify against D1 before any table change. Use PRAGMA table_info(<table>) via Cloudflare MCP or wrangler.
 ---
 
 # staffroom — D1 Schema
@@ -17,6 +17,45 @@ Used for the nudge/tracking pipeline, form completion tracking, and admin auth.
 New features that need new persistent data should use Neon PostgreSQL via PostgresService by default.
 
 > For Neon schema (primary DB, active/legacy tables, enum types) → `neon-schema.md`
+
+---
+
+## D1 Table Freshness Status (verified May 27 2026)
+
+Live queries confirmed which tables are actively written vs frozen. Check this before relying on any D1 table for current-state metrics.
+
+### Live (writing as of May 2026)
+
+Verified via direct D1 query May 27 2026. Row counts and latest timestamps confirmed live.
+
+| Table | Row count | Latest timestamp | Timestamp column |
+|---|---|---|---|
+| `nudge_link_clicks` | 22,928 | May 27, 2026 | `clicked_at` |
+| `nudges` | 2,687 | May 27, 2026 | `created_at` |
+| `question_completion_tracking` | 947 | May 27, 2026 | `created_at` |
+| `full_completion_queue` | 444 | May 27, 2026 | `created_at` |
+| `abandonment_queue` | 912 | May 27, 2026 | `created_at` |
+| `update_is_live_queue` | 615 | May 27, 2026 | `created_at` |
+| `initiation_nudge_queue` | 228 | May 27, 2026 | `created_at` |
+| `school_nudge_tracking` | 199 | May 27, 2026 | `last_nudge_sent_at` |
+| `completion_nudge_queue` | 155 | May 27, 2026 | `created_at` |
+| `share_clicks` | 195 | May 26, 2026 | `clicked_at` |
+| `share_events` | 119 | May 26, 2026 | `shared_at` |
+| `referrals` | 18 | May 26, 2026 | `created_at` |
+| `badge_contributor` | 466 | ~May 2026 | Unix timestamp |
+
+### Stale (frozen — not being written to)
+
+| Table | Row count | Last write | Root cause |
+|---|---|---|---|
+| `user_tracking` | 1,408 | Feb 15, 2026 (search) / Jan 31, 2026 (visit) | `/tracking/search` and `/tracking/visit` endpoints stopped writing to this table in Feb 2026. Root cause not confirmed. |
+| `search_intent_queue` | 1,125 | Feb 14, 2026 | Companion to user_tracking; same root cause. |
+
+⚠ **Do not use `user_tracking` or `search_intent_queue` for current school discovery or visit metrics.** They reflect Jan–Feb 2026 state only. The nudge pipeline and form tracking tables (above) are the live tracking sources.
+
+### Not freshness-verified
+
+`phone_otps`, `manual_schools`, cache tables (`api_cache`, `place_city_cache`, `place_location_cache`, `school_details_cache`, `top_rated_cache`), `nudge_template_configs`, `whatsapp_nudge_templates`, `unmapped_schools` — row counts and freshness not queried May 27 2026. These are config/cache tables unlikely to affect current-state analytics.
 
 ---
 
@@ -244,9 +283,9 @@ Generic API response cache. Cleared via admin endpoint.
 ---
 
 ### Queue Tables (D1)
-Four queue tables with identical schemas. Each represents a nudge trigger type.
+Six queue tables. The original four share one schema; the two newer nudge-type queues share a slightly different schema.
 
-**Tables:** `search_intent_queue`, `abandonment_queue`, `update_is_live_queue`, `full_completion_queue`
+**Original four — `search_intent_queue`, `abandonment_queue`, `update_is_live_queue`, `full_completion_queue`:**
 
 | Column | Type | Notes |
 |---|---|---|
@@ -260,13 +299,62 @@ Four queue tables with identical schemas. Each represents a nudge trigger type.
 | `processed` | INTEGER | 0 = pending, 1 = processed |
 | `processed_at` | TEXT | nullable, IST datetime |
 
-**Trigger logic:**
+**Trigger logic (original four):**
 - `search_intent_queue`: populated by `tracking.service.ts` when a user visits a school page (delay: 8h, dedup: 24h window)
 - `abandonment_queue`: populated when S0 answered but S1 not complete (delay: 60min)
 - `update_is_live_queue`: populated when S1 answered but S2 not complete (delay: 60min)
 - `full_completion_queue`: populated when S3 (full) complete (delay: 0min — immediate nudge)
 
+**Newer two — `initiation_nudge_queue`, `completion_nudge_queue`** (added Apr–May 2026, verified May 27 2026):
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, autoincrement |
+| `user_id` | TEXT | NOT NULL |
+| `question_tracking_id` | INTEGER | nullable |
+| `phone` | TEXT | nullable |
+| `scheduled_at` | TEXT | nullable |
+| `created_at` | TEXT | default datetime('now') |
+| `processed` | INTEGER | default 0 |
+| `processed_at` | TEXT | nullable |
+
+Note: no `tracking_id` column (unlike the original four). `user_id` is TEXT here vs INTEGER in original four. These correspond to the `042026` nudge templates injected by the deploy scripts.
+
 **Used by:** `short-form-legacy.service.ts`, `tracking.service.ts`, `nudges.service.ts`, `cron.service.ts`, `nudge-process.service.ts`.
+
+---
+
+### `school_nudge_tracking` (D1)
+Tracks nudge send history per user per school context. Prevents over-nudging. Added Apr–May 2026, verified May 27 2026.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, autoincrement |
+| `user_id` | TEXT | NOT NULL |
+| `question_tracking_id` | INTEGER | NOT NULL — FK → question_completion_tracking.id |
+| `school_name` | TEXT | nullable |
+| `nudge_type` | TEXT | nullable — type of nudge sent |
+| `priority` | INTEGER | nullable |
+| `nudges_sent_count` | INTEGER | default 0 |
+| `first_nudge_sent_at` | TEXT | nullable |
+| `last_nudge_sent_at` | TEXT | nullable |
+| `created_at` | TEXT | default datetime('now') |
+
+**Used by:** nudge pipeline services — tracks how many nudges have been sent per user/school pair to prevent repeat sends.
+
+---
+
+### `top_rated_cache` (D1)
+Single-row JSON cache for the top-rated schools list. Avoids recomputing the ranked list on every request.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER | PK, default 1 — always a single row |
+| `data` | TEXT | NOT NULL — JSON string of cached top-rated result |
+| `updated_at` | TEXT | NOT NULL |
+| `created_at` | TEXT | default datetime('now') |
+
+**Used by:** `top-rated.service.ts` (read-through cache — upsert on id=1).
 
 ---
 
@@ -283,10 +371,12 @@ One row per school page visit (search/discovery event). Powers the search_intent
 | `school_id` | TEXT | nullable |
 | `place_id` | TEXT | nullable |
 | `searched_at_ist` | TEXT | IST datetime |
-| `source` | TEXT | 'search' \| 'top_rated_card' \| 'near_school' |
+| `source` | — | **Column does not exist in live D1** (confirmed PRAGMA May 27 2026). Was documented in error. |
 | `action_taken` | TEXT | default 'none' — updated if user takes action |
 
 **Used by:** `tracking.service.ts` (INSERT + UPDATE), admin users service (analytics).
+
+**Query note (May 27 2026):** All 1,408 rows have `searched_at_ist` populated. 266 rows also have `visited_at_ist` — these are actual school page visits. The refresh-protocol.md D1 query `WHERE event_type = 'visit'` references a non-existent column. Correct query for visit events: `WHERE visited_at_ist IS NOT NULL`.
 
 ---
 
@@ -426,7 +516,7 @@ The following tables exist in **both** Neon and D1. The **NestJS code exclusivel
 | `phone_otps` | Shadow | **Active** | |
 | `school_details_cache` | Shadow | **Active** | |
 | `unmapped_schools` | Shadow | **Active** | |
-| `top_rated_cache` | Dead | Dead (see Section 3) | Not referenced in NestJS code at all |
+| `top_rated_cache` | None | **Active** | D1-only single-row cache for top-rated list. Was misclassified as Dead in Apr 2026 schema — corrected May 27 2026. |
 
 ---
 

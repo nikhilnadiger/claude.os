@@ -1,7 +1,7 @@
 ---
 skills: [codebase-context]
-last_updated: Apr 2026
-source: live codebase + infrastructure (package.json verified Apr 2026)
+last_updated: May 2026
+source: live codebase + infrastructure (package.json verified Apr 2026) + background services verified May 2026
 ---
 
 # Stack Topology
@@ -106,6 +106,19 @@ Full schema with all columns, constraints, and active/legacy status:
 
 Do not create new D1 tables or new Neon tables without explicit approval from Nikhil.
 Do not query D1 from the frontend or a CF Worker — always go through NestJS.
+
+---
+
+## Background Services (NestJS)
+
+Two background services run inside the NestJS process — no separate worker.
+
+| Service | File | Schedule | Purpose |
+|---|---|---|---|
+| MappingAuditCronService | `backend-nest/src/places/mapping-audit-cron.service.ts` | 2 AM IST nightly | Audits `school_mapping` rows against Google Places. Verdicts: PASS (no action), SOFT_FLAG (forensic row inserted, Nikhil reviews), HARD_FAIL (mapping deleted, forensic row inserted), LOCATION_ONLY / GOOGLE_FAIL / NO_MAPPING. Auto-stops via SchedulerRegistry when all eligible rows are audited. Dynamic batch sizing stays within a configurable Google Places API monthly budget. |
+| NestJS Cron (nudge pipeline) | `backend-nest/src/admin/cron/` | `*/5 * * * *` | Processes nudge queues every 5 minutes. Controlled by NUDGE_*_ENABLED env flags. |
+
+> Do not add new cron jobs without explicit approval from Nikhil. Resource contention on the DigitalOcean droplet is a real concern.
 
 ---
 

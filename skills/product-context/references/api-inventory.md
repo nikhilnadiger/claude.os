@@ -1,7 +1,7 @@
 ---
 skills: [product-context]
-last_updated: Apr 2026
-source: live codebase — backend-nest/src/ (all controllers verified Apr 2026)
+last_updated: May 2026
+source: live codebase — backend-nest/src/ (all controllers verified Apr 2026) + rum.controller.ts verified May 2026
 ---
 
 # staffroom — API Inventory
@@ -152,6 +152,18 @@ Nudge sending is queue-based — see data-flow.md Flow 5 for the full pipeline.
 | Method | Path | Auth | Description |
 |---|---|---|---|
 | GET | `/referral` | None | Handles visiting a referral link. Query params: `code` (referral code), `redirect` (destination). Records the referral in D1 `referrals` table and redirects. |
+
+---
+
+## RUM Module — `/rum`
+
+Real User Monitoring. Collects browser-side performance timing events (FCP, LCP, TTFB, etc.) from the Next.js frontend. Data is logged server-side; no DB write occurs.
+
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| POST | `/rum` | None | Ingests a RUM timing event from the browser. Body: `RumEvent` object (timing type + value). Returns HTTP 204 No Content. |
+
+> This endpoint has no auth guard and no DB persistence. It is a fire-and-forget telemetry sink. Do not build features that depend on its data being durable.
 
 ---
 
