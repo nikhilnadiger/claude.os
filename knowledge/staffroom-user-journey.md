@@ -424,7 +424,7 @@ The Home page renders **identical content** to the Landing page — the same `Ho
 Dropdown opens with:
 - User avatar + masked phone number + Contributor's Voice badge (if earned)
 - **Your Profile** item
-- **My Applications** item (routes to `/my-applications`) — visible only when `APPLY_ENABLED=true`
+- **My Applications** item (routes to `/my-applications`) — always shown for authenticated users
 - **Sign out** item
 - Footer: *"staffroom powered WIP Technology Solutions Private Limited"* + Instagram + YouTube icons
 
@@ -449,7 +449,7 @@ Three items — Schools | Your Experience | Community
 | Click a locked insight card | Prompt to continue or start the review form |
 | Click an unlocked insight card | Shows the user's data for that card |
 | Click **Help a friend get their insights** (visible only when all 5 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
-| Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **My Applications** (if Apply enabled) / **Sign out** + footer |
+| Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **My Applications** / **Sign out** + footer |
 | Click **Your Profile** | Profile page |
 | Click **My Applications** | My Applications page (`/my-applications`) |
 | Click **Sign out** | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
@@ -516,10 +516,26 @@ Both pages render the exact same `HomePageContent` component. The only differenc
 - School name (large, prominent)
 - Full address — tappable, opens Google Maps
 - School classification tags: class range (e.g., "Nursery–12"), board type (CBSE / ICSE / State), management type (Private / Private Aided)
-- **Salary range cards:** Three ranges showing estimated monthly salary (₹min–₹max) for teachers with 0–5 years, 5–15 years, and 15+ years of experience. Based on reviews submitted by teachers. Only visible when salary data exists. **Each card is now tappable** — tapping opens a popup with school-specific copy and a CTA to share your experience / see career insights. Previously these were static display-only divs.
+- **Salary range cards:** Three cards showing estimated monthly salary (₹min–₹max) by experience tier: **Fresher** (0–5 years exp.), **Mid Career** (6–15 years exp.), **Senior** (15+ years exp.). Based on reviews submitted by teachers. Only visible when salary data exists. **Each card is tappable** — tapping opens a popup with:
+  - Headline: *"Compare your salary and school with teachers near by"*
+  - Body: *"Your school won't know it was you."*
+  - CTA button: *"Share your experience and find out"* — routes unauthenticated users through `/login?returnUrl=/share-experience?...` before the form.
 - **Teacher count badge:** *"Teachers here: [N]"* — this is the total number of teachers working in the school's geographic area, drawn from a national education dataset (UDISE). It is **not** a count of staffroom users or registered members.
 - **Save/bookmark icon** (top right of header)
 - **Share icon** (top right of header)
+
+**Referral-locked state (overrides normal content for referred, unauthenticated visitors):**
+
+When a user arrives via a referral link and is **not logged in** (`isReferralLocked = true`), the school page renders a restricted view:
+- The salary section is **hidden**
+- The `SeeYourInsightsCard` is **hidden**
+- The Apply CTA is **hidden**
+- A locked panel appears instead: *"You were referred here [with code X]. Sign up to view reviews and salary insights."* + a **Sign up to continue** button that routes to `/login`
+- Reviews and school overview are still visible
+
+Once the user logs in, the page returns to its normal state.
+
+---
 
 **2. Sticky navigation bar (appears on scroll):**
 - School name + back arrow (left) + share + save buttons (right)
@@ -564,15 +580,15 @@ The heading above reviews and the CTA button below them change based on how many
 | Has not reviewed, zero school reviews | `SeeYourInsightsCard` | *"Compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Share your experience and find out"* |
 | Has not reviewed, school has reviews | `SeeYourInsightsCard` | *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Share your experience and find out"* |
 | Review in progress | `PartialInsightsCard` | *"[N] insights unlocked. Complete sharing your experience and unlock all five insights."* | *"Continue →"* |
-| Review complete | `InviteColleagueCard` | *"Help a friend get their insights. Share staffroom and they'll get their own career insights — based on their school and salary."* | *"Help a friend get their insights →"* |
+| Review complete | `InviteColleagueCard` | *"Help a friend get their insights. Share staffroom and they'll get their own career insights — based on their school and salary."* | *"Help a friend get their insights"* |
 
 The [N] in insight card text is the teacher count for the school's area (same national dataset figure as the header badge). Only shown if `teacherCount > 0`.
 
-**8. Additional sections (shown when data exists):**
+**8. Additional sections:**
 - `SchoolFeaturesCard` — rendered when supplementary UDISE data is available for this school (infrastructure, facilities)
-- `ContactInfoCard` — rendered when contact data (email, phone, website) is available
+- `ContactInfoCard` — rendered when contact data (email, phone, website) is available, **but only when Apply is disabled**. When Apply is enabled, the Apply CTA card below takes this slot instead — ContactInfoCard does not render when ApplyCTA is shown.
 
-**9. staffroom Apply CTA card (shown only when `APPLY_ENABLED=true`):**
+**9. staffroom Apply CTA card (shown when Apply is enabled and school has contact data or reviews, and user is not in referral-locked state):**
 
 A secondary card that appears below the review CTA, with a briefcase icon and cream background — visually subordinate to the primary contribution CTA. Three states:
 
@@ -597,9 +613,9 @@ Tapping the button opens the Apply multi-step sheet (see Screen 9). If the teach
 | Read a review | No | Card expands to show full content |
 | Tap *"Share your experience at this school"* | Yes | Review form opens as a dialog on this page. If not logged in: routes to `/share-experience?placeId=...` where mid-form login gate handles auth with correct returnUrl. |
 | Tap *"Continue your review"* | Yes | Review form opens pre-filled with existing answers |
-| Tap *"Share your experience and find out"* (insight card) | No (routes to share-experience) | Routes to `/share-experience` with school context. Login gate is handled mid-form after school selection. Unauthenticated users are no longer sent directly to `/login`. |
+| Tap *"Share your experience and find out"* (insight card) | Yes (login first) | Routes to `/login?returnUrl=/share-experience?placeId=...`. Unauthenticated users are sent to login first, then redirected to the review form with the school pre-selected. (Note: the home/landing page uses a different pattern — direct to `/share-experience` without login first. School page always goes through login.) |
 | Tap *"Continue →"* (partial insights card) | Yes | Review form opens pre-filled |
-| Tap *"Help a friend get their insights →"* (completed insight card) | Yes | Opens WhatsApp with pre-filled invite message containing the user's personal referral link |
+| Tap *"Help a friend get their insights"* (completed insight card) | Yes | Opens WhatsApp with pre-filled invite message containing the user's personal referral link |
 | Tap salary range card | No | Popup opens with school-specific copy and CTA to share experience |
 | Tap *"Send my application"* / *"Send my application — ₹5"* (Apply card) | Yes | Apply multi-step sheet opens (eligibility → resume → profile → confirm → pay). If not logged in: routes to login with returnUrl. Only visible when `APPLY_ENABLED=true`. |
 | Tap *"Track your application"* (Apply card, active application) | Yes | Routes to `/my-applications` |
@@ -964,63 +980,9 @@ No database call is made on the `/referral` page itself — all data is handled 
 
 ---
 
-### SCREEN 10 — My Applications
+### SCREEN 9 — staffroom Apply
 
-**URL:** `thestaffroom.in/my-applications`  
-**Who sees this:** Logged-in users only. Unauthenticated users are redirected to `/login?returnUrl=/my-applications`.  
-**How you arrive:** Hamburger menu → "My Applications" (when `APPLY_ENABLED=true`); or the *"Track my application →"* button after a successful application.
-
----
-
-#### What the user sees (top to bottom)
-
-**Header:**
-- Dark green curved section with a back arrow (top left) and heading *"My Applications"* + subtext *"Track where your applications stand."*
-
-**Section 1 — Teaching profile:**
-Shows the teacher's Apply profile (name, experience details). If the profile is complete, the details are displayed with an **Edit** (pencil) button. Tapping Edit opens the `ProfileForm` in-place for editing. The resume upload (`ResumeUpload`) component is also accessible here.
-
-If the profile is not yet created, the form is shown inline for first-time setup.
-
-**Section 2 — Applications:**
-One card per submitted application. Each card shows:
-- School name
-- Status badge: **Sent** / **Delivered** / **Viewed** / **Interested**
-- Timestamp of when the application was sent
-
-Empty state: no applications card shown when the teacher has not yet applied anywhere.
-
----
-
-#### What the user can do
-
-| Action | What happens |
-|--------|-------------|
-| Tap **Edit** on Teaching profile | Profile form opens in-place for editing. Changes saved immediately on submit. |
-| View application status | Status reflects the current lifecycle stage (Sent → Delivered → Viewed → Interested) |
-| Tap back arrow | Returns to previous page (or `/home` if no history) |
-
----
-
-#### What staffroom does behind the scenes
-
-On page load, two parallel API calls are made:
-1. `getApplyProfile()` — fetches the teacher's Apply profile (name, resume status, experience details)
-2. `getMyApplications()` — fetches all applications this teacher has submitted, with current status
-
----
-
-#### Exit points
-- Tap back arrow → previous page or Home
-- Navigate via bottom nav → Home or Share Experience
-
----
-
----
-
-### SCREEN 9 — staffroom Apply (dark-launched)
-
-**Feature flag:** `NEXT_PUBLIC_APPLY_ENABLED` (frontend) / `APPLY_ENABLED` (backend). Both default to `false`. The entire Apply surface — the CTA card on school pages, the application sheet, `/my-applications`, `/apply/[token]`, `/apply/payment-status`, and the post-review Reveal card — is invisible when the flag is off. No UI change is visible to users until it is switched on.
+**Feature flag:** `NEXT_PUBLIC_APPLY_ENABLED` (frontend) / `APPLY_ENABLED` (backend). Apply is currently live in production. The flag controls visibility of the entire Apply surface — the CTA card on school pages, the application sheet, `/my-applications`, `/apply/[token]`, `/apply/payment-status`, and the post-review Reveal card. When the flag is off, none of this UI is visible to users.
 
 **What it is:** A teacher-to-school job application system. Teachers send their resume + profile to a school directly through staffroom. staffroom delivers it to the school via email and WhatsApp, and the school can view the applicant on a one-time tokenized link.
 
@@ -1119,6 +1081,62 @@ When staffroom delivers an application, the school receives an email + WhatsApp 
 | **Delivered** | staffroom confirmed delivery to the school (email + WhatsApp sent) |
 | **Viewed** | School opened the tokenized link |
 | **Interested** | School completed OTP verification and marked interest |
+
+---
+
+---
+
+### SCREEN 10 — My Applications
+
+**URL:** `thestaffroom.in/my-applications`  
+**Who sees this:** Logged-in users only. Unauthenticated users are redirected to `/login?returnUrl=/my-applications`.  
+**How you arrive:** Hamburger menu → "My Applications" (always visible when logged in); or the *"Track my application →"* button after a successful application.
+
+---
+
+#### What the user sees (top to bottom)
+
+**Header:**
+- Dark green curved section with a back arrow (top left) and heading *"My Applications"* + subtext *"Track where your applications stand."*
+
+**Section 1 — Teaching profile:**
+Shows the teacher's Apply profile (name, experience details). If the profile is complete, the details are displayed with an **Edit** (pencil) button. Tapping Edit opens the `ProfileForm` in-place for editing. The resume upload (`ResumeUpload`) component is also accessible here.
+
+If the profile is not yet created, the form is shown inline for first-time setup.
+
+**Section 2 — Applications:**
+One card per submitted application. Each card shows:
+- School name
+- Status badge: **Sent** / **Delivered** / **Viewed** / **Interested**
+- Timestamp of when the application was sent
+
+Empty state: no applications card shown when the teacher has not yet applied anywhere.
+
+---
+
+#### What the user can do
+
+| Action | What happens |
+|--------|-------------|
+| Tap **Edit** on Teaching profile | Profile form opens in-place for editing. Changes saved immediately on submit. |
+| View application status | Status reflects the current lifecycle stage (Sent → Delivered → Viewed → Interested) |
+| Tap back arrow | Returns to previous page (or `/home` if no history) |
+
+---
+
+#### What staffroom does behind the scenes
+
+On page load, two parallel API calls are made:
+1. `getApplyProfile()` — fetches the teacher's Apply profile (name, resume status, experience details)
+2. `getMyApplications()` — fetches all applications this teacher has submitted, with current status
+
+---
+
+#### Exit points
+- Tap back arrow → previous page or Home
+- Navigate via bottom nav → Home or Share Experience
+
+---
 
 ---
 
@@ -1601,7 +1619,7 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 | Blog Post | `/blogs/[id]` | Yes | No | **No — URL only** | No |
 | WhatsApp Verify | `/whatsapp-verification` | Yes | No | **No — orphaned** | No |
 | Dashboard | `/dashboard` | No | Admin only | **No — admin only** | No |
-| My Applications | `/my-applications` | No | Yes | Hamburger menu (when Apply enabled) | No |
+| My Applications | `/my-applications` | No | Yes | Hamburger menu (always shown when logged in) | No |
 | Apply school view | `/apply/[token]` | Yes (token-gated) | No (school OTP) | **No — sent via email/WhatsApp only** | No |
 | Apply payment status | `/apply/payment-status` | No | Yes | **No — redirect only after payment** | No |
 
