@@ -148,11 +148,13 @@ Per-user-per-school form completion progress. Written on every form save.
 | `giving_feedback_to_principal_answered` | INTEGER | 0 or 1 |
 | `what_you_like_answered` | INTEGER | 0 or 1 |
 | `what_to_improve_answered` | INTEGER | 0 or 1 |
-| `section_zero_completed` | INTEGER | 0 or 1 — workedRecently answered |
-| `section_one_completed` | INTEGER | 0 or 1 — S0 + salary + overall |
-| `section_two_completed` | INTEGER | 0 or 1 — S1 + all quantitative fields |
-| `section_three_completed` | INTEGER | 0 or 1 — S2 + whatYouLike + whatToImprove |
+| `section_zero_completed` | INTEGER | 0 or 1 — gate answered (`workedRecently = 'yes'`) |
+| `section_one_completed` | INTEGER | 0 or 1 — Overall Rating submitted (`overallExperience > 0`) |
+| `section_two_completed` | INTEGER | 0 or 1 — legacy definition: all quantitative fields answered (old S2 bundle) |
+| `section_three_completed` | INTEGER | 0 or 1 — Full Completion (`whatToImprove` answered) |
 | `is_full_complete` | INTEGER | 0 or 1 — same as section_three_completed |
+
+⚠ **These column names reflect the old S0/S1/S2/S3 model.** The admin dashboard does not read these columns for its analytics — it queries Neon `stepper_form_data` directly using field-level anchors (see neon-schema.md for the 7-stage model). Do not conflate `section_two_completed` with the dashboard's "Salary & Work Experience" stage (which uses only `totalWorkExperience > 0` as its anchor).
 | `created_at` | TEXT | IST datetime string |
 | `updated_at` | TEXT | IST datetime string |
 

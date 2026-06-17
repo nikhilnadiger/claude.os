@@ -120,9 +120,9 @@ from the frontend. Processed by a cron job every 5 minutes.
 **Active queue population triggers (April 2026 system):**
 - User signs up but hasn't answered gate question → INSERT into `initiation_nudge_queue`
   → sends `initiation_nudge_042026`
-- S0 answered but S1 not complete → `short-form-legacy.service.ts` → INSERT into
+- Gate answered (`workedRecently = 'yes'`) but Overall Rating not yet submitted (`overallExperience` null) → `short-form-legacy.service.ts` → INSERT into
   `abandonment_queue` (delay: 60min) → sends `ratings1_nudge_042026`
-- S1 answered but salary not yet added → `short-form-legacy.service.ts` → INSERT into
+- Overall Rating submitted (`overallExperience > 0`) but Work Experience not yet added (`totalWorkExperience` null) → `short-form-legacy.service.ts` → INSERT into
   `update_is_live_queue` (delay: 60min) → sends `salary_nudge_042026`
 - Salary added but qualitative steps not complete → `short-form-legacy.service.ts` →
   INSERT into `completion_nudge_queue` → sends `completion_nudge_042026`

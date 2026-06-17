@@ -98,11 +98,30 @@ One row per login event. Used to store geolocation (lat/lon → pincode/city via
 | `createdAt` | timestamp(3) | NOT NULL, default NOW | |
 | `updatedAt` | timestamp(3) | NOT NULL | |
 
-**Review form sections (derived from `question_completion_tracking` column names):**
-- **Section 0 (S0):** `workedRecently` answered
-- **Section 1 (S1):** S0 + `salaryOnTime` + `overallExperience` answered
-- **Section 2 (S2):** S1 + all of: `salaryPerMonth`, `totalWorkExperience`, `highestQualification`, `designation`, `daysWorkHome`, `benefits`, `feesDeductions`, `applyingForLeave`, `workingWithTeachers`, `workingWithManagement`, `tryingNewThings`, `givingFeedbackToPrincipal` answered
-- **Section 3 (S3 / full):** `whatYouLike` + `whatToImprove` answered — this is "full completion"
+**Dashboard completion funnel (7 stages — as shown in `/dashboard` ReviewCompletionCard):**
+
+The admin dashboard tracks completion via 7 cumulative stages, each anchored to one field in `stepper_form_data`. Counts are cumulative: anyone who reached a later stage is also counted at all earlier stages.
+
+| # | Dashboard label | Field anchor | Backend variable |
+|---|---|---|---|
+| 1 | Started ("I worked here recently") | `workedRecently = 'yes'` | `has_s0` |
+| 2 | Overall Rating | `overallExperience IS NOT NULL AND overallExperience > 0` | `has_s1` |
+| 3 | Total of Salary and Work Experience | `totalWorkExperience IS NOT NULL AND totalWorkExperience > 0` | `has_s2` |
+| 4 | Benefits and Perks | `benefits` non-null, non-empty, non-`[]` | `has_benefits` |
+| 5 | Expenses borne | `feesDeductions` non-null, non-empty, non-`[]` | `has_expenses` |
+| 6 | Ease of working | `givingFeedbackToPrincipal IS NOT NULL AND TRIM(givingFeedbackToPrincipal) != ''` | `has_ease` |
+| 7 | What to improve (Full Completion) | `whatToImprove IS NOT NULL AND TRIM(whatToImprove) != ''` | `has_full` |
+
+**Note on legacy S0/S1/S2/S3 terminology:** Earlier documentation used a 4-stage S0/S1/S2/S3 model. The dashboard's 7-stage model supersedes it for all analytics purposes. The D1 `question_completion_tracking` table still has `section_zero_completed`–`section_three_completed` column names (structural, unchanged in the database) — do not conflate those with the dashboard stages. The dashboard queries Neon `stepper_form_data` directly using the field anchors above.
+
+**Career insights unlock states** (separate from the analytics funnel — used by `short-form-legacy.service.ts` to determine which of the 5 career insight cards unlock for the user):
+
+| Backend state | Condition | Cards unlocked |
+|---|---|---|
+| `s0_only` | Gate answered only | None |
+| `s1_complete` | Gate + Overall Rating submitted | Card A (school quality percentile) |
+| `s2_step2_complete` | Gate + Overall Rating + salary and work-from-home days added | Card A + Card B (salary percentile) |
+| `full_complete` | Gate + all steps answered (incl. qualitative comments) | All 5 cards |
 
 **Live review criteria:** `workedRecently` IS NOT NULL AND TRIM ≠ '' AND `overallExperience` IS NOT NULL AND > 0.
 

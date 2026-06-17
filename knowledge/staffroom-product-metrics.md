@@ -35,16 +35,21 @@ staleness_note: >
 
 ---
 
-## Review Funnel (Apr 22 2026)
+## Review Funnel (Apr 22 2026 — re-query needed for mid-stages)
 
-| Stage | Count | Condition | Notes |
+⚠ Counts below are from Apr 22 2026 and predate the dashboard's 7-stage model. Started, Overall Rating, and Full Completion figures are directly comparable. Mid-stage counts (Benefits, Expenses, Ease of working) were not separately queried under the old model — re-query from Neon using the field anchors in neon-schema.md.
+
+| Dashboard stage | Apr 22 2026 count | Field anchor | Notes |
 |---|---|---|---|
-| Submitted (any) | 838 | Any row in stepper_form_data | S0 is answered on every submission — it is the form entry gate |
-| Reached experience step | 531 | workedRecently IS NOT NULL AND overallExperience IS NOT NULL | 63% of submitted. Note: user journey's `s1_complete` requires salary also — true s1_complete count ≤ 418 |
-| Salary section complete (S2) | 418 | salaryPerMonth IS NOT NULL AND salaryPerMonth > 0 | 50% of submitted |
-| Full complete (S3) | 336 | whatToImprove IS NOT NULL | 40% of submitted; 63% of live reviews |
+| Started ("I worked here recently") | 838 | `workedRecently = 'yes'` | Entry gate — ~100% of submissions |
+| Overall Rating | ~531 | `overallExperience > 0` | ~63% of started |
+| Salary & Work Experience | not queried | `totalWorkExperience > 0` | was bundled into old "S2" — re-query |
+| Benefits and Perks | not queried | `benefits` non-null, non-`[]` | was bundled into old "S2" — re-query |
+| Expenses borne | not queried | `feesDeductions` non-null, non-`[]` | was bundled into old "S2" — re-query |
+| Ease of working | not queried | `givingFeedbackToPrincipal` answered | was bundled into old "S2" — re-query |
+| Full Completion ("What to improve") | 336 | `whatToImprove` answered | 40% of started; 63% of live reviews |
 
-**Key insight:** S0 is answered on 100% of submissions — it is the entry gate, not a drop-off point. The meaningful drop-offs are S1→S2 (531→418, 79% continue) and the 37% of live reviews that don't reach full completion.
+**Key insight:** The dashboard now exposes mid-funnel drop-off between Overall Rating and Full Completion as 4 distinct stages. Re-query all 7 stages from Neon to identify where teachers are stopping. For field anchors and query logic, see neon-schema.md dashboard funnel table.
 
 **PMF definition:** ≥70% of searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density).
 **Current baseline:** 10 schools with 3+ live reviews (nationwide, May 27 2026). The Mar 2026 figure of 15 was incorrect — the Apr 22 2026 live Neon query is the authoritative count.

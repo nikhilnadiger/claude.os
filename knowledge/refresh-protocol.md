@@ -204,9 +204,16 @@ Every metric and data flow in the other knowledge files must be interpreted thro
 Specific things the user journey clarifies that affect how metrics are recorded and labeled:
 - **Type 3 (Old Users):** Pre-OTP-era accounts get silently linked when they return via OTP.
   WhatsApp verification counts must not be framed as pure funnel drop-off without this context.
-- **Review completion stages:** `s1_complete` = Gate + Steps 1 AND 2 (Overall Experience + Salary).
-  The Neon query condition `overallExperience IS NOT NULL` catches "reached experience step" — not
-  s1_complete. Label accordingly.
+- **Review completion funnel:** The dashboard (`/dashboard` ReviewCompletionCard) tracks 7 cumulative stages. Use these Neon field anchors when querying metrics — do not use the old S0/S1/S2/S3 labels:
+  - Started: `TRIM(LOWER("workedRecently")) = 'yes'`
+  - Overall Rating: `"overallExperience" IS NOT NULL AND "overallExperience" > 0`
+  - Salary & Work Experience: `"totalWorkExperience" IS NOT NULL AND "totalWorkExperience" > 0`
+  - Benefits and Perks: `"benefits" IS NOT NULL AND TRIM("benefits"::text) NOT IN ('', '[]')`
+  - Expenses borne: `"feesDeductions" IS NOT NULL AND TRIM("feesDeductions"::text) NOT IN ('', '[]')`
+  - Ease of working: `"givingFeedbackToPrincipal" IS NOT NULL AND TRIM("givingFeedbackToPrincipal") != ''`
+  - Full Completion: `"whatToImprove" IS NOT NULL AND TRIM("whatToImprove") != ''`
+  See neon-schema.md for the full 7-stage table and cumulative counting logic.
+- **Career insights unlock states** (`s0_only`, `s1_complete`, `s2_step2_complete`, `full_complete`) are a separate concept — they control which career insight cards unlock for the user, and are set by `short-form-legacy.service.ts`. Do not conflate these with the analytics funnel stages.
 - **Review goes live immediately:** No admin gate. `stepper_form_approval` is never written.
 - **"Member since 2024" is hardcoded** on Profile — not a DB value.
 - **Sign-out is client-only** — no server-side token invalidation.
