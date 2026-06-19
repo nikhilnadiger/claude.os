@@ -202,6 +202,7 @@ Key knowledge files:
 
 Key skill reference files:
 - skills/visual-asset-creation/references/pptx-assets.md — PowerPoint asset creation (python-pptx, all asset types, export instructions)
+- skills/meta-ad-creation/ — Run a Meta Ads campaign via 4-gate sequential process (Brief → Routes → Scripts → Production Briefs → Meta Setup)
 
 ---
 

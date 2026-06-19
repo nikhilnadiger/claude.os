@@ -39,6 +39,7 @@ related_skills:
   - brand-custodian
   - product-design
   - engineering-review
+  - meta-ad-creation
 ---
 
 # advisory-councils

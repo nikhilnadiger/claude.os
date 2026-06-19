@@ -35,6 +35,7 @@ uses_references:
 related_skills:
   - brand-custodian
   - visual-asset-creation
+  - meta-ad-creation
 
 live_references:
   - label: Scripts Archive IR32–IR55 + Episodes E1–E16 (Google Drive folder)

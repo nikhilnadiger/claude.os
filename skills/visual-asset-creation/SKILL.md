@@ -39,6 +39,7 @@ uses_references:
 related_skills:
   - content-strategy
   - brand-custodian
+  - meta-ad-creation
 
 live_references:
   - label: Visual Identity (brand colours, typography, logo system)
