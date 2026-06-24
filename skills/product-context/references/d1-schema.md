@@ -1,9 +1,10 @@
 ---
 skills: [product-context, codebase-context, engineering-review]
-last_updated: May 2026
-source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/), PRAGMA table_info verified May 27 2026 via Cloudflare MCP
+last_updated: June 2026
+source: Cloudflare D1 live query (REVIEW_DB, uuid a8fabb84-3699-4c60-a431-82ef3dd94053), NestJS codebase analysis (backend-nest/src/), PRAGMA table_info verified May 27 2026 via Cloudflare MCP. Row counts re-verified June 24 2026 via Cloudflare MCP.
 staleness_note: >
   Schema reflects production state as of May 27 2026 (full table list + PRAGMA verified live).
+  Row counts updated June 24 2026. No new D1 tables since May 27 — Apply email feature (SendPulse) uses Neon (apply_recipients table), not D1.
   Verify against D1 before any table change. Use PRAGMA table_info(<table>) via Cloudflare MCP or wrangler.
 ---
 
@@ -20,29 +21,31 @@ New features that need new persistent data should use Neon PostgreSQL via Postgr
 
 ---
 
-## D1 Table Freshness Status (verified May 27 2026)
+## D1 Table Freshness Status (verified June 24 2026)
 
 Live queries confirmed which tables are actively written vs frozen. Check this before relying on any D1 table for current-state metrics.
 
-### Live (writing as of May 2026)
+### Live (writing as of June 2026)
 
-Verified via direct D1 query May 27 2026. Row counts and latest timestamps confirmed live.
+Row counts re-verified June 24 2026 via Cloudflare MCP direct query.
 
-| Table | Row count | Latest timestamp | Timestamp column |
-|---|---|---|---|
-| `nudge_link_clicks` | 22,928 | May 27, 2026 | `clicked_at` |
-| `nudges` | 2,687 | May 27, 2026 | `created_at` |
-| `question_completion_tracking` | 947 | May 27, 2026 | `created_at` |
-| `full_completion_queue` | 444 | May 27, 2026 | `created_at` |
-| `abandonment_queue` | 912 | May 27, 2026 | `created_at` |
-| `update_is_live_queue` | 615 | May 27, 2026 | `created_at` |
-| `initiation_nudge_queue` | 228 | May 27, 2026 | `created_at` |
-| `school_nudge_tracking` | 199 | May 27, 2026 | `last_nudge_sent_at` |
-| `completion_nudge_queue` | 155 | May 27, 2026 | `created_at` |
-| `share_clicks` | 195 | May 26, 2026 | `clicked_at` |
-| `share_events` | 119 | May 26, 2026 | `shared_at` |
-| `referrals` | 18 | May 26, 2026 | `created_at` |
-| `badge_contributor` | 466 | ~May 2026 | Unix timestamp |
+| Table | Row count (Jun 24) | Row count (May 27) | Latest timestamp | Timestamp column |
+|---|---|---|---|---|
+| `nudge_link_clicks` | 31,038 | 22,928 | Jun 24, 2026 | `clicked_at` |
+| `nudges` | 2,908 | 2,687 | Jun 24, 2026 | `created_at` |
+| `question_completion_tracking` | 1,320 | 947 | Jun 23, 2026 | `created_at` |
+| `initiation_nudge_queue` | 608 | 228 | Jun 23, 2026 | `created_at` |
+| `abandonment_queue` | 1,287 | 912 | not re-queried | `created_at` |
+| `update_is_live_queue` | 916 | 615 | not re-queried | `created_at` |
+| `completion_nudge_queue` | 405 | 155 | not re-queried | `created_at` |
+| `school_nudge_tracking` | 422 | 199 | Jun 24, 2026 | `last_nudge_sent_at` |
+| `badge_contributor` | 673 | 466 | ~Jun 2026 | Unix timestamp |
+| `full_completion_queue` | not re-queried | 444 | May 27, 2026 | `created_at` |
+| `share_clicks` | not re-queried | 195 | May 26, 2026 | `clicked_at` |
+| `share_events` | not re-queried | 119 | May 26, 2026 | `shared_at` |
+| `referrals` | not re-queried | 18 | May 26, 2026 | `created_at` |
+
+**Notable growth (May → June):** nudge_link_clicks +35%, qct +39%, initiation_nudge_queue +167% (initiation nudge enabled on prod June 23), school_nudge_tracking +112%, badges +44%.
 
 ### Stale (frozen — not being written to)
 

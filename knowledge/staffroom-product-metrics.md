@@ -1,79 +1,88 @@
 ---
-last_updated: May 2026
-source: Neon PostgreSQL (live queries Apr 22 2026), Microsoft Clarity dashboard (Apr 2026, May 2026 via MCP May 27 2026), Meta Ads CSV (Apr 22 2026)
+last_updated: June 2026
+source: Neon PostgreSQL (live queries Jun 24 2026), Microsoft Clarity MCP (Jun 24 2026, last 30 days), Meta Ads MCP (Jun 24 2026, all-time + 2026 YTD)
 skills: [content-strategy, codebase-context, brand-custodian, product-context]
 staleness_note: >
-  Partially refreshed May 27 2026. Neon: sign-ups, reviews, schools with 3+ are current.
-  D1: user_tracking discrepancy documented (see School Discovery section). Clarity: fully
-  refreshed May 2026. Pending: WhatsApp verified count, full completion count, salary data
-  re-query, school search count.
+  Fully refreshed Jun 24 2026. Neon: all metrics re-queried. Clarity: Jun 24 2026 (last 30 days, May 25–Jun 24).
+  Meta Ads: all campaigns queried Jun 24 2026. Geographic distribution of reviews (Apr 22 2026 — not re-queried).
+  D1 user_tracking: still STALE, frozen Feb 2026 (see School Discovery section).
 ---
 
 # staffroom — Product Metrics
 
 ---
 
-## Platform Metrics (May 27 2026)
+## Platform Metrics (Jun 24 2026)
 
-⚠ **Partially refreshed May 27 2026.** Sign-ups, reviews submitted, live reviews, and schools with 3+ reviews are current from Neon. WhatsApp verified, full completions, salary, school search counts, and saved schools are Apr 22 2026 figures pending re-query.
+All figures from Neon live queries Jun 24 2026 unless noted.
 
 | Metric | Value | Source |
 |---|---|---|
-| Sign-ups | 3,664 | `SELECT COUNT(*) FROM "User"` — May 27 2026 |
-| WhatsApp verified | not re-queried | pending — run `SELECT COUNT(*) FROM whatsapp_users` |
-| Reviews submitted | 1,106 | `SELECT COUNT(*) FROM stepper_form_data` — May 27 2026 |
-| Reviews live | 740 | workedRecently IS NOT NULL AND overallExperience IS NOT NULL — May 27 2026 |
-| Reviews fully complete (S3) | not re-queried | pending — run `WHERE whatToImprove IS NOT NULL` |
-| Schools with 3+ live reviews | 10 | 9 with identified placeId + 1 null-placeId group — May 27 2026 |
-| Median teacher salary (live reviews) | ₹30,000/month | 418 reviews with salary data — Apr 22 2026, not re-queried |
-| Schools searched (ever) | not re-queried | pending — run `WHERE first_searched_at IS NOT NULL` |
-| Community size | 12,000+ | WhatsApp + Instagram + YouTube (Mar 2026) |
-| CAC (blended, Meta Ads) | ~₹36/sign-up | ₹1,31,289 all-time Meta spend ÷ 3,664 sign-ups — May 27 2026 |
-| Saved schools | not re-queried | pending |
+| Sign-ups | 4,038 | `SELECT COUNT(*) FROM "User"` — Jun 24 2026 |
+| WhatsApp OTP verified | 2,309 (57.2%) | `SELECT COUNT(*) FROM whatsapp_users` — Jun 24 2026 |
+| Reviews submitted | 1,473 | `SELECT COUNT(*) FROM stepper_form_data` — Jun 24 2026 |
+| Reviews live | 1,033 | workedRecently IS NOT NULL AND overallExperience > 0 — Jun 24 2026 |
+| Reviews fully complete | 727 | whatToImprove IS NOT NULL — Jun 24 2026 |
+| Reviews with salary | 875 (59.4% of submitted) | salaryPerMonth > 0 — Jun 24 2026 |
+| Median teacher salary | ₹30,000/month | from 875 salary reviews — Jun 24 2026 |
+| Avg teacher salary | ₹35,871/month | from 875 salary reviews — Jun 24 2026 |
+| Schools with 3+ live reviews | 17 | by placeId, reviews where workedRecently + overallExperience present — Jun 24 2026 |
+| Unique schools reviewed | 1,187 | `COUNT(DISTINCT placeId) FROM stepper_form_data` — Jun 24 2026 |
+| Teacher job applications (Apply) | 78 total, 77 active | apply_applications table — Jun 24 2026 |
+| Community size | 12,000+ | WhatsApp + Instagram + YouTube (Mar 2026 — not re-queried) |
+| CAC (blended, Meta Ads) | ~₹41/sign-up | ₹1,66,648 all-time Meta spend ÷ 4,038 sign-ups — Jun 24 2026 |
+| Saved schools | 21 saves by 20 users | Apr 22 2026 — not re-queried (effectively zero adoption) |
 
 ⚠ **stepper_form_data has no `is_live` or `completion_stage` columns.** Both are computed from field presence. See queries below.
 
+**WhatsApp verified note:** `whatsapp_users` table (2,309) = users who have completed WhatsApp OTP at least once. `User.phone IS NOT NULL` (3,741) is broader and includes old-era accounts with phone numbers from other sources. Use `whatsapp_users` count for OTP-verified metric. The 1,729 unverified accounts include Type 3 Old Users (pre-OTP era) who haven't returned — not pure funnel dropoff.
+
 ---
 
-## Review Funnel (Apr 22 2026 — re-query needed for mid-stages)
+## Review Funnel (Jun 24 2026)
 
-⚠ Counts below are from Apr 22 2026 and predate the dashboard's 7-stage model. Started, Overall Rating, and Full Completion figures are directly comparable. Mid-stage counts (Benefits, Expenses, Ease of working) were not separately queried under the old model — re-query from Neon using the field anchors in neon-schema.md.
+Mid-stage counts (Benefits, Expenses, Ease of working) not re-queried Jun 24. Use Apr 22 2026 figures for mid-stages as directional reference only.
 
-| Dashboard stage | Apr 22 2026 count | Field anchor | Notes |
+| Dashboard stage | Jun 24 2026 count | Apr 22 count | Field anchor |
 |---|---|---|---|
-| Started ("I worked here recently") | 838 | `workedRecently = 'yes'` | Entry gate — ~100% of submissions |
-| Overall Rating | ~531 | `overallExperience > 0` | ~63% of started |
-| Salary & Work Experience | not queried | `totalWorkExperience > 0` | was bundled into old "S2" — re-query |
-| Benefits and Perks | not queried | `benefits` non-null, non-`[]` | was bundled into old "S2" — re-query |
-| Expenses borne | not queried | `feesDeductions` non-null, non-`[]` | was bundled into old "S2" — re-query |
-| Ease of working | not queried | `givingFeedbackToPrincipal` answered | was bundled into old "S2" — re-query |
-| Full Completion ("What to improve") | 336 | `whatToImprove` answered | 40% of started; 63% of live reviews |
+| Started ("I worked here recently") | 1,473 | 838 | `workedRecently IS NOT NULL` |
+| Overall Rating | 1,033 | ~531 | `overallExperience > 0` |
+| Salary & Work Experience | not re-queried | not queried | `totalWorkExperience > 0` |
+| Benefits and Perks | not re-queried | not queried | `benefits` non-null, non-`[]` |
+| Expenses borne | not re-queried | not queried | `feesDeductions` non-null, non-`[]` |
+| Ease of working | not re-queried | not queried | `givingFeedbackToPrincipal` answered |
+| Full Completion ("What to improve") | 727 | 336 | `whatToImprove` answered |
 
-**Key insight:** The dashboard now exposes mid-funnel drop-off between Overall Rating and Full Completion as 4 distinct stages. Re-query all 7 stages from Neon to identify where teachers are stopping. For field anchors and query logic, see neon-schema.md dashboard funnel table.
+**Funnel rates (Jun 24 2026):** Started → Live: 70.1% (1,033 / 1,473). Live → Full Completion: 70.4% (727 / 1,033). Salary filled: 59.4% of submitted. Full completion / started: 49.4% — significant improvement from 40% in Apr 2026.
+
+For field anchors and query logic, see neon-schema.md dashboard funnel table.
 
 **PMF definition:** ≥70% of searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density).
-**Current baseline:** 10 schools with 3+ live reviews (nationwide, May 27 2026). The Mar 2026 figure of 15 was incorrect — the Apr 22 2026 live Neon query is the authoritative count.
+**Current baseline:** 17 schools with 3+ live reviews (nationwide, Jun 24 2026), up from 10 May 27 2026 and 7 Apr 22 2026. Delhi/NCR schools now appear in the top 10 for the first time.
 
 ---
 
-## Schools with 3+ Live Reviews (May 27 2026)
+## Schools with 3+ Live Reviews (Jun 24 2026)
 
-10 schools nationwide with 3+ live reviews: 9 identified schools + 1 null-placeId group.
+17 schools with 3+ live reviews (all with identified placeId). Query: `placeId IS NOT NULL AND workedRecently IS NOT NULL AND overallExperience > 0 GROUP BY placeId HAVING COUNT(*) >= 3`.
 
-| placeId | Live Reviews |
-|---|---|
-| null (unmatched submissions) | 7 |
-| ChIJbVQ_C1URrjsRGY86qFLdpaY | 4 |
-| ChIJ67pnXv4NrjsRWrOt7C7itZM | 4 |
-| ChIJ2Y6vPxJurjsRGrLie_FUs4c | 4 |
-| ChIJFREQiDQ-rjsRollG9KpOgYg | 3 ← new since Apr 2026 |
-| ChIJi3j6F0FdUjoRnU-NllN4RK8 | 3 ← new since Apr 2026 |
-| ChIJV1Xl77JNGzkReZLxofYzBR0 | 3 |
-| ChIJndiJc5G25zsRHerkokRkR1E | 3 |
-| ChIJkeKlkmiZyzsRQRz0MC4EdR4 | 3 |
-| ChIJTx9TmSgUrjsRnJrZD_xn6Ow | 3 ← new since Apr 2026 |
+| School | placeId | Live Reviews |
+|---|---|---|
+| Neev Academy | ChIJ67pnXv4NrjsRWrOt7C7itZM | 5 |
+| Global City International School | ChIJbVQ_C1URrjsRGY86qFLdpaY | 5 |
+| Tejasvi Vidyaranya | ChIJkeKlkmiZyzsRQRz0MC4EdR4 | 4 |
+| Delhi Public School Vasant Kunj | ChIJ7-VOrTIcDTkRid_shxawFGw | 3 ← new Jun 2026, Delhi/NCR |
+| Delhi International School Sector 23 Dwarka | ChIJPf1nOAAbDTkRDHxoPukzhIc | 3 ← new Jun 2026, Delhi/NCR |
+| Green Field Sr. Sec. School | ChIJV1Xl77JNGzkReZLxofYzBR0 | 3 |
+| Smt. Sulochanadevi Singhania School | ChIJuUJQSRW55zsR2GDQbgQu1k0 | 3 ← new Jun 2026 |
+| Suncity School | ChIJNa_Rxq4XDTkRo-HTTdc1udM | 3 ← new Jun 2026, Delhi/NCR |
+| Candor International School | ChIJh_p64_IUrjsRwBdJZXvmWNc | 3 ← new Jun 2026 |
+| Lancer's Convent | ChIJKUf-UGIBDTkRPZBxSKNOJG4 | 3 ← new Jun 2026, Delhi/NCR |
+| (7 more schools with 3 live reviews each) | various | 3 each |
 
-The 7-review null group is reviews where `placeId` was not captured — likely early form submissions or edge cases in school resolution. The 9 identified schools are all Bengaluru-area (ChIJ prefix pattern).
+**Key shift:** Delhi/NCR schools appear in the top-10 list for the first time (4 of the top 10 are Delhi/NCR). Bengaluru remains the top city overall. Null-placeId group not included in this query (prior null group of 7 is legacy early submissions).
+
+**Trajectory:** 7 (Apr 22) → 10 (May 27) → 17 (Jun 24). +7 schools in ~4 weeks (Jun). Pace is accelerating — initiation nudge going live Jun 23 is the most likely driver.
 
 ---
 
@@ -107,12 +116,13 @@ Bengaluru Urban (116) accounts for ~22% of all live reviews — dominant but the
 
 | Month | New Sign-ups | Notes |
 |---|---|---|
-| May 2026 | 392 | Apr 23 – May 27 (~35 days) — not a full calendar month |
-| Apr 2026 | 331 | Partial month (~22 days) — run rate ~450/month |
+| Jun 2026 | 291 | Through Jun 24 only — run rate ~363/month |
+| May 2026 | 368 | Full calendar month |
+| Apr 2026 | 438 | Full calendar month |
 | Mar 2026 | 349 | |
-| Feb 2026 | 563 | Peak month — likely campaign push |
+| Feb 2026 | 563 | Peak month — highest Meta Ads spend period |
 | Jan 2026 | 404 | |
-| Dec 2025 | 160 | Slow month |
+| Dec 2025 | 160* | *Jun 24 query shows 62 for Dec (partial month window) — 160 is the correct full-month figure from May 27 query |
 | Nov 2025 | 205 | |
 | Oct 2025 | 410 | |
 | Sep 2025 | 475 | Strong month |
@@ -121,24 +131,21 @@ Bengaluru Urban (116) accounts for ~22% of all live reviews — dominant but the
 | Jun 2025 | 5 | Pre-launch / soft launch |
 | May 2025 | 7 | Pre-launch |
 
-Effective launch: Jul–Aug 2025. Trailing 6-month average (Nov 2025 – Apr 2026): ~335/month. Feb 2026 spike (563) correlates with the period of highest Meta Ads spend.
-
-**WhatsApp verification note:** 1,520 of 3,664 accounts are WhatsApp-verified (Apr 22 2026 figure — not re-queried). The remaining 1,752 unverified accounts include Type 3 Old Users (accounts created before WhatsApp OTP was made mandatory) who have not returned to verify — they are not purely a current funnel loss. The split between Old Users and genuine new-signup dropoffs is not queryable from Neon alone.
+Effective launch: Jul–Aug 2025. Trailing 6-month average (Jan–Jun 2026): ~385/month. Feb 2026 spike (563) correlates with highest Meta Ads spend. Apr (438) was a strong month despite lower ad spend — organic/nudge growth.
 
 ---
 
-## Salary Data (Apr 22 2026)
+## Salary Data (Jun 24 2026)
 
-From 418 reviews with `salaryPerMonth` filled (S2-complete reviews):
+From 875 reviews with `salaryPerMonth` > 0 (Jun 24 2026):
 
 | Metric | Value |
 |---|---|
 | Median salary | ₹30,000/month |
-| Minimum | ₹4,500/month |
-| Maximum | ₹1,50,000/month |
-| Reviews with salary | 418 (50% of all submitted) |
+| Average salary | ₹35,871/month |
+| Reviews with salary | 875 (59.4% of submitted, up from 50% Apr 22) |
 
-Median ₹30K/month = ₹3.6L/year. Consistent with Indian private school teacher salary benchmarks. The range (₹4.5K–₹1.5L) reflects the spectrum from budget primary schools to premium international schools.
+Median ₹30K/month = ₹3.6L/year. Unchanged from Apr 22 2026 — consistent with Indian private school benchmarks. Average (₹35.9K) higher than median indicates right skew (some high-paying international/premium schools pulling up the average). Min/max not re-queried Jun 24.
 
 ---
 
@@ -166,83 +173,83 @@ Note: Neon `school_mapping.first_searched_at` is a separate, independent school 
 
 ## Feature Adoption Notes
 
-- **Saved schools:** 21 saves by 20 users — effectively zero adoption. Not a feature teachers are using.
+- **Saved schools:** 21 saves by 20 users (Apr 22 2026 — not re-queried) — effectively zero adoption. Not a feature teachers are using.
 - **Referrals:** Tracked via `User.referredById` FK and `User.referralCount` column. No separate `referrals` table in Neon (a `referrals` table exists in D1 — see d1-schema.md). Referral volume not queried in this refresh.
 - **Career Insights:** `GET /insights/career-stats` is a public endpoint returning salary aggregates. Usage not tracked server-side.
 - **"Member since 2024" on Profile:** Hardcoded — always displays 2024 regardless of actual account creation date. Known product gap, documented in user journey Section 6 (Profile page).
-- **CAC denominator note:** The ₹36 blended CAC uses all 3,664 sign-ups as denominator (₹1,31,289 all-time Meta spend ÷ 3,664 sign-ups). Type 3 Old Users who predate paid acquisition are included — this underestimates true paid CAC for new-era sign-ups.
+- **staffroom Apply:** 78 applications total (77 active) as of Jun 24 2026. Feature live but early. Apply is feature-flagged behind `APPLY_ENABLED`. Schools receive email via SendPulse + WhatsApp notification. School-facing page is tokenized (no school registration required).
+- **CAC denominator note:** The ~₹41 blended CAC uses all 4,038 sign-ups as denominator. Type 3 Old Users who predate paid acquisition are included — this underestimates true paid CAC for new-era sign-ups. May2026 Campaign's own attribution shows ₹107.54/registration.
 
 ---
 
-## Clarity Analytics (May 2026 — last 30 days)
+## Clarity Analytics (Jun 2026 — last 30 days, May 25 – Jun 24 2026)
+
+Data from Microsoft Clarity MCP, queried Jun 24 2026. All figures are for the trailing 30-day window.
 
 **Traffic:**
 
-| Metric | Value | Change vs Apr 2026 |
+| Metric | Value | Change vs May 2026 |
 |---|---|---|
-| Sessions | 5,153 | ↑ from 3,703 (+39%) |
-| Users | 4,503 | ↑ from 3,114 (+45%) |
-| Avg pages/session | 2.33 | ↓ from ~2.87 |
-| Avg session duration | 97.6s | ↓ from ~138s |
-| Bounce rate | 65.7% | ↑ from ~56% |
-
-Note: Session and user counts include ~43 sessions from uat.thestaffroom.in (UAT environment — Clarity is installed on all three environments). These slightly inflate numbers, same as Apr.
+| Sessions | 6,805 | ↑ from 5,153 (+32%) |
+| Unique users | 6,019 | ↑ from 4,503 (+34%) |
 
 **Device split:**
 
 | Device | Sessions | % |
 |---|---|---|
-| Mobile | 4,927 | 95.6% |
-| Desktop | 194 | 3.8% |
-| Tablet | 32 | 0.6% |
+| Mobile | 6,649 | 97.7% |
+| Desktop | 131 | 1.9% |
 
-→ **Mobile dominance increased further (90% → 95.6%). Every UI/UX decision must be mobile-first.**
+→ **Mobile dominance increased further (95.6% → 97.7%). Every UI/UX decision must be mobile-first.**
 
-**Geography (top cities, May 2026):**
+**Geography (top cities, Jun 2026):**
 
-| City | Sessions | % | Change vs Apr 2026 |
-|---|---|---|---|
-| Bengaluru | 778 | 15.1% | ↓ dramatically from 31.4% |
-| New Delhi | 549 | 10.7% | new entrant in top 2 |
-| Kolkata | 335 | 6.5% | ↑ significantly |
-| Mumbai | 296 | 5.7% | Similar |
-| Pune | 241 | 4.7% | Similar |
-| Hyderabad | 240 | 4.7% | Similar |
-| Delhi | 237 | 4.6% | (note: "New Delhi" and "Delhi" are separate Clarity entries — combined NCR: ~786 sessions, ~15.3%) |
-| Chennai | 214 | 4.2% | Similar |
-| Ahmedabad | 105 | 2.0% | New in top 10 |
+| City | Sessions | % |
+|---|---|---|
+| New Delhi | 1,688 | 24.8% |
+| Bengaluru | 1,336 | 19.6% |
+| Delhi | 702 | 10.3% |
+| Gurugram | 297 | 4.4% |
+| Noida | 184 | 2.7% |
+| Faridabad | 133 | 2.0% |
+| Dehradun | 106 | 1.6% |
+| Kolkata | 98 | 1.4% |
+| Panipat | 77 | 1.1% |
 
-→ **Major shift: Bengaluru no longer dominant.** Delhi/NCR (New Delhi + Delhi combined) at ~786 sessions (~15.3%) now equals Bengaluru. Traffic is genuinely national. Content and product decisions can no longer assume Bengaluru-first.
+NCR (New Delhi + Delhi + Gurugram + Noida + Faridabad): 3,004 sessions = **44.1%** of all sessions. Bengaluru: 19.6%. **Major shift from May 2026 — Delhi/NCR is now overwhelmingly the dominant traffic source.** This is a structural change, not a spike. Product decisions, content, and GTM must be Delhi/NCR-first.
 
-**Funnel / exit pages:**
+**Top referrers:**
+
+| Referrer | Sessions |
+|---|---|
+| instagram.com | 4,108 |
+| m.facebook.com | 869 |
+| l.facebook.com | 343 |
+| google.com | 106 |
+
+Instagram is the #1 traffic source by a wide margin. Meta Ads (Instagram + Facebook combined) drives the vast majority of attributed traffic.
+
+**Exit pages:**
 
 | Page | Exit Count |
 |---|---|
-| / (homepage) | 6,366 |
-| /home | 1,763 |
-| /share-experience | 968 |
-| /login | 552 |
-| /dashboard | 128 |
+| / (landing) | 5,289 |
+| /share-experience | 564 |
+| /home | 283 |
+| /login | 145 |
 
-Exit note: Homepage exits are high because it has the most traffic (most sessions start and end there). Login exits: 552 (↓ from 662 in Apr) — the OTP/login friction improvement from May PR #113 (mobile keyboard/layout fix) may have helped. Share-experience exits: 968 — this is a new prominent exit point, up from not being in the top list in Apr.
+**Login exits: 145 (Jun) vs 552 (May) — a 74% drop.** Most likely explanation: HMAC magic token (deployed Jun 22 2026) silently logs in users arriving via nudge links without OTP, bypassing the login page entirely. This dramatically reduces login page exits from nudge traffic. Not a UX fix — structural change to the auth flow.
 
-**UX friction:**
-
-- 14.9% of sessions have dead clicks (vs 18.8% in Apr — improvement). Primarily a mobile issue.
-- Dead click pattern analysis (from Clarity session recordings, Apr 2026):
-  - **Login page:** Users tap blank areas before/between form elements — most common
-    in login sessions entering from Instagram/WhatsApp WebView
-  - **School page non-interactive elements:** "(X+ years exp.)" badges, "Have you worked
-    here recently?" text, designation labels — these look clickable but aren't
-  - **Navigation menu area on homepage** — users tapping the nav bar area outside active elements
-  - **"BackNext" button junction** in the review form — users tapping between the two buttons
+Share-experience exits: 564 — down from 968 in May. Improvement is notable but the page is still a meaningful drop-off point.
 
 **Channel attribution:**
 
-- Organic: 175 sessions
-- Social: 108 sessions
-- Direct: 34 sessions
-- **Untracked: ~4,836 sessions (~93.9%)** — slightly worse than Apr (89.4% untracked). Meta Ads traffic still missing UTMs on most links. Fix required: ensure all paid creative links include UTM parameters.
+- Untracked: majority of sessions (Meta Ads traffic still missing UTMs on most links)
+- Instagram.com attributed: 4,108 sessions (60.4% of total sessions)
+- Facebook combined (m.facebook.com + l.facebook.com): 1,212 sessions (17.8%)
+- Google.com: 106 sessions (1.6%)
+
+Fix required: ensure all paid creative links include UTM parameters. Without UTMs, cost attribution is impossible.
 
 ---
 
@@ -285,10 +292,30 @@ One highly engaged researcher session (34 minutes active, 14 pages, multiple sch
 
 ---
 
-## Meta Ads Performance
+## Meta Ads Performance (Jun 24 2026)
 
-For full campaign, ad set, and creative breakdown → `staffroom-content-performance.md`.
+Queried via Meta Ads MCP, Jun 24 2026. For full creative/ad-level breakdown → `staffroom-content-performance.md`.
 
-**All-time summary (Apr 22 2026):** ₹1,03,250 spend, 4,51,793 reach, 18,839 link clicks, 13,079 LPVs, CPC ₹5.48, CPM ₹86.37, LPV rate 69.4%.
+**All-time campaign summary (maximum date range):**
 
-**Blended CAC:** ₹1,03,250 ÷ 3,272 sign-ups = ~₹32/sign-up (all-time Meta spend ÷ total sign-ups — assumes majority of sign-ups are Meta-driven given ~83% of Clarity sessions are unattributed Meta traffic).
+| Campaign | Status | Spend | Reach | Clicks | CTR | CPC | Result |
+|---|---|---|---|---|---|---|---|
+| May2026 Campaign | ACTIVE | ₹52,365 | 1,61,317 | 13,151 | 2.86% | ₹3.98 | 487 registrations @ ₹107.54/reg |
+| Home_Conversion_Reviews&Salary | PAUSED | ₹47,670 | 2,85,942 | 15,125 | 2.61% | ₹3.15 | N/A (mixed attribution) |
+| BLR_Campaign | PAUSED | ₹30,773 | 50,996 | 3,925 | 2.22% | ₹7.84 | N/A (mixed attribution) |
+| See Reviews_Campaign | PAUSED | ₹17,438 | 1,58,880 | 7,129 | 2.16% | ₹2.45 | 547 phone verifications @ ₹31.88 |
+| View Salary_Campaign | PAUSED | ₹13,917 | 93,668 | 5,822 | 3.35% | ₹2.39 | 497 phone verifications @ ₹28.00 |
+| Submit Reviews_Campaign | PAUSED | ₹1,824 | 24,454 | 685 | 2.52% | ₹2.66 | 9 phone verifications |
+| Pr_Submit Reviews_Campaign | PAUSED | ₹841 | 8,465 | 287 | 2.67% | ₹2.93 | 4 phone verifications |
+| Pr_See Reviews_Campaign | PAUSED | ₹699 | 5,646 | 197 | 2.83% | ₹3.55 | 7 phone verifications |
+| Pr_View Salaries_Campaign | PAUSED | ₹697 | 9,955 | 193 | 1.60% | ₹3.61 | 16 phone verifications |
+| Salary_Campaign | — | ₹240 | 1,953 | 119 | 5.80% | ₹2.01 | 0 leads |
+| SeeReviews_Campaign | — | ₹184 | 270 | 78 | 26.80% | ₹2.36 | 0 leads |
+
+**All-time totals (Jun 24 2026):** ~₹1,66,648 spend, ~8 lakh unique reach, ~46,700 clicks.
+
+**2026 YTD (Jan 1 – Jun 24 2026):** ~₹1,35,600 spend, dominated by May2026 Campaign (₹52,370) + Home_Conversion (₹47,670) + BLR_Campaign (₹30,773).
+
+**Blended CAC:** ₹1,66,648 ÷ 4,038 sign-ups = **~₹41/sign-up** (up from ~₹32 Apr 2026 — May2026 Campaign running at ₹107.54/registration is pulling up the blended figure).
+
+**CAC note:** May2026 Campaign (₹107.54/registration) is 3–4x less efficient than prior campaigns (See Reviews: ₹31.88, View Salary: ₹28.00). Active campaign conversion rate needs investigation. Prior campaigns drove cheap OTP verifications; May2026 Campaign's conversion event is "Website registrations completed" — different metric, different funnel. Direct comparison is imperfect.

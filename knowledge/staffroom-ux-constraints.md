@@ -1,8 +1,8 @@
 ---
 skills: [product-design, codebase-context]
-last_updated: Apr 2026
-source: Microsoft Clarity analytics (Apr 2026) + Clarity session recordings (Apr 2026) + product context
-staleness_note: Device/session data refreshes monthly — verify against live Clarity before major design decisions
+last_updated: June 2026
+source: Microsoft Clarity analytics (Jun 2026, last 30 days May 25–Jun 24) + Clarity session recordings (Apr 2026) + product context
+staleness_note: Device/session data refreshed Jun 24 2026. Session recordings still from Apr 2026 — behavioral observations are stable even if counts changed.
 ---
 
 # staffroom — UX Constraints
@@ -17,7 +17,7 @@ Any design or implementation that violates them is wrong by definition.
 
 ### 1. Mobile-First — No Exceptions
 
-- **~90% of sessions are on mobile** (Clarity, Apr 2026)
+- **97.7% of sessions are on mobile** (Clarity, Jun 2026, 6,649 of 6,805 sessions) — up from 95.6% in May, 90% in Apr
 - Design at 360px width first. 360px is the minimum Android viewport in
   production traffic.
 - Do not design at 390px (iPhone default) or desktop and adapt down.
@@ -79,21 +79,18 @@ Design and engineering implications:
   - `getServerSideProps` renders server-side for initial load — this helps;
     subsequent navigations are client-side.
 
-### 6. Geography: Bengaluru First, But Diversifying
+### 6. Geography: Delhi/NCR First, Bengaluru Second
 
-- ~31% of all sessions come from Bengaluru (Clarity, Apr 2026) — down from 44%
-  in Mar 2026 as traffic grows nationally.
-- Bengaluru remains the primary city for content, GTM, and product focus.
-- When designing features that involve city/location context, Bengaluru is
-  the primary test case.
-- Teacher profile: English-comfortable, aspirational segment dominant.
-- The diversification to other cities (Mumbai, Chennai, Pune, Delhi, Hyderabad,
-  Kolkata each at 4–7%) means city-agnostic features are increasingly important.
+- **Delhi/NCR is 44.1% of all sessions** (Clarity, Jun 2026) — New Delhi (24.8%) + Delhi (10.3%) + Gurugram (4.4%) + Noida (2.7%) + Faridabad (2%). This is a structural shift, not a spike.
+- Bengaluru is 19.6% of sessions (Jun 2026) — down from 31% in Apr 2026. Still the #2 city.
+- When designing features involving city/location context, NCR is now the primary test case.
+- Teacher profile in NCR: Hindi-comfortable, private school teachers at mid-range schools (DPS, Delhi International, Suncity etc).
+- City-agnostic features are increasingly important as reviews and traffic are now meaningfully multi-city.
 
-### 7. Login Page: Highest Drop-Off
+### 7. Login Page: Drop-Off Significantly Reduced by Magic Token
 
-- 662 exits from the login page (Apr 2026, up from 606 in Mar 2026) — primary
-  conversion problem.
+- **Jun 2026: 145 login exits** (down from 552 in May, 662 in Apr). The 74% drop is primarily structural: HMAC magic token (deployed Jun 22 2026) silently authenticates users arriving via nudge links without requiring the OTP flow — they bypass the login page entirely.
+- Login page is still a friction point for users not arriving via nudge links (paid ads, organic, direct).
 - Any change to authentication UX must reduce friction, not add it.
 - OTP flow must be: phone number → OTP → done. Maximum 2 screens.
 - OTP UX requirements:
@@ -105,23 +102,25 @@ Design and engineering implications:
 - Do not add "create an account" flow. Teachers authenticate directly with
   phone number — no password, no email required.
 
-**Recording-confirmed patterns at login drop-off (Apr 2026):**
+**Recording-confirmed patterns at login drop-off (Apr 2026 — still applies to non-nudge traffic):**
 - Dead click near "Join the staffroom!" heading before OTP form loads — users
   tap static text expecting it to be interactive
 - WebView users (Instagram/WhatsApp in-app browser) arrive at OTP screen but
   cannot switch to WhatsApp to retrieve the code without losing the session
 - Pure bounces from Meta paid ads — teachers see the login requirement as a wall
 
-### 8. Review Completion: Mid-Form Drop-Off
+### 8. Review Completion: Mid-Form Drop-Off (Improving)
 
-- 838 reviews submitted (Apr 2026), 336 fully complete (~40% completion rate).
-- Drop-off is mid-form — the form is too long or hits a friction point.
+- **Jun 2026: 1,473 submitted, 727 fully complete (49.4% full completion rate)** — up from 40% in Apr 2026.
+- Live review rate: 1,033 of 1,473 = 70.1% (workedRecently + overallExperience present).
+- Full completion of those who are live: 70.4%.
+- Drop-off still happens mid-form between "live" and "full completion". Mid-stage data (Benefits, Expenses, Ease of working) not re-queried — specific stage with highest drop-off unknown.
 - Implications for form design:
   - Show progress indicator throughout the multi-step form
   - Save progress on every step (`POST /short-form/save`)
   - Minimum required fields — every optional field is a potential drop-off
   - Each step: one clear question or section, not a wall of inputs
-- **Recording-confirmed:** One real user successfully completed the entire review
+- **Recording-confirmed (Apr 2026):** One real user successfully completed the entire review
   flow from a Meta paid ad. Experienced one dead click at the "Back/Next" button
   junction (tapped between the buttons). The buttons must have a gap or be
   visually distinct enough that the tap target for each is unambiguous.

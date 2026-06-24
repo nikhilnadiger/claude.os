@@ -1,7 +1,7 @@
 ---
 skills: [product-context]
-last_updated: May 2026
-source: live codebase — backend-nest/src/ (all controllers verified Apr 2026) + rum.controller.ts verified May 2026
+last_updated: June 2026
+source: live codebase — backend-nest/src/ (all controllers verified Apr 2026) + rum.controller.ts verified May 2026 + exchange-magic-token + apply/email-events verified June 24 2026
 ---
 
 # staffroom — API Inventory
@@ -25,6 +25,7 @@ belongs to admin login only (see Admin Routes below).
 | POST | `/whatsapp/send-otp` | None | Sends OTP to teacher's phone via WhatsApp. Body: `{ phone: string }` |
 | POST | `/whatsapp/verify-otp` | None | Verifies OTP. Body: `{ phone: string, otp: string }`. Returns JWT in response body. |
 | POST | `/whatsapp/update-profile` | JWT required | Updates teacher's pincode and occupation post-login (profile completion step). |
+| POST | `/whatsapp/exchange-magic-token` | None | Silent auth for nudge links. Body: `{ tok: string }` — where `tok` is an HMAC-signed payload (`phone:expTs:sig`). Returns `{ success, token, user, isNew }`. Token valid 72 hours; rejects expired or tampered tokens. Used by `_app.tsx` on nudge landing to log in the teacher without OTP. Phase 1 (ratings1/salary/completion nudges) only — initiation nudge Phase 2 gated behind `NUDGE_MAGIC_INITIATION_ENABLED=false`. Added June 22 2026. |
 
 > There is **no `/auth/send-otp`**, **no `/auth/verify`**, and **no `/auth/me`** endpoint
 > for teachers. Session verification is done via `GET /user/context` (see User Module below).
@@ -236,6 +237,47 @@ endpoints in any public-facing frontend code.
 | `DELETE /admin/manual-schools/:id` | Delete a manual school record. |
 | `GET /admin/routes` | Lists all registered NestJS routes (dev/debug). |
 | `GET /tables/:tableName` | Read a D1 table by name (dev/debug — no admin prefix). |
+
+---
+
+## Apply Module — `/apply`
+
+staffroom Apply — teacher job application system. Feature-flagged behind `APPLY_ENABLED`. When flag is off, none of these endpoints are wired to any visible UI.
+
+**Teacher-facing:**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/apply/eligibility/:identifier` | JWT required | Checks teacher's eligibility to apply to a school (review done, profile complete, credit available). |
+| GET | `/apply/profile` | JWT required | Returns teacher's Apply profile (name, experience, resume status). |
+| POST | `/apply/profile` | JWT required | Creates Apply profile for first time. |
+| PATCH | `/apply/profile` | JWT required | Updates existing Apply profile. |
+| POST | `/apply/upload-resume` | JWT required | Uploads PDF resume. Stored as binary. Relaxed MIME check. |
+| DELETE | `/apply/resume` | JWT required | Deletes uploaded resume. |
+| GET | `/apply/my-resume` | JWT required | Returns resume metadata and download URL. |
+| POST | `/apply/reveal-shown` | JWT required | Marks the post-review Apply reveal card as shown for this user. One-time — never shown again after. |
+| POST | `/apply/create-order` | JWT required | Creates a Razorpay order for ₹5. Idempotent — returns existing order if one exists for this user + school. |
+| POST | `/apply/verify-payment` | JWT required | Verifies Razorpay payment and activates the application. |
+| POST | `/apply/send-with-credit` | JWT required | Sends application using a free credit (first application). |
+| GET | `/apply/my-applications` | JWT required | Returns all applications this teacher has submitted with current status. |
+| GET | `/apply/applications/:id/status` | JWT required | Returns status of a single application by ID. |
+| POST | `/apply/payment-callback` | None | Razorpay redirect callback for WebView payment flow. |
+| POST | `/apply/webhooks` | None | Razorpay webhook for payment events. |
+
+**School-facing (tokenized, no teacher auth):**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/apply/:token` | None (token-gated) | Returns application details for school to view. Token is single-use tokenized link sent via email + WhatsApp. |
+| POST | `/apply/:token/viewed` | None | JS beacon — records that school opened the application page. Updates status to "Viewed". |
+| POST | `/apply/:token/send-otp` | None | Sends OTP to school's WhatsApp number (before Interested/Reject action). |
+| POST | `/apply/:token/verify-otp` | None | Verifies school OTP. Returns session for next action. |
+| POST | `/apply/:token/interest` | School OTP session | School marks application as "Interested". staffroom notifies teacher. |
+| POST | `/apply/:token/reject` | School OTP session | School marks application as "Not a fit". Optional reason text. |
+| GET | `/apply/:token/resume-download` | None (token-gated) | Returns resume file for school to download. |
+
+**SendPulse email webhook (added June 22 2026):**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| POST | `/apply/email-events` | None (SendPulse signature) | Receives SendPulse delivery/bounce/soft-bounce events for school emails. Updates `apply_recipients` with `delivered_at`, `bounced_at`, `bounce_type`. |
 
 ---
 

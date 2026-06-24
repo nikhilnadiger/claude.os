@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 27-05-2026
+> Last updated: 24-06-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -52,11 +52,11 @@ The following rules are non-negotiable and must always be in context:
 Full metrics: `knowledge/staffroom-product-metrics.md` (refresh before any decision).
 
 Structural implications (always apply):
-- **95.6% mobile** (May 2026, up from 90%) — every UI/UX decision must be mobile-first, no exceptions
-- **Bengaluru is ~15% of sessions** (May 2026, down sharply from 31% — Delhi/NCR now matches it at ~15%). Traffic is now genuinely national. No single city dominates.
-- **Login page exits: 552 (May 2026)**, down from 662 in Apr — improvement from mobile OTP fix (PR #113). Share-experience page (968 exits) is now a bigger drop-off than login.
-- **~4,836 of 5,153 sessions untracked (May 2026)** — Meta Ads traffic still missing UTMs. Fix on all paid links.
-- **Instagram Ads is a primary traffic source** — WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
+- **97.7% mobile** (Jun 2026, up from 95.6%) — every UI/UX decision must be mobile-first, no exceptions
+- **Delhi/NCR is now 44.1% of sessions** (Jun 2026 — New Delhi 24.8% + Delhi 10.3% + Gurugram 4.4% + Noida 2.7% + Faridabad 2%). Bengaluru is 19.6%. This is a structural shift: NCR now dominates, Bengaluru is secondary. Content, GTM, and product decisions should be NCR-first.
+- **Login page exits: 145 (Jun 2026)**, down dramatically from 552 in May — HMAC magic token (Jun 22) silently logs in nudge-link users without OTP, bypassing the login page entirely.
+- **Share-experience exits: 564 (Jun 2026)**, down from 968 in May — still a meaningful drop-off point.
+- **Instagram is the #1 traffic source** — 4,108 of 6,805 sessions (60.4%). Meta Ads (Instagram + Facebook) drives the vast majority of attributed traffic. WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
 
 Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 44×44pt touch targets, 360px mobile viewport, ≤0.6s animations, 2G-capable, no auto-play media.
 
@@ -90,7 +90,7 @@ Full competitive analysis: knowledge/staffroom-competitive-landscape.md
 
 GTM strategy is city-by-city. Full PMF definition: ≥70% searches yield ≥3 reviews in 7 cities (top 7 by private school teacher density). 1-2 cities is the current step toward that goal.
 
-Current baseline (May 27 2026, Neon): 10 schools nationwide have 3+ live reviews (up from 7 in Apr — 3 new schools crossed the threshold). ⚠ D1 user_tracking is STALE — frozen at Feb 15 2026 (search) and Jan 31 2026 (visit). The 266 visits and 35 high-intent users figures are from Jan–Feb 2026, not current. Do not use user_tracking for current school discovery metrics — see staffroom-product-metrics.md School Discovery section. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
+Current baseline (Jun 24 2026, Neon): 17 schools nationwide have 3+ live reviews (up from 10 May 27, 7 Apr 22 — accelerating: +7 schools in ~4 weeks of June). Delhi/NCR schools now in top 10 for the first time. ⚠ D1 user_tracking is STALE — frozen at Feb 15 2026 (search) and Jan 31 2026 (visit). Do not use user_tracking for current school discovery metrics — see staffroom-product-metrics.md School Discovery section. The gap to the goal is large — the bottleneck is review volume per school, not number of schools covered.
 
 ---
 
@@ -115,7 +115,7 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
   `nikhilnadiger@gmail.com` profile first. Do not attempt to connect until confirmed.
 - **Cloudflare MCP:** Account access is live. D1 changes affect production.
   Do not create new D1 tables or modify D1 schema without explicit approval.
-  **D1 data reliability — check before using any D1 table for metrics:** Not all D1 tables are live. `user_tracking` and `search_intent_queue` are STALE (frozen Feb 2026, tracking pipeline broke). All nudge pipeline tables, form tracking, and share tables are live (May 2026). Authoritative live/stale list: `skills/product-context/references/d1-schema.md` → "D1 Table Freshness Status" section.
+  **D1 data reliability — check before using any D1 table for metrics:** Not all D1 tables are live. `user_tracking` and `search_intent_queue` are STALE (frozen Feb 2026, tracking pipeline broke). All nudge pipeline tables, form tracking, and share tables are live (June 2026). Authoritative live/stale list: `skills/product-context/references/d1-schema.md` → "D1 Table Freshness Status" section (re-verified June 24 2026).
   Do not create new KV namespaces, R2 buckets, or Workers without explicit approval.
 - **Figma MCP:** Read-only — can view existing designs, get metadata,
   screenshots, and variable definitions. Cannot create new files or edit

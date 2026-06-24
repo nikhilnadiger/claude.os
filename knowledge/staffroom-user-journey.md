@@ -1,8 +1,8 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.6  
+**Version:** 1.7  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 17 June 2026  
+**Codebase last verified:** 24 June 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
 
 ---
@@ -1058,11 +1058,18 @@ When staffroom delivers an application, the school receives an email + WhatsApp 
 - **Not found / Expired** — if token is invalid or the viewing window has passed
 - **Ready** — shows applicant details
 
-**What the school sees:**
+**What the school sees on the ready state:**
+- Browser title: *"staffroom · teacher applications"*
+- Subheader: *"A teacher applied to join [School Name]"* (school name shown)
+- Note: *"Viewing and hiring is free for schools. No registration required."*
 - Teacher's name, resume (downloadable), profile details
 - Application timestamp
 
 **Actions the school can take (both require OTP verification of the school's phone number first):**
+
+When the school taps Interested or Not a fit, they are prompted to enter their WhatsApp number. The OTP prompt reads:
+- Heading: *"Enter your WhatsApp number to unlock the resume"*
+- Subtext: *"We'll send a one-time code. No account. No charges. No spam."*
 
 | Action | What happens |
 |--------|-------------|
@@ -1272,18 +1279,26 @@ Scenario: user started the review gate but didn't complete Step 1. staffroom sen
 User receives WhatsApp message from staffroom
     ↓ Clicks link in message
 WhatsApp's built-in browser opens
-Link: thestaffroom.in/nudge/go?to=/share-experience
+Link: thestaffroom.in/nudge/go?to=/share-experience&placeId=[schoolId|token]
     → staffroom server records: URL, timestamp, WebView detected, user ID if known
-    → 302 redirect to /share-experience
-    → App also records the landing: URL, WebView status, user ID
+    → 302 redirect to /share-experience?placeId=[schoolId|token]&utm_source=whatsapp&utm_medium=nudge
+    → App records the landing: URL, WebView status, user ID
 
 [If session still active (within 7 days):]
+    → Token stripped from URL (silent, URL cleaned in browser history)
 SCREEN 5: Share Experience (/share-experience)
     — Previous answers pre-loaded, form starts at first unanswered section —
     ↓ User continues and completes the form
     ↓ Success screen → Career Insights
 
-[If session expired:]
+[If session expired, magic token valid (ratings1/salary/completion nudges — Phase 1):]
+    → App silently exchanges token for session (no OTP, no login screen)
+    → Token stripped from URL
+SCREEN 5: Share Experience (/share-experience)
+    — Previous answers pre-loaded —
+    ↓ User completes form → success
+
+[If session expired, token absent or invalid (e.g. initiation nudge, or token >72h old):]
 SCREEN 2: Login Page (/login)
     — Same WebView advisory banner if applicable —
     ↓ Phone step → OTP step [no profile step]
@@ -1436,7 +1451,7 @@ Not all nudge types in the codebase are actually sent automatically. The distinc
 | WhatsApp message sent | Queue table processed | Trigger condition | Where the link goes |
 |----------------------|----------------------|------------------|-------------------|
 | `otp` | — (not a nudge queue) | User requests login OTP | — (auth flow only, not a nudge) |
-| `initiation_nudge_042026` | `initiation_nudge_queue` | User signed up but has not answered the gate question | `/share-experience` |
+| `initiation_nudge_042026` | `initiation_nudge_queue` | User signed up but has not answered the gate question | `/share-experience` · **enabled on prod 23 June 2026** (after Meta template approval) |
 | `ratings1_nudge_042026` | `abandonment_queue` | Gate answered but Step 1 not completed | `/share-experience` (pre-filled) |
 | `salary_nudge_042026` | `update_is_live_queue` | Step 1 completed but salary not yet added | `/share-experience` (to continue) |
 | `completion_nudge_042026` | `completion_nudge_queue` | Salary added but qualitative steps not complete | `/share-experience` (to continue) |
@@ -1473,7 +1488,15 @@ Not all nudge types in the codebase are actually sent automatically. The distinc
 User sees: only the destination page. The `/nudge/go` step is invisible (too fast to render).
 
 6. If session active → user sees destination directly
-7. If session expired → login page first, then redirected to destination
+7. **If session expired — two paths depending on nudge type:**
+
+**Path A — Silent auth (ratings1, salary, completion nudges, Phase 1):**
+nudge URLs for these three types embed an HMAC-signed token in the button URL parameter (format: `placeId|phone:expiry:signature`). The token is valid for 72 hours. On destination page load, if the user is not logged in and the URL carries a valid token with `utm_source=whatsapp&utm_medium=nudge`, the app silently exchanges the token for a session — the user is logged in with no OTP step. The token is stripped from the URL after exchange so it never sits in browser history. Graceful degradation: if the token is expired, tampered with, or the exchange call fails for any reason, the user falls through to the OTP login flow unchanged.
+
+**Path B — OTP login (initiation nudge, or any expired/invalid token):**
+Login page appears, user completes OTP, then is redirected to the original destination.
+
+**Note on Phase 2:** The initiation nudge's magic token (a standalone `tok=` URL parameter) is built and gated behind `NUDGE_MAGIC_INITIATION_ENABLED=false` on prod as of 24 June 2026 — pending a separate Meta template approval. Until that flag is set to `true`, the initiation nudge always follows Path B.
 
 ---
 
@@ -1625,4 +1648,4 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 
 ---
 
-*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 17 June 2026. All content verified from code.*
+*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 24 June 2026. All content verified from code.*
