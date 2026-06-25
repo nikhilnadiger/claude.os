@@ -74,8 +74,10 @@ a PR or architecture decision causes real, hard-to-reverse harm.
    `backend-deprecated/` — it is still deployed and receiving legacy traffic.
 3. **Never hardcode `/api/...` paths** for server-side calls. Always use
    `getApiBaseUrl()` from `lib/api-base.ts`.
-4. **Run `pnpm build` and `pnpm lint` before any PR** — in BOTH repo root
-   AND `/backend-nest`. Both must pass with 0 errors. Non-negotiable.
+4. **Before any PR — mandatory sequence for frontend/UI changes:**
+   a. **UX constraint validator first:** `node claude.os/skills/ux-constraint-validator/validate.js http://localhost:3000`. Zero `[FAIL]` items required. `[WARN]` items must be assessed and either fixed or explicitly documented as acceptable.
+   b. **Then `pnpm build` and `pnpm lint`** in BOTH repo root AND `/backend-nest`. Both must pass with 0 errors. Non-negotiable.
+   For backend-only PRs with no UI changes, skip (a).
 5. **`PROJECT_REFERENCE.md` is outdated** — describes the old dual-CF-Worker
    architecture. Ignore entirely.
 6. **Avoid edits to proxy config, ports, environment variables, or routing

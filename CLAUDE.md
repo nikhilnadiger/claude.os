@@ -40,7 +40,7 @@ The following rules are non-negotiable and must always be in context:
 - **Never hardcode `/api/...` paths.** Always use `getApiBaseUrl()` from `lib/api-base.ts`.
 - **Never create a PR targeting `main`.** Never run `gh pr create --base main`. Never merge to main. Never suggest merging to main. Nikhil handles the merge to main manually on GitHub after UAT testing.
 - **When asked to push to UAT:** first run `git status` — confirm working tree is clean and all changes are committed. If uncommitted changes exist, commit them first (`git add <specific files>` + `git commit`). Then run `git push origin uat` and stop. Never use `git push origin main:uat` or any other refspec.
-- **After completing local changes:** run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop and report ready — do NOT push to UAT without explicit instruction from Nikhil.
+- **After completing local changes:** (1) Run the UX constraint validator first — `node claude.os/skills/ux-constraint-validator/validate.js http://localhost:3000` — against the running dev server. Fix all `[FAIL]` items before proceeding. (2) Then run `pnpm build` + `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop and report ready — do NOT push to UAT without explicit instruction from Nikhil.
 - **Never claim a test passed if it was run in a lower-fidelity environment than required.** When a required test cannot be run accurately, state this explicitly — do not substitute a proxy and report success. This applies to all test categories. Fidelity classification in `engineering-review/references/code-review-checklist.md`.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`
@@ -58,7 +58,7 @@ Structural implications (always apply):
 - **Share-experience exits: 564 (Jun 2026)**, down from 968 in May — still a meaningful drop-off point.
 - **Instagram is the #1 traffic source** — 4,108 of 6,805 sessions (60.4%). Meta Ads (Instagram + Facebook) drives the vast majority of attributed traffic. WebView (Instagram, WhatsApp, Facebook in-app browsers) is a primary access environment. Any change to login, OTP, or interactive input fields must be tested in a real WebView, not only Chrome DevTools.
 
-Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 44×44pt touch targets, 360px mobile viewport, ≤0.6s animations, 2G-capable, no auto-play media.
+Product UI minimums: load `knowledge/staffroom-ux-constraints.md` before any design or frontend task. These are the non-negotiable floors for all UI/UX work — 48×48pt touch targets (8px gap between adjacent targets, 20px edge exclusion), 320px minimum viewport (iOS floor) / 360px Android floor, ≤0.6s CSS-only animations, 2G-capable (≤200KB JS gzipped), no auto-play media, iOS/Safari 36% of sessions (all 13 Safari constraints apply). Run `ux-constraint-validator` skill before every `pnpm build`.
 
 ---
 

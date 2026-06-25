@@ -111,10 +111,12 @@ aspirational; the floor is not.
 
 Defined in `staffroom-ux-constraints.md`. At a minimum:
 
-- 90% mobile — mobile-first, no exceptions
-- 44×44pt minimum touch targets
-- 2G network baseline — lazy-load images, no auto-play video
-- Android budget devices — ≤0.6s animations, no complex shadows/gradients
-- Bengaluru is 44% of sessions — primary city context
-- Login page is primary drop-off (606 exits) — any login design must
-  reduce friction, not add it
+- 97.7% mobile — mobile-first, no exceptions
+- iOS is 36% of mobile sessions — 13 Safari/WKWebView constraints apply
+- 48×48pt minimum touch targets (8px gap between adjacent; 20px edge exclusion)
+- 320px minimum viewport (iOS floor); design optimised for 360px (Android)
+- 2G network baseline — lazy-load images, no auto-play video, ≤200KB JS gzipped
+- Android budget + iOS floor — ≤0.6s CSS transitions; prefers-reduced-motion: skip entirely
+- Delhi/NCR is 44.1% of sessions; Bengaluru is 19.6%
+- Login exits 145 (Jun 2026, down from 662) — any login design must reduce friction
+- 84.74% WebView sessions — design must work in Instagram in-app browser

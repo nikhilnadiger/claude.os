@@ -79,9 +79,12 @@ them causes real harm to the codebase and production system.
 4. **Never hardcode `/api/...` paths** for server-side calls. Always use
    `getApiBaseUrl()` from `lib/api-base.ts`. The catch-all proxy at
    `pages/api/[...path].ts` is only active on localhost and UAT — not production.
-5. **After completing local changes, run `pnpm build` and `pnpm lint`** — in BOTH
-   repo root AND `/backend-nest`. Fix all errors and re-run until both pass. Stop
-   and report ready — do NOT push to UAT until Nikhil explicitly asks.
+5. **After completing any frontend or UI change:**
+   a. Start dev server if not running (`pnpm dev`).
+   b. **Run UX constraint validator first:** `node claude.os/skills/ux-constraint-validator/validate.js http://localhost:3000` (or the specific page URL). Fix all `[FAIL]` items before proceeding — do not proceed to build with open FAILs.
+   c. Then run `pnpm build` and `pnpm lint` in BOTH repo root AND `/backend-nest`. Fix all errors and re-run until both pass.
+   d. Stop and report ready — do NOT push to UAT until Nikhil explicitly asks.
+   For backend-only changes with no UI impact, skip step (b) and go directly to (c).
 6. **Avoid edits to proxy config, ports, environment variables, or routing
    logic** unless there is no other way. If unavoidable, ask Nikhil for explicit
    approval with risks and mitigation stated.

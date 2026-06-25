@@ -1,0 +1,17 @@
+{
+  "name": "ux-constraint-validator",
+  "version": "1.0.0",
+  "description": "Automated UX constraint validator for staffroom. Checks touch targets, input attributes, contrast, bundle size, and Core Web Vitals.",
+  "main": "validate.js",
+  "scripts": {
+    "validate": "node validate.js"
+  },
+  "dependencies": {
+    "@axe-core/puppeteer": "^4.9.1",
+    "lighthouse": "^12.2.1",
+    "puppeteer": "^23.11.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
