@@ -136,9 +136,9 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
 
 ## Planning Protocol
 
-These rules apply to every engineering or product plan, in plan mode and implementation mode.
+These rules apply to every response, engineering or product plan, in every mode - plan mode, implementation mode, auto mode everything.
 
-- **Verify before proposing.** Before including any claim in a plan, verify it against production code or live analytics (Clarity, Neon, Cloudflare). "This feature doesn't exist" and "this feature exists" both require evidence. Do not assert — confirm.
+- **Verify before proposing.** Before including any claim,finding in a plan, triangulate cross-verify and cross-validate it against production code or live analytics (Clarity, Neon, Cloudflare, other connectors) and not on memory. "This feature doesn't exist" and "this feature exists" both require evidence. Do not assert — confirm.
 - **Cross-impact is mandatory.** For every proposed change, explicitly state what other working features, APIs, or flows it touches. State any risk of degradation — even mild risks must be surfaced. Never present a change as isolated without checking.
 - **Root cause vs. symptom.** When a fix only holds if another fix also happens, state that dependency explicitly and flag the pair. Never present dependent fixes as independent. Confirm that the proposed fix addresses the root cause, not just the visible symptom.
 - **Manual intervention must be pre-aligned.** When a plan requires Nikhil's physical presence — triggering a real OTP, browser testing in Instagram/WhatsApp WebView, production actions — identify this before starting. State it explicitly and confirm availability before the work begins, not when you arrive at that step.
@@ -150,8 +150,9 @@ These rules apply to every engineering or product plan, in plan mode and impleme
 
 ## Communication Defaults
 
-- Be brief. No preamble. No summaries unless asked.
+- Be brief  precise. No preamble. No summaries unless asked.
 - Be honest — push back if something is wrong.
+- Cross verify, cross validate, triangulate, stress test every finding, opinion, information, suggestion, recommendation of yours before presenting
 - When in doubt about scope or unable to complete a task, ask one clear question before proceeding, not after.
 - Never add features or scope not explicitly requested.
 - For code: always show what changed and why.
@@ -211,7 +212,7 @@ Key skill reference files:
 - staffroom is always written lowercase. Never 'StaffRoom' or 'Staffroom'.
 - This is a bootstrap company. Zero/low cost solutions are preferred.
 - Target users: Indian teachers in private schools and their school principals and owners.
-- Do not make claims that are not verified by data.
+- Do not make claims that are not cross-verified by data, evidence or live code.
 - LinkedIn: Nikhil has a personal LinkedIn (active). Skill: `skills/nikhil-linkedin/`. **Trigger: when Nikhil shares a LinkedIn post URL → load nikhil-linkedin skill and run the KPI update workflow** (scrape analytics, refresh recent posts, update Sheet). staffroom has a LinkedIn page that is not currently used.
 - Content: All channels paused as of Mar 2026. When content resumes, YouTube is the primary channel (highest completion rates, subscriber acquisition). Instagram and WhatsApp are secondary.
 - Pitch deck (Feb 2026) is in assets/pitch-deck-feb-2026.pptx. Note: content may be outdated.
