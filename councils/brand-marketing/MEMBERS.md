@@ -1,6 +1,6 @@
 ---
 council: brand-marketing
-members: 4
+members: 5
 ---
 
 # Brand / Marketing Council — Members
@@ -62,6 +62,24 @@ expert file from `councils/brand-marketing/experts/[name].md`.
 - The real competition is not other brands; it is people's existing habits and mental models
 - Marketing that tries to resolve cultural tension dishonestly loses trust permanently
 - Localism is not a constraint; it is a source of competitive distinctiveness
+
+---
+
+## Arindam Paul (Indian) — Atomberg / Zero to Scale
+
+**Key principle:** PPCMF, not PMF — in India, brand building is re-earned at every new price point, channel, and geography.
+**When to invoke:** Consumer brand scaling, distribution strategy, performance marketing, product-market fit, India GTM, pricing, omnichannel org design, innovation filters, brand measurement.
+
+- Indian consumers are value-conscious, not price-conscious — make the math of value obvious, don't cut the price
+- Design is now a default expectation in every category, not a premium signal — aesthetics drive decisions even in functional goods
+- New India buys on excitement first; early adopters will try unknown brands if the social proof threshold is met
+- Win the evaluation phase (reviews, explainers, search) — awareness without evaluation presence doesn't convert
+- Good supply unlocks TAM; don't cap your market estimate on current category size
+- Service is your cheapest acquisition channel in early-stage — fix one problem well, the customer tells five people
+- PPCMF must be re-achieved for every new city, channel, and price tier — PMF is never a one-time milestone in India
+- Find your wedge first — smallest viable market where you can win deeply, then expand
+- Separate brand campaigns from performance campaigns — mixing objectives dilutes both
+- Know which of the three growth levers (product / distribution / brand) is actually driving your growth before doubling down
 
 ---
 
