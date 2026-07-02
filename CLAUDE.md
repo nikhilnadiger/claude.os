@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 24-06-2026
+> Last updated: 02-07-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -19,7 +19,7 @@ Teachers leave experiences of schools (salary, culture, management, ease of work
 
 Think: Glassdoor with Tripadvisor positioning. Functionally it is Glassdoor (workplace reviews, specific to schools) but the brand positioning is Tripadvisor — positive, discovery-oriented. Teachers visit to find great workplaces, not to rant. Schools partner to build reputation and attract top teachers. Both sides should want to be on it.
 
-Market: 4 million private school teachers across 340,000+ private schools in India. Over 50% work without written contracts; ~40% in temporary roles. Private school teacher unions are functionally nonexistent — staffroom could serve as a de facto collective voice mechanism.
+Market: ~3.7 million teachers across ~330,000 private unaided schools in India (UDISE+ 2023-24: 37.3 lakh teachers, 3.31 lakh schools). Over 50% work without written contracts; ~40% in temporary roles. Private school teacher unions are functionally nonexistent — staffroom could serve as a de facto collective voice mechanism.
 
 Stage: Early-stage, bootstrapped. Revenue model a work in progress — active pilots with education businesses and schools.
 Current metrics: knowledge/staffroom-product-metrics.md
@@ -44,6 +44,45 @@ The following rules are non-negotiable and must always be in context:
 - **Never claim a test passed if it was run in a lower-fidelity environment than required.** When a required test cannot be run accurately, state this explicitly — do not substitute a proxy and report success. This applies to all test categories. Fidelity classification in `engineering-review/references/code-review-checklist.md`.
 - **Avoid edits to proxy config, ports, env vars, or routing logic** without explicit approval from Nikhil with clear reasoning.
 - Repo: `/mnt/GitHub/staffroom-v2`
+
+---
+
+## Response Standards — All Responses, All Modes
+
+These standards apply to **every response** in every mode (plan, implement, investigate, report, converse). Not just formal plans.
+
+### 1. Verify before asserting
+
+- **External facts** (market size, competitor data, regulations, product claims about other companies): search the web and cite the source before asserting. Memory alone is insufficient regardless of confidence level.
+- **Internal product/code facts** (feature existence, API behaviour, DB state): triangulate against production code or live analytics (Clarity, Neon, Cloudflare, other connectors) — not memory. "This feature doesn't exist" and "this feature exists" both require evidence. Do not assert — confirm.
+- **Cross-impact is mandatory.** For every proposed change, explicitly state what other features, APIs, or flows it touches. State any risk of degradation — even mild risks must be surfaced. Never present a change as isolated without checking.
+
+### 2. Investigate wide and deep before presenting
+
+Before presenting any plan, investigation, recommendation, or complex answer:
+1. Map it wide first — cross-impacts, root causes, dependencies, edge cases, alternative explanations, counter-evidence.
+2. Stress-test the findings — ask "how could this be wrong?" and "what am I missing?" before committing to a conclusion.
+3. Investigation must be thorough. This step cannot be skipped to save time or tokens.
+
+### 3. Present with Pareto priority — 20% effort → 80% result
+
+After wide investigation, the **recommended action** must apply Pareto's principle: lead with the minimum viable move that delivers 80% of the result for 20% of the effort. This is a presentation and prioritisation standard — it does not constrain investigation depth, which must remain broad.
+
+Also surface the next 2–3 options that were considered but deprioritised. Nikhil can choose to go further or in a different direction from that list.
+
+### 4. Minimum viable change (code and product proposals)
+
+The investigation goes wide; the solution goes minimal:
+1. Draft the smallest change the investigation confirms will fix the root cause.
+2. Critique that draft: how could it fail? What regressions, risks, dependencies, or loopholes does it introduce?
+3. Present only the refined proposal. The draft and critique are internal — not shown.
+
+### 5. Root cause, dependencies, sequencing
+
+- When a fix only holds if another fix also happens, state that dependency explicitly. Never present dependent fixes as independent.
+- Before finalising any plan: identify all interdependencies, merge items that solve the same root problem, sequence items with hard dependencies (A only works if B is done first).
+- If information needed to decide is incomplete, gather it first. Do not present for approval when evidence is partial.
+- When a plan requires Nikhil's physical presence (OTP, WebView testing, production actions): identify this at the start, not when you arrive at that step.
 
 ---
 
@@ -134,20 +173,6 @@ constraint (engineering safety rules, UI minimums, anonymity, etc.):
 
 ---
 
-## Planning Protocol
-
-These rules apply to every response, engineering or product plan, in every mode - plan mode, implementation mode, auto mode everything.
-
-- **Verify before proposing.** Before including any claim,finding in a plan, triangulate cross-verify and cross-validate it against production code or live analytics (Clarity, Neon, Cloudflare, other connectors) and not on memory. "This feature doesn't exist" and "this feature exists" both require evidence. Do not assert — confirm.
-- **Cross-impact is mandatory.** For every proposed change, explicitly state what other working features, APIs, or flows it touches. State any risk of degradation — even mild risks must be surfaced. Never present a change as isolated without checking.
-- **Root cause vs. symptom.** When a fix only holds if another fix also happens, state that dependency explicitly and flag the pair. Never present dependent fixes as independent. Confirm that the proposed fix addresses the root cause, not just the visible symptom.
-- **Manual intervention must be pre-aligned.** When a plan requires Nikhil's physical presence — triggering a real OTP, browser testing in Instagram/WhatsApp WebView, production actions — identify this before starting. State it explicitly and confirm availability before the work begins, not when you arrive at that step.
-- **Dependencies and sequencing before finalising.** Before presenting a final plan, identify all interdependencies between proposed changes. Merge items that solve the same root problem. Sequence items that have hard dependencies (A only works if B is done first).
-- **Comprehensive information before approval.** If the information needed to make a decision is incomplete, gather it first. Do not present something for approval/rejection when the evidence is partial.
-- **Minimum viable change — internal two-step process (applies to the solution, not the investigation).** Investigate broadly — cross-impact, root cause, all dependencies. Then: (1) draft the smallest code change the investigation confirms will fix the root cause; (2) critique that draft — how could it fail? What new risks, dependencies, errors, crashes, regressions, degradation or loopholes does it introduce? The final proposal must address the critiqued issues while remaining the smallest possible change that does so. This process is internal — only the refined proposal is presented to Nikhil. Thorough investigation and a minimal, self-critiqued solution are both required simultaneously.
-
----
-
 ## Communication Defaults
 
 - Be brief  precise. No preamble. No summaries unless asked.
@@ -197,8 +222,8 @@ Key knowledge files:
 - knowledge/staffroom-ux-constraints.md — non-negotiable UX floors for all design and frontend work
 - knowledge/staffroom-whatsapp-community.md — WhatsApp community analysis: group structure, user profiles, engagement patterns, content strategy evolution (Oct 2024 – Apr 2026). Load when discussing community strategy, teacher engagement, WhatsApp content, or user behavior. Raw chat exports in knowledge/staffroom-whatsapp-community/
 - knowledge/staffroom-user-journey.md — screen-by-screen user journey: all screens, user types, entry points, error states, system behaviors, known limitations. Verified from production codebase. Load for any product, design, engineering, or content task requiring precise user-PoV context. To update to latest codebase: trigger "update user journey" with product-context skill loaded.
-- knowledge/staffroom-journey.md — company origin story: ethnographic research, early experiments (WhatsApp community, ChatGPT-WhatsApp tool), MVP results, inbound demand from teachers and school owners, AI hiring tool, revenue model evolution. Load for investor/partner storytelling, content about staffroom's founding, or discussion of the company's "why." **Data caution: platform metrics in this file may be outdated — verify against staffroom-product-metrics.md and live sources before using any figures.**
-- knowledge/staffroom-strategic-narrative.md — full strategic narrative across four versions (Aug 2025 → Feb 2026): problem statement, market data, competitive analysis, GTM, monetisation, expansion thesis, FAQs. Feb 2026 version is most complete. Load for investor/partner conversations, pitch prep, or strategic decisions requiring full context. **Data caution: traction figures, projections, and team/expense data may be outdated — verify against live sources before using. Older versions use "StaffRoom" (historical capitalisation only).**
+- knowledge/staffroom-journey.md — company origin story: ethnographic research, early experiments (WhatsApp community, ChatGPT-WhatsApp tool), MVP results, inbound demand from teachers and school owners, AI hiring tool, revenue model evolution. Load for investor/partner storytelling, content about staffroom's founding, or discussion of the company's "why." **Data caution: platform metrics are outdated (sign-ups, CAC, review rate). Market size figures ("50L teachers / 4L schools") are wrong — use CLAUDE.md market size (UDISE+ 2023-24: ~3.7M teachers, ~330K schools). Teacher age stated as 34yrs — correct figure is 32yrs (TISS SOTTTER 2023). Verify all figures before using.**
+- knowledge/staffroom-strategic-narrative.md — full strategic narrative across four versions (Aug 2025 → Feb 2026): problem statement, market data, competitive analysis, GTM, monetisation, expansion thesis, FAQs. Feb 2026 version is most complete. Load for investor/partner conversations, pitch prep, or strategic decisions requiring full context. **Data caution: traction figures, projections, and team/expense data are outdated. Market size figures ("~50L teachers and 4L+ private schools") are overstated — use CLAUDE.md market size (UDISE+ 2023-24: ~3.7M teachers, ~330K private unaided schools). Older versions use "StaffRoom" (historical capitalisation only).**
 - knowledge/skill-architecture.md — read before creating any new skill
 
 Key skill reference files:

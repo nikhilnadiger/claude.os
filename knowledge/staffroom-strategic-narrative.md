@@ -4,13 +4,17 @@ last_updated: Feb 2026
 skills: [nikhil-linkedin, brand-custodian, advisory-councils]
 data-freshness: >
   This file contains platform traction figures, market statistics, GTM metrics,
-  and monetisation projections that may be outdated. The Feb 2026 version is the
-  most complete but still reflects a point-in-time snapshot. Before using any
-  specific numbers (sign-ups, daily visits, cost-per-signup, ARR projections,
-  team/expense figures), verify against knowledge/staffroom-product-metrics.md,
-  knowledge/staffroom-competitive-landscape.md, and live sources (Clarity, Neon,
-  Cloudflare). Older versions (Aug–Nov 2025) also use "StaffRoom" capitalisation —
-  this is historical; the correct form is always "staffroom" (lowercase).
+  and monetisation projections that are outdated. The Feb 2026 version is the most
+  complete but reflects a point-in-time snapshot. Before using any specific numbers,
+  verify against live sources.
+
+  Known inaccurate figures in this file (do not use without correction):
+  - "~50L private school teachers and 4L+ private schools" — OVERSTATED.
+    UDISE+ 2023-24 (authoritative): ~3.7M (37.3 lakh) teachers in ~330,000
+    (3.31 lakh) private unaided schools. Use CLAUDE.md market size figures.
+  - Traction figures (sign-ups, visits, CAC) — verify against staffroom-product-metrics.md.
+  - ARR projections and team/expense figures — likely outdated.
+  - Older versions use "StaffRoom" capitalisation — historical only; always use "staffroom".
 ---
 
 # Strategic Narrative — Feb 2026

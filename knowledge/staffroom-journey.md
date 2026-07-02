@@ -3,11 +3,16 @@ source: https://docs.google.com/document/d/19jIOrYVoXV455HV-OMCZ5fw7qT4nt9IACSX7
 last_updated: undated (pre-Feb 2026)
 skills: [content-strategy, nikhil-linkedin, advisory-councils]
 data-freshness: >
-  This file contains platform metrics (sign-ups, daily visits, cost-per-signup,
-  community size) and business model details that may be outdated. Before using
-  any specific figures, verify against knowledge/staffroom-product-metrics.md,
-  knowledge/staffroom-content-performance.md, and live sources (Clarity, Neon,
-  Cloudflare). Use this file for narrative/origin context only, not as a data source.
+  USE THIS FILE FOR NARRATIVE AND ORIGIN CONTEXT ONLY. All specific figures are outdated
+  or incorrect. Do not cite any number from this file without verifying against a live source.
+
+  Known inaccurate figures in this file (do not use):
+  - "4L+ private schools / 50L teachers" — WRONG. UDISE+ 2023-24: ~330,000 private unaided
+    schools, ~3.7M teachers. The correct figures are in CLAUDE.md.
+  - "Median school teacher is 34yrs old" — WRONG. TISS SOTTTER 2023 (primary source): 32yrs.
+  - "2500+ sign-ups" — outdated. Current: 4,038 (Jun 24 2026, Neon).
+  - "MetaAds at ₹30/sign-up" — outdated. Current blended CAC: ~₹41/sign-up.
+  - "~20% of teachers who sign up share their experience" — outdated. Current rate: ~36%.
 ---
 
 # staffroom — Company Journey

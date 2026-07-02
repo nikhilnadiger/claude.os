@@ -2,12 +2,18 @@
 skills: [brand-custodian, content-strategy, product-context]
 last_updated: Mar 2026
 source: desk research, company websites, funding databases, news sources
-staleness_note: Competitor funding rounds, headcount, and product moves change frequently — verify key claims before investor or partner conversations
+staleness_note: >
+  Last researched Mar 2026. Competitor funding rounds, headcount, and product moves change
+  frequently — verify key claims before investor or partner conversations.
+  Market size figures updated Jul 2026 to UDISE+ 2023-24 authoritative data:
+  ~3.7M teachers / ~330K private unaided schools. The narrative "4 million / 340,000+"
+  figures in the body below have been updated; any other reference to these in investor
+  materials should use the UDISE+ 2023-24 figures.
 ---
 
 # staffroom's competitive landscape: wide-open market, real but manageable threats
 
-**staffroom operates in a genuinely unoccupied niche.** After extensive analysis of every plausible competitor and adjacent player, no platform in India offers anonymous, teacher-powered workplace reviews of schools. The closest global analogy — Glassdoor — covers Indian schools only superficially, with most individual school branches attracting fewer than 20 reviews. The real competitive threats are not direct rivals but structural forces: school management retaliation, India's criminal defamation laws, and the theoretical pivot risk from platforms like AmbitionBox (Info Edge/Naukri) that already own workplace-review infrastructure. With **4 million private school teachers** across **340,000+ private schools** — over half working without written contracts — the demand side is enormous. The strategic window is open but not infinite.
+**staffroom operates in a genuinely unoccupied niche.** After extensive analysis of every plausible competitor and adjacent player, no platform in India offers anonymous, teacher-powered workplace reviews of schools. The closest global analogy — Glassdoor — covers Indian schools only superficially, with most individual school branches attracting fewer than 20 reviews. The real competitive threats are not direct rivals but structural forces: school management retaliation, India's criminal defamation laws, and the theoretical pivot risk from platforms like AmbitionBox (Info Edge/Naukri) that already own workplace-review infrastructure. With **~3.7 million private school teachers** across **~330,000 private unaided schools** (UDISE+ 2023-24) — over half working without written contracts — the demand side is enormous. The strategic window is open but not infinite.
 
 ---
 
@@ -111,7 +117,7 @@ Government school teachers have powerful unions (AIPTF organized marches through
 ## What investors will ask, and how to answer
 
 **"Isn't this just Glassdoor for schools? Why won't Glassdoor just do this?"**
-Glassdoor's Indian school coverage is thin and fragmented. DPS has 5+ separate employer pages for different branches. Most individual school branches have under 20 reviews. Glassdoor optimizes for corporate employers with 100+ employees; India's 340,000 private schools average 5–30 teachers each. The unit economics don't work for Glassdoor. Plus, Glassdoor's 2024 identity-verification controversy damaged trust precisely where staffroom needs it most.
+Glassdoor's Indian school coverage is thin and fragmented. DPS has 5+ separate employer pages for different branches. Most individual school branches have under 20 reviews. Glassdoor optimizes for corporate employers with 100+ employees; India's ~330,000 private unaided schools average 5–30 teachers each. The unit economics don't work for Glassdoor. Plus, Glassdoor's 2024 identity-verification controversy damaged trust precisely where staffroom needs it most.
 
 **"What stops AmbitionBox/Naukri from adding a school vertical?"**
 Nothing technically, but education is a sub-1% revenue vertical for Info Edge. Private schools are fragmented, low-ARPU, and lack the HR/recruiting budgets that drive AmbitionBox's corporate model. staffroom's education-specific review framework (board type, curriculum freedom, salary by subject, parent interference metrics) requires domain expertise that a generic platform won't build for a tiny revenue opportunity.
