@@ -80,8 +80,8 @@ and values. Single checkpoint before any brand-facing content is delivered.
 
 1. **staffroom is always lowercase** — never StaffRoom, Staffroom, or
    STAFFROOM, anywhere, including mid-sentence and in document titles
-2. **Canonical CTA is "Share an experience"** — not "Write a review";
-   "Share your experience" is acceptable as a personalised variant
+2. **Canonical CTA is "Write a review"** — not "Share an experience";
+   "Write your review" is acceptable as a personalised variant
 3. **Voice stance: celebrate excellence, invite improvement — never accuse**
    — staffroom never takes sides between teachers and schools publicly
 4. **Evidence-backed only** — never make claims not verified by data; no
@@ -90,7 +90,7 @@ and values. Single checkpoint before any brand-facing content is delivered.
    in any public-facing or partner-facing output
 6. **Teacher voice**: warm, constructive, empowering. **Institution voice**:
    collaborative, credible, respectful. Keep the two voices distinct
-7. **Verification language**: "Verified teacher experience" — not "Approved
+7. **Verification language**: "Real teacher review" — not "Approved
    review", "Certified", or "Endorsed"
 8. **Recognition language**: "recognised for building supportive staffrooms"
    — not "Top school" or "Best school" unless supported by review volume and data
@@ -142,7 +142,7 @@ and values. Single checkpoint before any brand-facing content is delivered.
 ## Red Flags — Review Before Delivering
 
 - [ ] "staffroom" capitalised anywhere (StaffRoom, Staffroom, STAFFROOM)
-- [ ] "Write a review" used instead of "Share an experience"
+- [ ] "Share an experience" or "Share your experience" used instead of "Write a review"
 - [ ] Accusatory or inflammatory language toward a school or teacher
 - [ ] Any public naming/shaming of a specific school
 - [ ] Platform appearing to take sides between teacher and school

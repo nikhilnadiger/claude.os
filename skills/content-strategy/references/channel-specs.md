@@ -42,7 +42,7 @@ conversation channel.
 
 Based on [X] teacher experiences shared on staffroom.
 
-Share your experience → thestaffroom.in
+Write your review → thestaffroom.in
 Follow @thestaffroomdotin on Instagram
 
 #teachers #indianteachers #teacherlife #[topic-specific hashtag]
@@ -222,7 +222,7 @@ share experiences, useful content drops. Not for long-form content.
 **Status:** Active (running as of Mar 2026 on Home_Conversion and BLR campaigns).
 
 **Primary use:** Paid acquisition — driving teachers to the staffroom homepage
-to sign up or share an experience.
+to sign up or write a review.
 
 **What the data shows (MetaAds-by-content-metrics.csv, Mar 2026):**
 

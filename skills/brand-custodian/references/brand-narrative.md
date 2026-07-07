@@ -84,7 +84,7 @@ small wins and incremental progress.
 ## Voice System
 
 **Teacher Voice** — Warm, constructive, empowering.
-> "Find workplaces where you can grow and share your experience to help
+> "Find workplaces where you can grow and write your review to help
 > others make informed choices."
 
 **Institution Voice** — Collaborative, credible, respectful.

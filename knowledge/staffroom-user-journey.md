@@ -705,6 +705,8 @@ The form has a gate question, then six steps, with two insight reveal screens ap
 **Gate — "Have you worked here recently?"**
 A single **Yes** button (checkmark circle). There is no "No" option. Tapping Yes saves the answer and advances immediately to the S0 Gate Screen. The user cannot proceed without tapping Yes — they can only navigate away.
 
+**This gate renders on one entry path only.** When a user arrives at the review form via the school-profile-page CTA (school not yet pre-selected in the URL), the gate question is shown. When a user arrives via the share-experience search flow (school pre-selected via the `/share-experience` search bar or a direct `?placeId=` URL parameter), the gate question is skipped entirely — the answer is treated as an implicit "Yes" and the form advances directly to the S0 Gate Screen. This distinction is verified from `components/short-form/GroupedStepperForm.tsx`.
+
 If a user returns to a school where they previously saved a non-"Yes" answer (legacy data only), the form shows a static message instead of the gate: *"We only collect reviews from people who have worked here recently."* No action is available from this state.
 
 **After gate "Yes" — S0 Gate Screen (interstitial before Step 1):**
@@ -1497,6 +1499,37 @@ nudge URLs for these three types embed an HMAC-signed token in the button URL pa
 Login page appears, user completes OTP, then is redirected to the original destination.
 
 **Note on Phase 2:** The initiation nudge's magic token (a standalone `tok=` URL parameter) is built and gated behind `NUDGE_MAGIC_INITIATION_ENABLED=false` on prod as of 24 June 2026 — pending a separate Meta template approval. Until that flag is set to `true`, the initiation nudge always follows Path B.
+
+---
+
+### Approved WhatsApp Template Copy (Meta-approved, April 2026)
+
+The final, Meta-approved copy for the four active nudge templates is recorded below. These are the exact strings submitted to and approved by Meta — do not reconstruct from memory or code.
+
+**`initiation_nudge_042026`** — triggers when user signed up but has not answered the gate question:
+> Your staffroom account has been set up.
+> What do you like about the school you work at? What about others you have worked at?
+> Write a review of your school on staffroom and get career insights for yourself.
+> *Button:* Get career insights
+
+**`ratings1_nudge_042026`** — triggers when gate answered but Step 1 not completed:
+> Compare your school and salary with teachers near you
+> Have you worked at {{1}} recently? How does it and your salary there compare with teachers nearby?
+> Review the school on staffroom and find out.
+> *Button:* Review the school
+
+**`salary_nudge_042026`** — triggers when Step 1 completed but salary not yet added:
+> Compare your salary with teachers near you
+> How does {{1}} and your salary there compare with teachers nearby?
+> Do you receive benefits that others do? Are you bearing expenses others don't? What about work-life balance?
+> Finish reviewing the school and find out.
+> *Button:* Finish reviewing
+
+**`completion_nudge_042026`** — triggers when salary added but qualitative steps not complete:
+> Unlock all career insights
+> What do you like about working at {{1}}? What do you think needs to improve?
+> Finish reviewing the school to unlock all career insights for yourself.
+> *Button:* Finish reviewing & unlock
 
 ---
 

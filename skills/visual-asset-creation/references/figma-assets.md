@@ -139,7 +139,7 @@ multi-point argument where each frame is standalone but part of a whole.
 - Frame 1 (Cover): Hook — strongest single image or statement. Must stand alone.
   Include "→" swipe indicator.
 - Frames 2–N (Body): Each frame advances the story. Standalone but rewards sequence.
-- Last Frame (Closure): Summary + CTA. "Share your experience at thestaffroom.in"
+- Last Frame (Closure): Summary + CTA. "Write your review at thestaffroom.in"
   + full logo prominent.
 
 **Visual continuity rules (all frames must share):**
@@ -172,7 +172,7 @@ multi-point argument where each frame is standalone but part of a whole.
 1. Background: Deep Forest Green #043630 or Dark Teal #004D43
 2. Primary text hook: 5–7 words max, Zalando Sans SemiExpanded Bold,
    Lime Accent #D0FF71 or Warm Cream #E6D7B6
-3. CTA text: "Share your experience → thestaffroom.in" (Satoshi Regular, smaller)
+3. CTA text: "Write your review → thestaffroom.in" (Satoshi Regular, smaller)
 4. Logo: bottom-right — `logo-light.png`
 5. For Bengaluru targeting: include Kannada text variant of the hook alongside
    or below English

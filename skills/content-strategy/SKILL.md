@@ -99,7 +99,7 @@ pillars. No hypothetical frameworks.
    authenticity; do not force it
 7. **Never take sides between teachers and schools** — staffroom
    surfaces reality; it does not accuse, vilify, or sensationalise
-8. **CTA default is "Share an experience"** — not "write a review"
+8. **CTA default is "Write a review"** — not "share an experience"
 9. **Before writing a script**: read references/script-style-guide.md
    for the confirmed IR format and hook formulas
 10. **Before choosing a topic**: read references/content-pillars.md
@@ -159,7 +159,7 @@ pillars. No hypothetical frameworks.
       is missing]; scripts with open flags must not be published until resolved
 - [ ] staffroom lowercase throughout
 - [ ] No side-taking between teacher and school
-- [ ] CTA present and uses approved language ("Share an experience")
+- [ ] CTA present and uses approved language ("Write a review")
 - [ ] Format matches channel spec (duration, caption length, hashtags)
 - [ ] If Hinglish used: natural, not forced
 

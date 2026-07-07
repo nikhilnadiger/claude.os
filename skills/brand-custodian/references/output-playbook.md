@@ -1,6 +1,6 @@
 ---
 source: distilled from brand-guidelines.pdf, SKILL.md key rules, and live product review
-last_updated: Mar 2026
+last_updated: 07-07-2026
 skills: [brand-custodian]
 update-frequency: When channel strategy, canonical language, or output rules change
 ---
@@ -21,12 +21,12 @@ tooltips, navigation items, confirmation dialogs.
 
 | Context | Use | Do not use |
 |---|---|---|
-| Primary CTA (generic) | Share an experience | Write a review, Leave a review, Add a review |
-| Primary CTA (personalised) | Share your experience | Write your review |
-| Verification badge | Verified teacher experience | Approved review, Certified, Endorsed |
+| Primary CTA (generic) | Write a review | Share an experience, Leave a review, Add a review |
+| Primary CTA (personalised) | Write your review | Share your experience |
+| Verification badge | Real teacher review | Approved review, Certified, Endorsed |
 | Recognition label | Recognised for building supportive staffrooms | Top school, Best school, #1 school |
-| School score label | [score] based on [n] teacher experience(s) | Rating, Stars, Score out of 5 |
-| Community prompt | Join [n] teachers who have shared their experience | Join [n] reviewers |
+| School score label | [score] based on [n] teacher review(s) | Rating, Stars, Score out of 5 |
+| Community prompt | Join [n] teachers who have written a review | Join [n] reviewers |
 
 ### Semantic Colour Usage in UI
 
@@ -72,7 +72,7 @@ and informed, never pressured or guilt-tripped.
 ### Rules
 
 - Lead with what the teacher gains — not what staffroom needs from them.
-- CTA: "Share an experience" (generic) or "Share your experience" (personalised).
+- CTA: "Write a review" (generic) or "Write your review" (personalised).
 - Never frame it as "we need your review" or "help us grow" — this is about their
   experience and their community.
 - Anonymity assurance should be clear but factual — say "your name is never shared
@@ -201,7 +201,7 @@ Applies to: WhatsApp community replies, Instagram comment responses, DM replies.
 > that others can learn from."
 
 **When a school contacts with a complaint about a review:**
-> "All experiences on staffroom are submitted by verified teachers and reviewed
+> "All reviews on staffroom are submitted by real teachers and checked
 > against our community guidelines. We take concerns seriously — please write
 > to [support email] with details and we will review."
 
@@ -219,7 +219,7 @@ community updates.
 - Opening line: lead with value to the reader. Not "We are excited to
   announce...".
 - One main message per broadcast. Do not combine multiple asks.
-- CTA: one per message. Clear, specific. "Share an experience" or
+- CTA: one per message. Clear, specific. "Write a review" or
   "Explore schools in [city]" — not "Click here".
 - WhatsApp: shorter than email. One idea, one CTA, conversational register.
   Under 200 words total.
@@ -244,10 +244,6 @@ All brand voice and language rules from sections 1–7 apply to these documents.
 ---
 
 ## 9. Before/After Rewrites — Common Violations
-
-### Red flag: "Write a review"
-**Before:** "Write a review for your school"
-**After:** "Share an experience about your school"
 
 ### Red flag: capitalised staffroom
 **Before:** "Welcome to StaffRoom"
@@ -282,6 +278,6 @@ For content moderation decisions on submitted reviews — not for external commu
 - All moderation decisions should be explainable with reference to a specific
   guideline — not "it felt wrong".
 - Never tell a teacher their review was "rejected" or "failed" — use "We were
-  unable to publish this experience" with reference to the guideline it violated.
+  unable to publish this review" with reference to the guideline it violated.
 - Schools cannot request removal of reviews unless they violate community guidelines.
   This is non-negotiable — it is the basis of staffroom's trust model.

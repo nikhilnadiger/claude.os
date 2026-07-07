@@ -75,7 +75,7 @@ load product-context when you need to understand.
 India's first teacher-powered platform for real insights into school
 workplaces. Teachers leave anonymous experiences of schools (salary,
 culture, management, facilities). Schools build reputation through
-verified teacher feedback and attract top talent. Functionally Glassdoor;
+real teacher feedback and attract top talent. Functionally Glassdoor;
 brand-positioned as Tripadvisor — positive, discovery-oriented.
 
 ## When to Load This Skill

@@ -1,6 +1,6 @@
 # staffroom — Claude Working Memory
 
-> Last updated: 02-07-2026
+> Last updated: 07-07-2026
 > Maintained by: Nikhil Nadiger
 
 ---
@@ -15,7 +15,7 @@ Nikhil Nadiger — co-founder, staffroom. I make all product, engineering, conte
 
 India's first teacher-powered platform for real insights into school workplaces.
 
-Teachers leave experiences of schools (salary, culture, management, ease of working, facilities etc). Schools earn trust through verified teacher feedback and attract top talent i.e., teachers.
+Teachers leave experiences of schools (salary, culture, management, ease of working, facilities etc). Schools earn trust through real teacher feedback and attract top talent i.e., teachers.
 
 Think: Glassdoor with Tripadvisor positioning. Functionally it is Glassdoor (workplace reviews, specific to schools) but the brand positioning is Tripadvisor — positive, discovery-oriented. Teachers visit to find great workplaces, not to rant. Schools partner to build reputation and attract top teachers. Both sides should want to be on it.
 

@@ -122,3 +122,14 @@ This is a live content opportunity — content that names this gap without explo
 4. **YouTube is the channel to build on** — it is the only platform where teachers actively seek educational content and trust what they find.
 
 5. **WhatsApp is functional, not community** — teachers will respond to direct value (useful information, nudges) but will not organically form community there.
+
+6. **"Experience" as the platform action-verb creates a résumé mental model — confirmed**
+   *Logged: 07-07-2026*
+
+   Teachers structurally default to a job-application mental model when "experience" is used as the platform's action-verb near a school-search step. Two converging evidence sources:
+
+   - **Confirmed incident:** A teacher wrote about her actual experience at School X but selected School Y (a school she wanted to work at) in the share-experience flow — apparently reading the prompt as "tell School Y about your experience" rather than "review this past employer." This is not inferred; it is a real, observed case.
+
+   - **Code-level collision:** In `components/short-form/constants.ts` (product repo), the review form uses the word "experience" in two opposite senses within the same multi-step flow: `overallExperience` ("Rate your overall experience of working here" — retrospective, about this school) and `totalWorkExperience` ("How many years of total work experience do you have?" — résumé sense, career tenure). Both appear a few screens apart in the same form. The existence of a legitimately-named `totalWorkExperience` field proves "experience" cannot serve as the action-verb without ambiguity — the collision is structural, not incidental.
+
+   **Decision taken:** staffroom is replacing "experience" with "review" as the core action word across all brand and content touchpoints (CTA: "Write a review" / "Write your review"). This is a brand-language correction, not a rebrand. The change to product code (`/share-experience` URL, form field copy) is a separate, already-handed-off engineering track.

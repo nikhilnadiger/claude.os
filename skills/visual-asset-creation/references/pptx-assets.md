@@ -318,7 +318,7 @@ Logo (upper-right):            logo-light.png, small
 **Frame structure:**
 - Frame 1 (Cover): strongest hook statement. Include a "→ swipe" cue.
 - Frames 2–N (Body): each advances the story; standalone but rewards sequence.
-- Final Frame: summary + CTA: "Share your experience at thestaffroom.in" + full logo prominent.
+- Final Frame: summary + CTA: "Write your review at thestaffroom.in" + full logo prominent.
 
 ---
 

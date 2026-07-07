@@ -32,7 +32,7 @@ Used as the YouTube/Instagram caption. Structure:
   (emoji bullets — this is the convention in the archive)
 - Source attribution: "Based on [X] experiences shared on staffroom"
   where platform data is used
-- CTA: "Share your experience at thestaffroom.in"
+- CTA: "Write your review at thestaffroom.in"
 - Follow prompt: "Follow @thestaffroomdotin on Instagram" /
   "Subscribe to @thestaffroom-in on YouTube" — no cadence implied;
   do not write "for regular updates", "for more content", or similar
@@ -271,15 +271,15 @@ performance signal.
 ## CTA Standards
 
 **Primary CTA (for content driving reviews):**
-> "Apna school ka experience share karo — thestaffroom.in"
+> "Apna school ka review likho — thestaffroom.in"
 > OR
-> "Share your experience at thestaffroom.in"
+> "Write your review at thestaffroom.in"
 
 **Secondary CTA (for follow/community growth):**
 > "Follow @thestaffroomdotin on Instagram" / "Subscribe to @thestaffroom-in on YouTube"
 
 **Never use:**
-- "Write a review" — this is a brand violation (brand-custodian rule)
+- "Share an experience" / "Share your experience" — retired; now the wrong form
 - "Rate your school" — reduces the act to a rating, misses the brand positioning
 - "Join our community" — vague, not action-specific
 
@@ -318,7 +318,7 @@ Key data points:
 • [Specific finding with number]
 
 Based on [X] teacher experiences shared on staffroom.
-Share your experience: thestaffroom.in
+Write your review: thestaffroom.in
 
 Sources:
 [List all data sources]
