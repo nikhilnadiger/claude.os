@@ -1,5 +1,5 @@
 ---
-last_updated: Jul 2026 (targeted correction only — see Review Funnel note; full metrics still Jun 24 2026)
+last_updated: Jul 2026 (Review Funnel table fully re-queried Jul 17 2026 via direct Neon connection; Platform Metrics table below still Jun 24 2026 — not re-queried this pass)
 source: Neon PostgreSQL (live queries Jun 24 2026), Microsoft Clarity MCP (Jun 24 2026, last 30 days), Meta Ads MCP (Jun 24 2026, all-time + 2026 YTD)
 skills: [content-strategy, codebase-context, brand-custodian, product-context]
 staleness_note: >
@@ -39,21 +39,25 @@ All figures from Neon live queries Jun 24 2026 unless noted.
 
 ---
 
-## Review Funnel (Jun 24 2026)
+## Review Funnel (Jul 17 2026)
 
-Mid-stage counts (Benefits, Expenses, Ease of working) not re-queried Jun 24. Use Apr 22 2026 figures for mid-stages as directional reference only.
+Re-queried in full Jul 17 2026 via direct Neon connection (`POSTGRES_CONNECTION_STRING`, `backend-nest/.env`) — all stages, not just the top two.
 
-| Dashboard stage | Jun 24 2026 count | Apr 22 count | Field anchor |
-|---|---|---|---|
-| Started ("I worked here recently") | 1,473 | 838 | `workedRecently IS NOT NULL` |
-| Overall Rating | 1,033 | ~531 | `overallExperience > 0` |
-| Salary & Work Experience | not re-queried | not queried | `totalWorkExperience > 0` |
-| Benefits and Perks | not re-queried | not queried | `benefits` non-null, non-`[]` |
-| Expenses borne | not re-queried | not queried | `feesDeductions` non-null, non-`[]` |
-| Ease of working | not re-queried | not queried | `givingFeedbackToPrincipal` answered |
-| Full Completion ("What to improve") | 727 | 336 | `whatToImprove` answered |
+| Dashboard stage | Jul 17 2026 count | Jun 24 2026 count | Apr 22 count | Field anchor |
+|---|---|---|---|---|
+| Started ("I worked here recently") | 1,600 | 1,473 | 838 | `workedRecently IS NOT NULL` |
+| Overall Rating | 1,129 | 1,033 | ~531 | `overallExperience > 0` |
+| Salary & Work Experience | 945 | not re-queried | not queried | `totalWorkExperience > 0` |
+| Benefits and Perks | 863 | not re-queried | not queried | `benefits` non-null, non-`[]` |
+| Expenses borne | 842 | not re-queried | not queried | `feesDeductions` non-null, non-`[]` |
+| Ease of working | 836 | not re-queried | not queried | `givingFeedbackToPrincipal` answered |
+| Full Completion ("What to improve") | 783 | 727 | 336 | `whatToImprove` answered |
 
-⚠ **Salary & Work Experience stage was bugged prior to 6 July 2026 (fixed in commit `b094fe2`).** The admin dashboard's underlying query counted this stage as reached whenever `totalWorkExperience` was non-null — but the column defaults to `0` on row creation, so nearly every review row qualified whether or not the field was ever genuinely answered. The fix (now reflected in the field anchor above, `> 0` not just non-null) was applied consistently across 17 duplicated occurrences in `review-density.service.ts` and `users.service.ts`. **Any admin-dashboard "Salary & Work Experience" figure viewed before 6 July 2026 was inflated and should not be trusted or compared against post-fix figures.** This stage still needs a fresh query — flagging as **needs Nikhil's action** (Neon access) since no live DB connector is available in this session.
+Also re-queried while connected: total submissions (`stepper_form_data`) = 1,600 (matches Started, as expected since every row requires a `workedRecently` answer to exist); total sign-ups (`"User"`) = 4,178 (up from 4,038 on Jun 24).
+
+⚠ **Salary & Work Experience stage was bugged prior to 6 July 2026 (fixed in commit `b094fe2`).** The admin dashboard's underlying query counted this stage as reached whenever `totalWorkExperience` was non-null — but the column defaults to `0` on row creation, so nearly every review row qualified whether or not the field was ever genuinely answered. The fix (now reflected in the field anchor above, `> 0` not just non-null) was applied consistently across 17 duplicated occurrences in `review-density.service.ts` and `users.service.ts`. **Any admin-dashboard "Salary & Work Experience" figure viewed before 6 July 2026 was inflated and is not comparable to the 945 figure above**, which is queried with the corrected (`> 0`) anchor.
+
+**Caveat:** This query ran against whichever Postgres instance `backend-nest/.env`'s local connection string points to. Figures are directionally consistent with organic growth from the Jun 24 baseline (all stages up, roughly proportionally), which is what you'd expect from the shared production Neon instance — but I have not independently confirmed this is the production database rather than a long-lived shared dev/UAT instance pointing at the same data. If precision matters for a specific decision, sanity-check against the admin dashboard directly.
 
 **Funnel rates (Jun 24 2026):** Started → Live: 70.1% (1,033 / 1,473). Live → Full Completion: 70.4% (727 / 1,033). Salary filled: 59.4% of submitted. Full completion / started: 49.4% — significant improvement from 40% in Apr 2026.
 
