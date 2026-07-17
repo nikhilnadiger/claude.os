@@ -1,5 +1,5 @@
 ---
-last_updated: June 2026
+last_updated: Jul 2026 (targeted correction only — see Review Funnel note; full metrics still Jun 24 2026)
 source: Neon PostgreSQL (live queries Jun 24 2026), Microsoft Clarity MCP (Jun 24 2026, last 30 days), Meta Ads MCP (Jun 24 2026, all-time + 2026 YTD)
 skills: [content-strategy, codebase-context, brand-custodian, product-context]
 staleness_note: >
@@ -52,6 +52,8 @@ Mid-stage counts (Benefits, Expenses, Ease of working) not re-queried Jun 24. Us
 | Expenses borne | not re-queried | not queried | `feesDeductions` non-null, non-`[]` |
 | Ease of working | not re-queried | not queried | `givingFeedbackToPrincipal` answered |
 | Full Completion ("What to improve") | 727 | 336 | `whatToImprove` answered |
+
+⚠ **Salary & Work Experience stage was bugged prior to 6 July 2026 (fixed in commit `b094fe2`).** The admin dashboard's underlying query counted this stage as reached whenever `totalWorkExperience` was non-null — but the column defaults to `0` on row creation, so nearly every review row qualified whether or not the field was ever genuinely answered. The fix (now reflected in the field anchor above, `> 0` not just non-null) was applied consistently across 17 duplicated occurrences in `review-density.service.ts` and `users.service.ts`. **Any admin-dashboard "Salary & Work Experience" figure viewed before 6 July 2026 was inflated and should not be trusted or compared against post-fix figures.** This stage still needs a fresh query — flagging as **needs Nikhil's action** (Neon access) since no live DB connector is available in this session.
 
 **Funnel rates (Jun 24 2026):** Started → Live: 70.1% (1,033 / 1,473). Live → Full Completion: 70.4% (727 / 1,033). Salary filled: 59.4% of submitted. Full completion / started: 49.4% — significant improvement from 40% in Apr 2026.
 

@@ -1,6 +1,6 @@
 ---
 skills: [product-context, codebase-context, engineering-review]
-last_updated: Apr 2026
+last_updated: Jul 2026
 source: NestJS codebase analysis (backend-nest/src/) + full Neon pg_dump (Apr 2026, 180KB). Full dump covers all application tables including stepper_form_data, "User", stepper_form_approval, school_mapping, save_school_by_user, whatsapp_users, etc.
 staleness_note: >
   Full pg_dump obtained Apr 2026 (180KB). All active table schemas (Section 1) have been
@@ -114,14 +114,16 @@ The admin dashboard tracks completion via 7 cumulative stages, each anchored to 
 
 **Note on legacy S0/S1/S2/S3 terminology:** Earlier documentation used a 4-stage S0/S1/S2/S3 model. The dashboard's 7-stage model supersedes it for all analytics purposes. The D1 `question_completion_tracking` table still has `section_zero_completed`–`section_three_completed` column names (structural, unchanged in the database) — do not conflate those with the dashboard stages. The dashboard queries Neon `stepper_form_data` directly using the field anchors above.
 
-**Career insights unlock states** (separate from the analytics funnel — used by `short-form-legacy.service.ts` to determine which of the 5 career insight cards unlock for the user):
+**Career insights unlock states** (separate from the analytics funnel — used by `short-form-legacy.service.ts` to determine which of the 9 career insight cards unlock for the user — expanded from 5 to 9 on 7 July 2026, commit `0adb8d2`; new Cards F/G/H/I reuse `professionalFeedback`, `writtenContract`, `salaryOnTime`, and `daysWorkHome`, no new form fields were added):
 
 | Backend state | Condition | Cards unlocked |
 |---|---|---|
 | `s0_only` | Gate answered only | None |
 | `s1_complete` | Gate + Overall Rating submitted | Card A (school quality percentile) |
 | `s2_step2_complete` | Gate + Overall Rating + salary and work-from-home days added | Card A + Card B (salary percentile) |
-| `full_complete` | Gate + all steps answered (incl. qualitative comments) | All 5 cards |
+| `full_complete` | Gate + all steps answered (incl. qualitative comments) | All 9 cards (C–I unlock only at this final stage, by product decision — not a data availability constraint) |
+
+**Note on state-label naming vs. frontend step numbers:** As of 25 June 2026 the review form's Step 1 was split into two steps (Overall Rating is now its own step, pushing everything after it back by one). The `s1_complete`/`s2_step2_complete` labels above were not renamed and still refer to the old step numbering — see `knowledge/staffroom-user-journey.md` Screen 5 for the current step-by-step mapping.
 
 **Live review criteria:** `workedRecently` IS NOT NULL AND TRIM ≠ '' AND `overallExperience` IS NOT NULL AND > 0.
 

@@ -1,9 +1,11 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 1.7  
+**Version:** 2.0  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 24 June 2026  
+**Codebase last verified:** 17 July 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
+
+**Changelog note:** Between the v1.7 baseline (24 June 2026) and this refresh, an untracked manual edit (7 July 2026, commit `cf0427f`) had already patched in the Screen 5 gate-skip explanation and the WhatsApp template copy appendix without bumping the version or verified-date — both are now folded into this v2.0 baseline along with everything else below. Major changes this refresh: review form restructured from 6 to 7 steps with 3 new mid-flow reveal cards (Screen 5); Career Insights expanded from 5 to 9 cards (Section 5); "share your experience" terminology renamed to "review" throughout the app; insight-card taps now open a popup instead of direct navigation; Clarity tracking substantially expanded (Section 8).
 
 ---
 
@@ -172,16 +174,16 @@ The landing page is a linear scroll with the following sections from top to bott
 Platform-wide salary data for teachers across different experience bands.
 
 **3. Career Insights section:**
-The user's five personal career insight cards (locked or partially/fully unlocked based on review progress). Accessible to all users — unauthenticated users see all five cards locked.
+The user's nine personal career insight cards (expanded from five on 7 July 2026; locked or partially/fully unlocked based on review progress). Accessible to all users — unauthenticated users see all nine cards locked.
 
 **4. Teacher Voices section:**
-Review excerpts and quotes from teachers who have used staffroom.
+Heading (added as literal on-screen copy 7 July 2026): *"What teachers say about their schools."* Review excerpts and quotes from teachers who have used staffroom — expanded 7 July 2026 with 4 additional cards (Bengaluru + Delhi NCR), ordered so adjacent cards never share a city.
 
 **5. City selector section:**
 A row of city buttons to filter the Top Schools list below.
 
 **6. Top Schools section:**
-A list of up to 15 ranked schools (filterable by city). Each school card shows name, location, rating, and salary/review data where available.
+Heading (added as literal on-screen copy 7 July 2026): *"Schools recommended by teachers"* (or *"Schools recommended by teachers in [city]"* when a city filter is active). A list of up to 15 ranked schools (filterable by city). Each school card shows name, location, rating, and salary/review data where available. As of 7 July 2026 this is a pure school list — Career Insight cards and the S0 gate card that had previously been interleaved into this grid were removed, along with the two components that rendered them.
 
 **Sticky search navbar:**
 Appears when the user scrolls past the hero section — compact version with search bar locks to the top.
@@ -218,7 +220,7 @@ Appears when the user scrolls past the hero section — compact version with sea
 
 - **On every page load (once per browser session, 400ms after the page opens):** Records a session landing — full URL visited, whether the user is inside an in-app browser (WebView), and user identity if they are logged in. This is used to track traffic sources and WebView usage. Fires silently; no user-visible effect.
 - **Top Schools list:** Loaded from staffroom's database (up to 150 schools fetched, filtered to max 15 per city view). Schools are ranked by a 6-tier system based on rating level and data completeness (salary + qualitative comments).
-- **Career Insights section:** For unauthenticated users, all 5 cards show as locked. For authenticated users, unlock state is fetched from the server.
+- **Career Insights section:** For unauthenticated users, all 9 cards show as locked. For authenticated users, unlock state is fetched from the server.
 - **Logged-in redirect:** After auth state loads client-side, if the user is authenticated they are sent to `/home` (or their original destination) via `router.replace`. This is not a server-side redirect — the page has already rendered by this point.
 
 ---
@@ -327,7 +329,7 @@ A dark green banner inside the login panel:
 | Wrong OTP code entered | Error: *"Incorrect verification code. Please check the code and try again."* OTP boxes cleared |
 | OTP expired (5-minute limit) | *"This verification code has expired. Please request a new OTP."* |
 | OTP already used | *"This code has already been used. Please sign in or request a new OTP."* |
-| Too many OTP requests in 5 minutes | *"You've requested too many OTPs. Please try again after 5 minutes."* |
+| Too many OTP requests in 5 minutes (keyed by phone number, not IP, as of 9 Jul 2026) | *"You've requested too many OTPs. Please try again after 5 minutes."* |
 | WhatsApp service unavailable | *"We couldn't send your OTP. Please try again."* |
 
 ---
@@ -410,7 +412,7 @@ The Home page renders **identical content** to the Landing page — the same `Ho
 **Content sections (top to bottom) — same as Landing page:**
 1. Hero section (dark green) — search bar, headline, teacher count subline
 2. Salary benchmarks section
-3. Career Insights section — 5 cards (locked/unlocked per this user's review progress if authenticated; all locked if unauthenticated)
+3. Career Insights section — 9 cards (locked/unlocked per this user's review progress if authenticated; all locked if unauthenticated)
 4. Teacher Voices section
 5. City selector section
 6. Top Schools section (up to 15 schools, filterable by city)
@@ -434,7 +436,7 @@ Dropdown opens with:
 - Footer: same as above
 
 **Bottom navigation bar (always visible):**
-Three items — Schools | Your Experience | Community
+Three items — Schools | Reviews | Community (renamed from "Your Experience" 7 July 2026)
 
 ---
 
@@ -446,16 +448,15 @@ Three items — Schools | Your Experience | Community
 | Select school from search results | Brief loading screen → School Profile page. staffroom logs the search. |
 | Click a school card (Top Schools section) | School Profile page |
 | Tap a city button (City selector) | Top Schools list filters to that city |
-| Click a locked insight card | Prompt to continue or start the review form |
-| Click an unlocked insight card | Shows the user's data for that card |
-| Click **Help a friend get their insights** (visible only when all 5 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
+| Click any insight card, locked or unlocked (changed 30 Jun 2026) | Opens a bottom-sheet popup (reusing the `SalaryBandPopup` shell) showing the card's headline and body. The popup's CTA adapts to the user's unlock state: all-locked → routes to Write a Review; partial (some cards unlocked) → continues the in-progress review; full-complete (all 9 unlocked) → WhatsApp invite as the primary button, "write another review" as secondary. Previously, tapping a locked card only prompted to continue/start, and tapping an unlocked card showed its data inline with no popup. Separately (also 30 Jun 2026), the `SeeYourInsightsCard` and the gate screen before Step 1 became fully tappable anywhere on the card — previously only the CTA pill inside them was tappable. |
+| Click **Help a friend get their insights** (visible only when all 9 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
 | Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **My Applications** / **Sign out** + footer |
 | Click **Your Profile** | Profile page |
 | Click **My Applications** | My Applications page (`/my-applications`) |
 | Click **Sign out** | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
 | Click hamburger menu (unauthenticated) | Dropdown opens with **Log In** button |
 | Click **Schools** (bottom nav) | Already on Home — no change |
-| Click **Your Experience** (bottom nav) | Share Experience page |
+| Click **Reviews** (bottom nav) | Share Experience page |
 | Click **Community** (bottom nav) | Opens staffroom's WhatsApp community group in a new tab or the WhatsApp app |
 
 ---
@@ -471,7 +472,7 @@ Three items — Schools | Your Experience | Community
 
 - **No auth check on page load:** `/home` has no auth guard. All users see the same page content. The auth state determines what the Career Insights section shows (locked vs unlocked), not whether the page is accessible.
 - **Top Schools list:** Loaded from staffroom's database. Up to 150 schools are fetched; max 15 displayed. Ranked by a 6-tier system based on rating and data completeness. Filterable by city.
-- **Career Insights data:** For authenticated users, checks the user's review completion state to determine which of the 5 cards to show as locked or unlocked. For unauthenticated users, all 5 cards show as locked. Platform-wide statistics are recomputed daily and cached.
+- **Career Insights data:** For authenticated users, checks the user's review completion state to determine which of the 9 cards to show as locked or unlocked. For unauthenticated users, all 9 cards show as locked. Platform-wide statistics are recomputed daily and cached.
 - **After each sign-in:** Fetches and stores the user's context — city, pincode, list of reviews submitted, badge status.
 
 ---
@@ -492,7 +493,7 @@ Both pages render the exact same `HomePageContent` component. The only differenc
 
 #### Exit points
 - Click school → School Profile
-- Click Your Experience (bottom nav) → Share Experience
+- Click Reviews (bottom nav) → Share Experience
 - Click Community (bottom nav) → external WhatsApp group (leaves app)
 - Click Your Profile (menu) → Profile page
 - Sign out → Landing page
@@ -519,7 +520,7 @@ Both pages render the exact same `HomePageContent` component. The only differenc
 - **Salary range cards:** Three cards showing estimated monthly salary (₹min–₹max) by experience tier: **Fresher** (0–5 years exp.), **Mid Career** (6–15 years exp.), **Senior** (15+ years exp.). Based on reviews submitted by teachers. Only visible when salary data exists. **Each card is tappable** — tapping opens a popup with:
   - Headline: *"Compare your salary and school with teachers near by"*
   - Body: *"Your school won't know it was you."*
-  - CTA button: *"Share your experience and find out"* — routes unauthenticated users through `/login?returnUrl=/share-experience?...` before the form.
+  - CTA button: *"Write your review and find out"* — routes unauthenticated users through `/login?returnUrl=/share-experience?...` before the form.
 - **Teacher count badge:** *"Teachers here: [N]"* — this is the total number of teachers working in the school's geographic area, drawn from a national education dataset (UDISE). It is **not** a count of staffroom users or registered members.
 - **Save/bookmark icon** (top right of header)
 - **Share icon** (top right of header)
@@ -561,7 +562,7 @@ The heading above reviews and the CTA button below them change based on how many
 **5. Review list (shown only when reviews exist):**
 - One card per submitted review
 - Each card shows: overall rating, monthly salary, whether the school provides a written contract, whether salary is paid on time, written comments (what the teacher liked, what they'd improve), benefits received, years of experience
-- Reviewer name: always shown as *"Verified Teacher"* — never identified
+- Reviewer name: always shown as *"Real Teacher"* (renamed from "Verified Teacher" 7 July 2026) — never identified
 - Cards are expandable/collapsible (tap to expand)
 - The logged-in user's own review, if they have one, appears at the top of the list
 
@@ -569,7 +570,7 @@ The heading above reviews and the CTA button below them change based on how many
 
 | User's review status for this school | Button shown | Subtitle shown |
 |--------------------------------------|-------------|---------------|
-| Has not reviewed | *"Share your experience at this school"* | *"Add your review to help other teachers make informed choices."* |
+| Has not reviewed | *"Write a review of [School Name]"* (was "Share your experience at this school" before 7 July 2026) | *"Add your review to help other teachers make informed choices."* |
 | Review in progress | *"Continue your review"* | *"You have a review in progress. Continue where you left off."* |
 | Review complete | No button — completion card shown instead | *"Thanks for reviewing in [Month, Year]."* |
 
@@ -577,9 +578,9 @@ The heading above reviews and the CTA button below them change based on how many
 
 | User's review status | Card shown | Card text | Button |
 |---------------------|-----------|-----------|-------|
-| Has not reviewed, zero school reviews | `SeeYourInsightsCard` | *"Compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Share your experience and find out"* |
-| Has not reviewed, school has reviews | `SeeYourInsightsCard` | *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Share your experience and find out"* |
-| Review in progress | `PartialInsightsCard` | *"[N] insights unlocked. Complete sharing your experience and unlock all five insights."* | *"Continue →"* |
+| Has not reviewed, zero school reviews | `SeeYourInsightsCard` | *"Compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Write your review and find out"* |
+| Has not reviewed, school has reviews | `SeeYourInsightsCard` | *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* | *"Write your review and find out"* |
+| Review in progress | `PartialInsightsCard` | *"[N] insights unlocked. Complete your review and unlock all nine insights."* | *"Continue →"* |
 | Review complete | `InviteColleagueCard` | *"Help a friend get their insights. Share staffroom and they'll get their own career insights — based on their school and salary."* | *"Help a friend get their insights"* |
 
 The [N] in insight card text is the teacher count for the school's area (same national dataset figure as the header badge). Only shown if `teacherCount > 0`.
@@ -611,9 +612,9 @@ Tapping the button opens the Apply multi-step sheet (see Screen 9). If the teach
 | Tap **Save / Bookmark** | Yes | School saved to user's profile. If not logged in: *"Please login to save schools"* tooltip shown — button visible but action blocked. |
 | Tap **Share** | No | Share dialog opens |
 | Read a review | No | Card expands to show full content |
-| Tap *"Share your experience at this school"* | Yes | Review form opens as a dialog on this page. If not logged in: routes to `/share-experience?placeId=...` where mid-form login gate handles auth with correct returnUrl. |
+| Tap *"Write a review of [School Name]"* | Yes | Review form opens as a dialog on this page. If not logged in: routes to `/share-experience?placeId=...` where mid-form login gate handles auth with correct returnUrl. |
 | Tap *"Continue your review"* | Yes | Review form opens pre-filled with existing answers |
-| Tap *"Share your experience and find out"* (insight card) | Yes (login first) | Routes to `/login?returnUrl=/share-experience?placeId=...`. Unauthenticated users are sent to login first, then redirected to the review form with the school pre-selected. (Note: the home/landing page uses a different pattern — direct to `/share-experience` without login first. School page always goes through login.) |
+| Tap *"Write your review and find out"* (insight card) | Yes (login first) | Routes to `/login?returnUrl=/share-experience?placeId=...`. Unauthenticated users are sent to login first, then redirected to the review form with the school pre-selected. (Note: the home/landing page uses a different pattern — direct to `/share-experience` without login first. School page always goes through login.) |
 | Tap *"Continue →"* (partial insights card) | Yes | Review form opens pre-filled |
 | Tap *"Help a friend get their insights"* (completed insight card) | Yes | Opens WhatsApp with pre-filled invite message containing the user's personal referral link |
 | Tap salary range card | No | Popup opens with school-specific copy and CTA to share experience |
@@ -655,7 +656,7 @@ All share actions are silently recorded by staffroom (platform used, school shar
 4. Delivers school data to the page (name, address, tags, contact info, overview)
 
 **After the page renders (client side):**
-5. Fetches all reviews for this school — all reviews that have at least basic data (overall rating, worked recently flag) are shown, regardless of admin approval status. No minimum review count threshold.
+5. Fetches all reviews for this school — all reviews that have at least basic data (overall rating, worked recently flag) are shown, regardless of admin approval status. No minimum review count threshold. Reviews, salary ranges, and header data are cached; the cache now evicts immediately when a new review is saved for this school (fixed 9 July 2026 — a dependency-injection bug had silently disabled cache eviction, so newly submitted reviews could take up to the full 60-minute cache TTL to appear on the school page).
 6. Fetches salary ranges — computed from all submitted reviews for this school, grouped into experience brackets
 7. Fetches teacher count via two-step lookup:
    - Gets the school's pincode from its record
@@ -687,8 +688,8 @@ All share actions are silently recorded by staffroom (platform used, school shar
 ### SCREEN 5 — Share Experience (Review Submission)
 
 **URL:** `thestaffroom.in/share-experience`  
-**Who sees this:** Anyone — logged in or not. Unauthenticated users can land on the page and search for a school. Once a school is selected, they see a login prompt card ("Log in to see your career insights") with a CTA that routes to `/login?returnUrl=[share-experience-url-with-school]` — the form itself requires authentication.  
-**How you arrive:** Bottom nav "Your Experience", or the *"Share your experience at this school"* / *"Continue your review"* CTA on a school profile page (which opens an overlay version of the same form)
+**Who sees this:** Anyone — logged in or not. Unauthenticated users can land on the page and search for a school. Once a school is selected, they see a login prompt card ("Log in to see your career insights") with a CTA that routes to `/login?returnUrl=[share-experience-url-with-school]` — the form itself requires authentication. As of 1 July 2026, this login-gate card also shows a real nearby-teacher count (reusing the same location-lookup chain as the School Profile teacher-count badge, with a platform-wide unique-review-count fallback if the location lookup fails) plus an anonymity reframe line below the CTA, to reduce drop-off at this gate.  
+**How you arrive:** Bottom nav "Reviews" (was "Your Experience" before 7 July 2026), or the *"Write a review of [School Name]"* / *"Continue your review"* CTA on a school profile page (which opens an overlay version of the same form)
 
 ---
 
@@ -696,11 +697,15 @@ All share actions are silently recorded by staffroom (platform used, school shar
 
 **If arriving from bottom nav (school not pre-selected):**
 A dark-themed search bar at the top: *"Search for a school you've worked at..."*
-Below the search bar, a **Suggested Schools** section shows a list of schools relevant to the user (based on their pincode/history), so they can tap a suggestion rather than searching. User must select a school (via search or suggestion) before the form appears.
+Below the search bar, a **Suggested Schools** section (on-screen heading: *"Recently reviewed"* or *"Recently reviewed near you"* for Bengaluru/Delhi-NCR users) shows a list of schools with recent teacher reviews, based on the user's location — so they can tap a suggestion rather than searching. User must select a school (via search or suggestion) before the form appears.
+
+**Tapping a "Recently reviewed" card (added 3 July 2026):** Previously jumped straight into the review form. Now opens a bottom-sheet popup first: *"Write a review, or read theirs?"* / *"See what a teacher recently shared about [School] — or go ahead and add your own."* — primary button *"Write a review →"* (proceeds into the review form, school pre-selected); secondary button *"Read what they shared"* (routes to the school's profile page instead, leaving the review form). This does not apply to the search bar above it — searching and selecting a school still goes directly into the form.
 
 **The review form — full sequence:**
 
-The form has a gate question, then six steps, with two insight reveal screens appearing between steps. Progress bar shows *"N/6"* at the top (e.g., "1/6", "2/6").
+The form has a gate question, then **seven steps**, with **five** insight reveal screens appearing between steps. Progress bar shows *"N/7"* at the top (e.g., "1/7", "2/7").
+
+**Note on step count (verified 17 July 2026):** Prior to 25 June 2026, Step 1 combined four questions (professional feedback, written contract, salary-on-time, overall rating) into a single step, for a 6-step form. That step was split into two — the rating question now stands alone as its own step — bringing the total to 7. This is a real change in flow, not a renumbering exercise: the user now taps "Next" once more, and the first insight reveal (Reveal A) now fires one step later than before.
 
 **Gate — "Have you worked here recently?"**
 A single **Yes** button (checkmark circle). There is no "No" option. Tapping Yes saves the answer and advances immediately to the S0 Gate Screen. The user cannot proceed without tapping Yes — they can only navigate away.
@@ -713,60 +718,83 @@ If a user returns to a school where they previously saved a non-"Yes" answer (le
 A full-screen card appears before the form begins:
 - Heading: *"See your career insights."*
 - Body: *"Understand and compare your school and salary with [N] teachers near you. It will take you <2 mins."*
-- Subtext: *"Share your experience and get your career insights."*
+- Subtext: *"Write your review and get your career insights."*
 - Button: *"Let's start"*
 - Footer: *"Your name will never be shared with any school."*
 
-**Step 1 — Overall Experience:**
-Four questions: professional feedback from management (Yes/No/Somewhat); written contract provided (Yes/No); salary paid on time (Yes/No/Sometimes); overall experience rating (1–5 stars)
+**Step 1 — Feedback & Contract:**
+Three questions: professional feedback from management (Yes/Sometimes/No); written contract or joining letter provided (Yes/No — narrowed from a three-way Yes/Sometimes/No as of 25 June 2026); salary paid on time (Yes/Sometimes/No). No reveal card appears after this step — it advances straight to Step 2.
 
-**After Step 1 "Next" — Reveal A (full-screen card):**
+**Step 2 — Overall Experience:**
+One question: overall experience rating (1–5 stars)
+
+**After Step 2 "Next" — Reveal A (full-screen card):**
 - Badge: *"School quality — unlocked"* (green pill)
 - Large metric: *"[N]%"* — the percentage of all teachers on staffroom who gave the same overall star rating as the user
 - Description: *"of teachers on staffroom rate their schools the same as you."*
 - Nudge: *"Complete the next section to find out how your salary compares to your peers."*
-- Button: *"Continue →"*
+- Button: *"Compare your salary →"*
 
-**Step 2 — Salary:**
-Three fields: monthly salary in rupees (number); total years of work experience (number); days taking work home per week (number)
+**Step 3 — Salary:**
+Three fields: monthly salary in rupees (number); total years of work experience (number — 0 is a valid, accepted answer as of 4 July 2026; previously a validation bug treated 0 as "unanswered" and trapped teachers with under a year of experience in an endless "please answer all questions" loop); days taking work home per week (number)
 
-**Inline during Step 2 — SalaryContextCard:**
+**Inline during Step 3 — SalaryContextCard:**
 As soon as the user enters their years of experience (value > 0), a card appears below that question:
 - Heading: *"Typical Salary for [0–5 / 5–15 / 15+] Years Experience"*
 - Value: salary range for that experience band (₹min – ₹max) based on verified reviews at this school
-- Footer: *"Based on verified teacher reviews from this school"*
+- Footer: *"Based on real teacher reviews from this school"*
 Only shown if sufficient salary data exists for this school. Does not appear if data is absent.
 
-**After Step 2 "Next" — Reveal B (full-screen card):**
+**After Step 3 "Next" — Reveal B (full-screen card):**
 - Badge: *"Your salary — unlocked"* (green pill)
 - Large metric: *"[N]%"* — percentage of teachers on staffroom who earn more than the user
 - Description: *"of teachers on staffroom earn more than you."*
-- Nudge: *"Complete the remaining sections to unlock three more insights."*
-- Button: *"Continue →"*
+- Nudge: *"Complete the next section to see the benefits & perks teachers like you report."*
+- Button: *"See your benefits & perks →"*
 
-**Step 3 — Benefits:**
+**Step 4 — Benefits:**
 Multi-select checkboxes: which benefits does the school provide? (HRA, transport, PF, medical, etc.)
 
-**Step 4 — Deductions:**
+**After Step 4 "Next" — Reveal C (full-screen card, added 7 July 2026):**
+- Badge: *"Benefits & perks — unlocked"* (green pill)
+- Body: *"Teachers in schools like yours most commonly report [up to 3 benefits, underlined]."* — drawn from the same salary-band data as the Step 4 question. If no benefits data exists for this band: *"Not enough data yet for your salary range — your review is helping build it."*
+- Nudge: *"Complete the next section to see the deductions & fees teachers like you report."*
+- Button: *"Check your deductions & fees →"*
+
+**Step 5 — Deductions:**
 Multi-select checkboxes: what fees or deductions do teachers pay? (school fees for own children, fines, etc.)
 
-**Step 5 — Working Conditions:**
+**After Step 5 "Next" — Reveal D (full-screen card, added 7 July 2026):**
+- Badge: *"Deductions & fees — unlocked"* (green pill)
+- Body: *"Teachers in schools like yours most commonly report [up to 3 deductions, underlined]."* Same no-data fallback as Reveal C if this salary band has no deductions data.
+- Nudge: *"Complete the next section to see how easy your school is to work at, compared to others."*
+- Button: *"See how easy your school is to work at →"*
+
+**Step 6 — Working Conditions:**
 Multi-radio group: *"Are the following easy to do in this school?"* — covers: taking leave / trying new things / working with other teachers / working with management / giving feedback to the principal
 
-**Step 6 — Final Comments:**
-Two required free-text fields: what you like about working here; what needs improvement. Both fields require **more than 12 characters** (minLength: 13). If the user attempts to proceed with too little text, an inline error appears below the field: *"Add few more words - share one real thing you liked working here."* / *"Add few more words - share one real thing you would change here."*
+**After Step 6 "Next" — Reveal E (full-screen card, added 7 July 2026):**
+- Badge: *"Ease of working — unlocked"* (green pill)
+- Large metric + description: *"[N]% of schools on staffroom are harder to work in than yours."* If the user's ease score computes to 0 (hardest possible): a different line replaces the metric — *"Working conditions at your school are among the most challenging reported on staffroom."*
+- Nudge: *"Finish the last couple of questions to unlock everything staffroom knows about schools like yours."*
+- Button: *"Unlock everything →"*
 
-**Completion screen (after Step 6 submitted):**
+**Step 7 — Final Comments:**
+Two required free-text fields: what you like about working here; what needs improvement. Both fields require **more than 12 characters** (minLength: 13) **and** pass a low-effort-answer check (added 7 July 2026): generic non-answers like "Nothing," "Everything," "N/A," etc. are rejected on both the client and the server, closing a gap where such answers could previously slip through via autosave-on-blur before the length check ran. If the user attempts to proceed with too little text or a rejected low-effort answer, an inline error appears below the field: *"Add few more words - share one real thing you liked working here."* / *"Add few more words - share one real thing you would change here."*
+
+**Completion screen (after Step 7 submitted):**
 - Heading: *"All insights unlocked"*
-- Body: *"Your experience has been noted. Your name will never be shared with the school."*
+- Body: *"Your review has been noted. Your name will never be shared with the school."*
 - Button: *"See your career insights"*
 - **Apply Reveal card** (shown once, only when `APPLY_ENABLED=true` and the server confirms this is the user's first completed review and the card hasn't been shown before): *"Use what you know to find your next school"* / *"staffroom Apply lets you send your resume to schools you'd love to work at. Your first application is free."* / Button: *"Explore schools to apply to"* (routes to `/home`). After this card is shown once, the server marks `reveal_shown` — it will never appear again for this user.
 
 **Every question at every step is required.** The "Next" button is disabled until all questions in the current step are answered. There is no way to skip a question.
 
-**Back button:** Available on every step. Returns to the previous step. All answers are preserved.
+**Back button:** Available on every step. Steps back exactly one question via the form's own back handler (fixed 7 July 2026 — previously the back icon always hard-reset the flow to school search instead of stepping back one question). All answers are preserved, including an auto-assumed "Yes" on the gate question, which now correctly renders as checked if the user navigates back into it.
 
 **Browser back button:** Intercepted — pressing the phone's back button navigates to the previous form step, not away from the page.
+
+**Bottom navigation (added 3 July 2026):** The bottom nav bar — including the one-tap external WhatsApp link in "Community" — is now hidden for the entire duration of an active review, from the moment a school is selected through form completion. Previously it stayed visible and tappable throughout, letting a teacher exit the review in one tap. It reappears once the user backs out to school selection or completes the review.
 
 ---
 
@@ -774,14 +802,14 @@ Two required free-text fields: what you like about working here; what needs impr
 
 | Action | What happens |
 |--------|-------------|
-| Tap a school from Suggested Schools section | School selected immediately — no search needed. Loads existing progress (if any) or starts fresh. |
+| Tap a school from the "Recently reviewed" (Suggested Schools) section | Opens the "Write a review, or read theirs?" popup (see above) — Write proceeds into the form (loads existing progress if any, or starts fresh); Read routes to the school's profile page instead. |
 | Search for a school (if not pre-selected) | Dropdown appears after typing min 2 characters. Shows schools from Google Places + staffroom manual list. Selecting a school loads existing progress (if any) or starts fresh. |
 | Answer any question | Answer is selected. The form immediately saves all current answers to staffroom's database in the background (*"Saving..."* text briefly appears). |
 | Click **Next** (when all current section answers are complete) | Moves to the next section |
 | Click **Back** | Returns to the previous section. Saved answers are preserved. |
 | Close browser or navigate away mid-form | Progress is saved (up to the last auto-save). On return, the form resumes from the first unanswered section. |
 | Return to this school after previously starting | Form loads with all previous answers pre-filled. Starts at the first unanswered question. |
-| Complete all steps (Gate + Steps 1–6) | Completion screen: *"All insights unlocked"* / *"Your experience has been noted. Your name will never be shared with the school."* / button *"See your career insights"* |
+| Complete all steps (Gate + Steps 1–7) | Completion screen: *"All insights unlocked"* / *"Your review has been noted. Your name will never be shared with the school."* / button *"See your career insights"* |
 | Click **See your career insights** | Goes to `/home?school=[placeId]#career-insights` — scrolls to the Career Insights section, showing this school's data |
 
 ---
@@ -810,13 +838,15 @@ Two required free-text fields: what you like about working here; what needs impr
 | State label | Condition |
 |------------|-----------|
 | `s0_only` | Gate question answered |
-| `s1_complete` | Gate + Step 1 fully answered (Overall Experience rating) |
-| `s2_step2_complete` | Gate + Step 1 + Step 2 fully answered (salary and work-from-home days) |
-| `full_complete` | Gate + all steps fully answered (qualitative comments in Step 6 filled) |
+| `s1_complete` | Gate + Step 2 fully answered (Overall Experience rating) |
+| `s2_step2_complete` | Gate + Step 2 + Step 3 fully answered (salary and work-from-home days) |
+| `full_complete` | Gate + all steps fully answered (qualitative comments in Step 7 filled) |
+
+**Note on naming:** These state labels predate the 25 June 2026 step split and are not renumbered — `s1_complete` refers to the Overall Experience question, which now lives in Step 2 (was Step 1); `s2_step2_complete` refers to the salary/work-from-home fields, now in Step 3 (was Step 2). The condition each label checks (which database fields are filled) is unchanged — only which on-screen step number the user is at when they satisfy it has shifted.
 
 This completion state drives which Career Insight cards are unlocked.
 
-**On full completion (Step 5 saved):**
+**On full completion (Step 7 saved):**
 1. Review record is complete in the database
 2. **Review goes live immediately** — there is no admin approval gate. A moderation table exists in the database (`stepper_form_approval`) but is never written to by any part of the system; it was designed for a future approval workflow that was not implemented. All reviews with an overall rating and a worked-recently answer appear on the school profile page immediately after submission.
 3. Badge status is re-checked and updated in the background
@@ -862,7 +892,7 @@ Note: A "Teacher Count" stat was previously shown in this row. It has been remov
 **Referral section:**
 - The user's personal referral link
 - **Copy** button
-- Two stats: *"Successful teacher sign-ups from your referral"* (count of sign-ups via this link) and *"Verified teacher experiences from your referral"* (count of reviews submitted by referred users)
+- Two stats: *"Successful teacher sign-ups from your referral"* (count of sign-ups via this link) and *"Real teacher reviews from your referral"* (renamed from "Verified teacher experiences from your referral" 7 July 2026; count of reviews submitted by referred users)
 
 **Saved Schools:**
 - Section heading: *"My Saved Schools"*
@@ -870,7 +900,7 @@ Note: A "Teacher Count" stat was previously shown in this row. It has been remov
 - Each card: school name, address, an unsave button
 - Empty state: *"No saved schools yet"*
 
-**My Experiences:**
+**My Reviews:** (renamed from "My Experiences" 7 July 2026)
 - Section heading always visible
 - One card per submitted review, showing: school name, overall star rating, salary, years of experience, comments excerpt, submission timestamp
 - Status badge on each card: **Complete** / **In Progress** / **Not live**
@@ -881,15 +911,15 @@ Note: A "Teacher Count" stat was previously shown in this row. It has been remov
 **Sign Out button:**
 A dedicated "Sign out" button at the bottom of the page (red tinted, below all other content). Signs the user out immediately.
 
-**Career Insights card (always shown below My Experiences — three states):**
+**Career Insights card (always shown below My Reviews — three states):**
 
 | User's review state | Card shown | What it says | Tapping goes to |
 |--------------------|-----------|-------------|----------------|
-| No reviews submitted | `SeeYourInsightsCard` | *"See your career insights."* / *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* / Button: *"Share your experience and find out"* | `/share-experience` |
-| At least one review exists but not fully complete | `PartialInsightsCard` | *"[N] insights unlocked."* / *"Complete sharing your experience and unlock all five insights."* / Button: *"Continue →"* | `/share-experience?placeId=...` (most recently updated incomplete review) |
-| All reviews fully complete | `AllInsightsUnlockedCard` | *"All insights unlocked"* / *"Your experience has been noted. Your name will never be shared with the school."* / Button: *"See your career insights"* | `/home#career-insights` |
+| No reviews submitted | `SeeYourInsightsCard` | *"See your career insights."* / *"Understand and compare your school and salary with [N] teachers nearby. It will take you <2 mins."* / Button: *"Write your review and find out"* | `/share-experience` |
+| At least one review exists but not fully complete | `PartialInsightsCard` | *"[N] insights unlocked."* / *"Complete your review and unlock all nine insights."* / Button: *"Continue →"* | `/share-experience?placeId=...` (most recently updated incomplete review) |
+| All reviews fully complete | `AllInsightsUnlockedCard` | *"All insights unlocked"* / *"Your review has been noted. Your name will never be shared with the school."* / Button: *"See your career insights"* | `/home#career-insights` |
 
-When no reviews exist, this card is the primary content of the My Experiences section.
+When no reviews exist, this card is the primary content of the My Reviews section.
 
 ---
 
@@ -902,7 +932,7 @@ When no reviews exist, this card is the primary content of the My Experiences se
 | Tap **Copy** on referral link | Referral URL copied to clipboard |
 | Tap a review card | Full review dialog opens |
 | Tap **Visit School Page** (in review dialog) | School Profile page for that school |
-| Tap *"Share your experience and find out"* (insight card) | Share Experience page |
+| Tap *"Write your review and find out"* (insight card) | Share Experience page |
 | Tap *"Continue →"* (partial insights card) | Share Experience page, pre-filled with that school's answers |
 | Tap *"See your career insights"* (completed card) | Home page, Career Insights tab |
 | Tap **Sign out** (button at bottom of page) | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
@@ -1005,7 +1035,7 @@ Each condition shows a green checkmark when met, or a numbered step (with *"NEXT
 | Auth + eligibility state | Button shown |
 |--------------------------|-------------|
 | Not logged in | *"Login to get started"* (routes to `/login`) |
-| Logged in, no review | *"Share your experience to get started"* (routes to `/share-experience`) |
+| Logged in, no review | *"Write your review to get started"* (routes to `/share-experience`) |
 | Logged in, review done, no resume/profile | *"Upload your resume to continue"* → opens resume step |
 | Fully eligible, first app free | *"Send your first application — it's free"* |
 | Fully eligible, no free credit | *"Continue to payment"* |
@@ -1201,7 +1231,7 @@ SCREEN 1: Landing Page (/)
     ↓ User browses Top Rated schools
     ↓ Clicks on a school card
 SCREEN 4: School Profile (/school/...)
-    ↓ User taps "Share your experience at this school"
+    ↓ User taps "Write a review of [School Name]"
     → Not logged in: redirected to Login with this school page as destination
 SCREEN 2: Login Page (/login)
     ↓ Phone step → OTP step
@@ -1379,11 +1409,11 @@ Journey D, E, or B depending on recipient's auth status
 
 ## SECTION 5: CAREER INSIGHTS IN DETAIL
 
-Career Insights are the five personal data cards that show a teacher how their salary, benefits, deductions, and working conditions compare to everyone else on the platform.
+Career Insights are the **nine** personal data cards (expanded from five on 7 July 2026) that show a teacher how their salary, benefits, deductions, feedback, contract status, and working conditions compare to everyone else on the platform.
 
 ---
 
-### The 5 Cards
+### The 9 Cards
 
 | Card | Title | What it shows |
 |------|-------|--------------|
@@ -1392,6 +1422,12 @@ Career Insights are the five personal data cards that show a teacher how their s
 | C | Benefits | The top 5 most common benefits (HRA, transport, PF, etc.) among teachers in the user's salary band |
 | D | Deductions | The top 5 most common deductions (fees, fines, etc.) among teachers in the user's salary band |
 | E | Ease of Work | Where the user's working conditions score falls in the distribution of all ease scores on the platform |
+| F *(added 7 Jul 2026)* | Feedback from management | Share of teachers on staffroom who report the same regular-feedback answer (Yes/Sometimes/No) as the user |
+| G *(added 7 Jul 2026)* | Salary paid on time | Share of teachers on staffroom who report the same salary-on-time answer as the user |
+| H *(added 7 Jul 2026)* | Written contracts | Share of teachers on staffroom who report the same written-contract status as the user |
+| I *(added 7 Jul 2026)* | Work-life balance | The platform's single most common answer for days of school work brought home per week (no personalisation — same for every user) |
+
+Cards F, G, and H reuse answers already collected in Step 1 of the review form (professional feedback, written contract, salary-on-time) — no new questions were added to collect them. Card I reuses the `daysWorkHome` field from Step 3.
 
 ---
 
@@ -1401,10 +1437,12 @@ Cards unlock progressively as the user completes more of the review form. There 
 
 | What the user has completed | Backend state | Cards unlocked |
 |----------------------------|--------------|---------------|
-| Nothing, or gate only answered | `s0_only` | None — all 5 cards show *"Share your experience to unlock"* |
-| Gate + Step 1 answered (Overall Experience rating submitted) | `s1_complete` | Card A (school quality percentile) |
-| Gate + Step 1 + Step 2 answered (salary and work-from-home days added) | `s2_step2_complete` | Card A + Card B (salary percentile) |
-| Gate + all steps fully answered (including qualitative comments in Step 6) | `full_complete` | All 5 cards. *"Help a friend get their insights"* card also appears. |
+| Nothing, or gate only answered | `s0_only` | None — all 9 cards show *"Write a review to unlock"* |
+| Gate + Step 2 answered (Overall Experience rating submitted) | `s1_complete` | Card A (school quality percentile) |
+| Gate + Step 2 + Step 3 answered (salary and work-from-home days added) | `s2_step2_complete` | Card A + Card B (salary percentile) |
+| Gate + all steps fully answered (including qualitative comments in Step 7) | `full_complete` | All 9 cards. Cards F–I unlock only at this final stage — by product decision, not because their underlying fields (answered back in Step 1/3) aren't available sooner. *"Help a friend get their insights"* card also appears. |
+
+See the naming note under Screen 5's "What staffroom does behind the scenes" — `s1_complete`/`s2_step2_complete` refer to steps by their pre-25-June numbering, not their current one.
 
 ---
 
@@ -1584,9 +1622,11 @@ staffroom checks the browser's identity string on every page load to detect in-a
 - School saves: school details, user ID, timestamp
 - School shares: platform used, school, user ID, timestamp
 - Nudge link clicks: destination URL, timestamp, WebView status, user ID
+- Login CTA source (added 2 Jul 2026): every one of the 9 distinct code paths that route a user into `/login` now tags which CTA sent them there, so sign-ups can be filtered by entry point in Clarity instead of collapsing into one generic `page_type=login`.
+- Share Experience funnel events (added 30 Jun 2026): Form Started, Step N Completed (fired once per step, matching the current 7-step numbering), Form Submitted.
 
 **External analytics tools running at all times:**
-- Microsoft Clarity — session recordings and heatmaps (production only)
+- Microsoft Clarity — session recordings and heatmaps (production only). Instrumentation substantially extended 30 June 2026: every `safeTrack()` event now also fires as a Clarity Smart Event (previously Clarity only captured passive recordings/heatmaps, not discrete events); sessions are tagged with the user's internal UUID, `auth_status`, and `is_contributor` status; sessions are also tagged with WebView status, UTM entry-source, and a `page_type` tag that aggregates all `/school/*` pages into one heatmap bucket. `/dashboard/*` admin routes are explicitly excluded from Clarity session recording.
 - Meta Pixel — page views + registration conversion events
 - Google Ads tracking tag (gtag — AW-17177065793)
 
@@ -1596,7 +1636,7 @@ Note: Umami was removed in May 2026 and is no longer active.
 
 ### What staffroom Does NOT Track
 
-- UTM parameters from Instagram or other ads (inbound ad source not captured or stored by staffroom)
+- UTM parameters from Instagram or other ads are not captured or stored in staffroom's own database. (As of 30 Jun 2026, Microsoft Clarity itself does tag sessions with a UTM entry-source value client-side — but that lives only in Clarity's system, not staffroom's.)
 - Source of organic WhatsApp shares (no way to attribute these)
 - User's GPS location or physical location (never requested)
 - Device contacts, camera, microphone, or any app data
@@ -1633,10 +1673,12 @@ Note: Umami was removed in May 2026 and is no longer active.
 
 All user-visible error messages, with exact wording where confirmed from code.
 
+**Note on OTP rate limiting (changed 9 July 2026):** The 5-per-5-min limit below is now keyed by phone number/token instead of by IP address. Previously, several genuine users behind the same carrier-level NAT (common with Indian mobile carriers, which route many customers through one shared IP) could trip each other's rate limit and see this error despite each having sent far fewer than 5 requests themselves. Same limit, same message — fewer false positives.
+
 | Where it appears | Situation | Exact message shown |
 |-----------------|-----------|-------------------|
 | Login — OTP send | Phone number not 10 digits | *"Please enter a valid 10-digit phone number"* |
-| Login — OTP send | Too many OTP requests (rate limit: 5 per 5 min) | *"You've requested too many OTPs. Please try again after 5 minutes."* |
+| Login — OTP send | Too many OTP requests (rate limit: 5 per 5 min, keyed by phone number) | *"You've requested too many OTPs. Please try again after 5 minutes."* |
 | Login — OTP send | WhatsApp service unavailable | *"We couldn't send your OTP. Please try again."* |
 | Login — OTP send | Server returns non-parseable response | *"We couldn't send your OTP. Please check your number and try again."* |
 | Login — OTP send | Network / connection failure (catch block) | *"Connection error. Please check your internet and try again."* |
@@ -1666,7 +1708,7 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 | Login | `/login` | Yes | No | Via hamburger menu / auth overlay | No |
 | Home | `/home` | Yes | No | Bottom nav "Schools" | No |
 | School Profile | `/school/[slug]` | Yes | No (read) / Yes (write/save) | Via search & school cards | Yes |
-| Share Experience | `/share-experience` | No | Yes | Bottom nav "Your Experience" | Yes |
+| Share Experience | `/share-experience` | No | Yes | Bottom nav "Reviews" | Yes |
 | Profile | `/profile` | No | Yes | Header menu "Your Profile" | No |
 | Referral Redirect | `/referral` | Yes | No | Via referral link only | No |
 | 404 | `/404` | Yes | No | — (error state) | No |

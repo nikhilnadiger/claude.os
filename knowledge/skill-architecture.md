@@ -1,5 +1,5 @@
 ---
-last_updated: Jul 2026
+last_updated: Jul 2026 (17 Jul — see Known Inaccuracies additions below)
 maintained_by: Nikhil Nadiger
 purpose: >
   Structural standards for staffroom's claude.os skill ecosystem.
@@ -262,6 +262,13 @@ skill system but may still appear in other locations:
 | knowledge/staffroom-product-metrics.md | All Mar 2026 figures outdated (2,905 sign-ups, 635 submitted, 255 full_complete, 15 schools with 3+ reviews, Bengaluru 44%) | Updated to Apr 2026: 824 submitted, 521 live, 329 full_complete, Bengaluru ~31%. Flagged 15→6 schools discrepancy for Nikhil to verify. | Fixed Apr 2026 |
 | knowledge/staffroom-ux-constraints.md | Mar 2026 figures throughout; no recording-based behavioural evidence | Updated to Apr 2026 figures. Added recording-confirmed patterns for login drop-off (WebView/dead click), school page dead clicks (non-interactive elements that look clickable), and review form Back/Next button junction. | Fixed Apr 2026 |
 | knowledge/staffroom-content-performance.md | Mar 2026 data; 261 videos, 133K views, 7,563 hours; Bengaluru 44% | Updated to Apr 2026: 260 videos, 242,089 views (3,807 hours — different time window, noted). IG: 1,072,202 total views, 12,086 shares (full Jan–Dec 2025). City concentration note updated. | Fixed Apr 2026 |
+| knowledge/staffroom-user-journey.md | v1.7 header (24 Jun 2026) undercounted: review form documented as 6 steps / 2 mid-flow reveals / 5 Career Insight cards; "share your experience" terminology throughout; insight-card taps documented as direct-navigate | Full refresh to v2.0 (17 Jul 2026): 7-step form / 5 reveals (A–E), 9 Career Insight cards (F–I added), "Write a review" terminology app-wide, insight-card taps now open a state-appropriate popup, Section 8 tracking expanded (Clarity instrumentation), cache-eviction and rate-limiting notes added | Fixed Jul 2026 |
+| skills/product-context/references/neon-schema.md | "5 career insight cards" in unlock-states table, no naming-drift note | Updated to 9 cards (F–I added); added note that `s1_complete`/`s2_step2_complete` labels still refer to pre-25-Jun step numbering | Fixed Jul 2026 |
+| skills/product-context/references/api-inventory.md | `/wa/dlv` (WhatsApp delivery webhook) undocumented; entire `admin/apply` route block (12 endpoints) missing despite other admin modules being comprehensively listed | Added both | Fixed Jul 2026 |
+| skills/codebase-context/references/deployment-guide.md | `/api/admin/health` documented as a meaningful CI gate; no mention it was a stub that always returned 200 until 9 Jul 2026; new pre-build Postgres-container test gate undocumented | Added both notes | Fixed Jul 2026 |
+| skills/codebase-context/references/stack-topology.md | Postgres pool sizing undocumented | Added `max: 50, connectionTimeoutMillis: 5000` (set 28 Jun 2026) | Fixed Jul 2026 |
+| knowledge/staffroom-product-metrics.md | "Salary & Work Experience" funnel stage marked "not queried" with no warning that pre-6-Jul admin-dashboard figures for this stage were inflated by a since-fixed bug (`totalWorkExperience` defaulting to 0 counted as "answered") | Added warning; figure still needs a fresh query — flagged as Nikhil's action (no DB connector in session) | Fixed Jul 2026 |
+| skills/product-design/references/component-standards.md | Empty-state example copy used retired "share your experience" phrasing | Updated to "write a review" terminology | Fixed Jul 2026 |
 
 ---
 

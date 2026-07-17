@@ -1,7 +1,7 @@
 ---
 skills: [product-design]
-last_updated: Mar 2026
-source: staffroom product + codebase patterns (verified Mar 2026)
+last_updated: Jul 2026
+source: staffroom product + codebase patterns (verified Mar 2026; empty-state copy terminology corrected Jul 2026)
 ---
 
 # Component Standards
@@ -166,7 +166,7 @@ Every list, feed, or data view needs an empty state. It must:
 Examples:
 - Search with no results: "We couldn't find [school name]. Check the spelling
   or add this school."
-- No reviews yet: "Be the first to share your experience at this school."
+- No reviews yet: "Be the first to write a review of this school." (updated 7 July 2026 — "share your experience" phrasing was retired app-wide in favor of "review" terminology; see brand-custodian's output-playbook.md)
 - No searches yet: show the search bar prominently, maybe a top-rated list
   as a starting point
 

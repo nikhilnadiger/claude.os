@@ -1,7 +1,7 @@
 ---
 skills: [codebase-context]
-last_updated: May 2026
-source: live codebase + infrastructure (package.json verified Apr 2026) + background services verified May 2026
+last_updated: Jul 2026
+source: live codebase + infrastructure (package.json verified Apr 2026) + background services verified May 2026 + Postgres pool config verified Jul 17 2026
 ---
 
 # Stack Topology
@@ -26,7 +26,7 @@ source: live codebase + infrastructure (package.json verified Apr 2026) + backgr
 | Item | Detail |
 |---|---|
 | Framework | NestJS 11 |
-| DB client | pg (raw Pool, parameterised queries — NOT TypeORM). Note: `@nestjs/typeorm` is listed in package.json but has 0 usages in source — it is an unused ghost dependency. |
+| DB client | pg (raw Pool, parameterised queries — NOT TypeORM). Note: `@nestjs/typeorm` is listed in package.json but has 0 usages in source — it is an unused ghost dependency. Pool sized at `max: 50` connections, `connectionTimeoutMillis: 5000` (set 28 June 2026). |
 | Auth | Passport/JWT |
 | DB driver | pg (PostgreSQL) |
 | Port (prod) | :9000 |

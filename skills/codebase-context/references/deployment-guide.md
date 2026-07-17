@@ -1,7 +1,7 @@
 ---
 skills: [codebase-context]
-last_updated: May 2026
-source: live codebase — deployment/deploy-prod.sh, deployment/deploy-uat.sh, ecosystem.production.config.cjs, ecosystem.uat.config.cjs, .github/workflows/deploy-prod.yml (verified May 2026)
+last_updated: Jul 2026
+source: live codebase — deployment/deploy-prod.sh, deployment/deploy-uat.sh, ecosystem.production.config.cjs, ecosystem.uat.config.cjs, .github/workflows/deploy-prod.yml (verified May 2026; CI test gate + health check verified Jul 17 2026)
 ---
 
 # Deployment Guide
@@ -95,6 +95,10 @@ Without `GIT_COMMIT_SHA`, BUILD_ID falls back to `build-${Date.now()}` — non-d
 
 Both deploy scripts check `[ ! -s .next/BUILD_ID ]` immediately after build. If the file is missing or empty, the script aborts. This catches silent build corruption before PM2 is restarted.
 
+### Pre-build CI test gate (added 9 July 2026)
+
+Before the build step runs, CI now spins up a Postgres service container and runs the test suite against it, blocking the deploy if tests fail. Previously there was no test gate at all — a broken build could reach the build/deploy steps unchecked.
+
 ### Post-deploy verification (CI)
 
 After deploy, GitHub Actions runs a verification loop:
@@ -103,6 +107,8 @@ After deploy, GitHub Actions runs a verification loop:
 - 5 attempts × 12 second intervals. Fails the workflow if both do not pass.
 
 This was added after the 24 May 2026 incident where CI reported success but the old build was still live. If this check fails, the old process did not exit cleanly — inspect PM2 logs and the `delete + start` output.
+
+**Note on the health check itself (changed 9 July 2026):** `/api/admin/health` was previously a stub that always returned HTTP 200 regardless of actual backend state — meaning this entire verification step was, until this fix, confirming only that *a* process was listening, not that it was healthy. It now performs real Postgres + D1 connectivity checks, so a 200 response is a meaningful signal for the first time.
 
 ### Nudge template env vars
 

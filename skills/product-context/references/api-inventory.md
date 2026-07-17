@@ -1,7 +1,7 @@
 ---
 skills: [product-context]
-last_updated: June 2026
-source: live codebase — backend-nest/src/ (all controllers verified Apr 2026) + rum.controller.ts verified May 2026 + exchange-magic-token + apply/email-events verified June 24 2026
+last_updated: Jul 2026
+source: live codebase — backend-nest/src/ (all controllers verified Apr 2026) + rum.controller.ts verified May 2026 + exchange-magic-token + apply/email-events verified June 24 2026 + admin/apply + /wa/dlv verified Jul 17 2026
 ---
 
 # staffroom — API Inventory
@@ -26,6 +26,7 @@ belongs to admin login only (see Admin Routes below).
 | POST | `/whatsapp/verify-otp` | None | Verifies OTP. Body: `{ phone: string, otp: string }`. Returns JWT in response body. |
 | POST | `/whatsapp/update-profile` | JWT required | Updates teacher's pincode and occupation post-login (profile completion step). |
 | POST | `/whatsapp/exchange-magic-token` | None | Silent auth for nudge links. Body: `{ tok: string }` — where `tok` is an HMAC-signed payload (`phone:expTs:sig`). Returns `{ success, token, user, isNew }`. Token valid 72 hours; rejects expired or tampered tokens. Used by `_app.tsx` on nudge landing to log in the teacher without OTP. Phase 1 (ratings1/salary/completion nudges) only — initiation nudge Phase 2 gated behind `NUDGE_MAGIC_INITIATION_ENABLED=false`. Added June 22 2026. |
+| POST | `/wa/dlv` | None (32-char token in query string) | ORAI WhatsApp delivery-status webhook. **Renamed from `/whatsapp/delivery-events` on 1 July 2026** — the old path (132 chars with token) exceeded ORAI's 100-character webhook URL limit; new path is 83 chars. Also has a `GET` handler (added 29 June 2026) so ORAI's webhook-verification ping doesn't 404. |
 
 > There is **no `/auth/send-otp`**, **no `/auth/verify`**, and **no `/auth/me`** endpoint
 > for teachers. Session verification is done via `GET /user/context` (see User Module below).
@@ -224,6 +225,22 @@ endpoints in any public-facing frontend code.
 | `GET /admin/users/by-active` | Active vs inactive users. |
 | `GET /admin/users/by-contributor-status` | Contributor vs non-contributor. |
 | `GET /admin/users/by-power-influencer-bucket` | Power influencer segments. |
+
+**Apply admin** (`/admin/apply` — added Jul 17 2026, gap-filled; feature itself predates this window):
+| Path | Description |
+|---|---|
+| `GET /admin/apply/applications` | List all Apply applications (staffroom ops view). |
+| `GET /admin/apply/applications/:id` | Single application detail. |
+| `POST /admin/apply/applications/:id/recipients` | Add a manually-sourced school contact (email/WhatsApp) to an application. |
+| `PATCH /admin/apply/applications/:id/recipients/:rid` | Update a recipient record. |
+| `PATCH /admin/apply/applications/:id/teacher-notified` | Mark the teacher as notified of a school response. |
+| `PATCH /admin/apply/applications/:id/failed` | Mark an application as failed delivery. |
+| `POST /admin/apply/applications/:id/reconcile` | Reconcile application status against delivery/webhook records. |
+| `POST /admin/apply/applications/:id/send-emails` | Manually (re)trigger the school-facing delivery email. |
+| `POST /admin/apply/backfill-website-contacts` | Batch-backfill school website contacts from prior scrapes. |
+| `POST /admin/apply/applications/:id/scrape-website` | Manually trigger a website contact scrape for one application's school. |
+| `GET /admin/apply/applications/:id/resume` | Download the teacher's resume (admin view). |
+| `DELETE /admin/apply/applications/:id/contacts` | Remove a manually-added contact. |
 
 **Other admin:**
 | Path | Description |
