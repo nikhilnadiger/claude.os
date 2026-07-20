@@ -47,7 +47,7 @@ related_skills:
 ## Purpose
 
 Convenes synthetic expert advisory councils to deliberate on staffroom
-decisions. Councils think from defined mental models (25 learnings each),
+decisions. Councils think from defined mental models (up to 50 learnings each),
 argue with each other, ask clarifying questions when needed, and deliver
 a structured advisory output. They do not implement — they advise.
 
@@ -75,9 +75,9 @@ a structured advisory output. They do not implement — they advise.
 
 | Council | Folder | Members |
 |---|---|---|
-| brand-marketing | councils/brand-marketing/ | Piyush Pandey, Prasoon Joshi, Santosh Desai, Rory Sutherland |
+| brand-marketing | councils/brand-marketing/ | Piyush Pandey, Prasoon Joshi, Santosh Desai, Arindam Paul, Rory Sutherland |
 | visual-design | councils/visual-design/ | Sudhir Sharma, Sujata Keshavan, Michael Bierut |
-| product-design | councils/product-design/ | Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug |
+| product-design | councils/product-design/ | Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug, Andrew Chen |
 | software-engineering | councils/software-engineering/ | Pramod Varma, Venkat Subramaniam, Martin Fowler, Kent Beck, Kelsey Hightower, Kailash Nadh |
 
 ---

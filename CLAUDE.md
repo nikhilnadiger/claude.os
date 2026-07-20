@@ -193,7 +193,7 @@ Four expert councils available for strategic decisions. Trigger by typing:
 **Councils:**
 - `brand-marketing` — Piyush Pandey, Prasoon Joshi, Santosh Desai, Rory Sutherland, Arindam Paul
 - `visual-design` — Sudhir Sharma, Sujata Keshavan, Michael Bierut
-- `product-design` — Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug
+- `product-design` — Saptarshi Prakash, Luke Wroblewski, Jared Spool, Steve Krug, Andrew Chen
 - `software-engineering` — Pramod Varma, Venkat Subramaniam, Martin Fowler, Kent Beck, Kelsey Hightower, Kailash Nadh
 
 **Joint council:** `"run joint council [council-a + council-b]: [question]"`

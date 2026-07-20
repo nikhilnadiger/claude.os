@@ -1,7 +1,7 @@
 ---
 expert: Sudhir Sharma (Indian)
 council: VISUAL DESIGN
-learnings: 25
+learnings: 36
 ---
 
 # Sudhir Sharma (Indian) — Full Learnings
@@ -180,3 +180,80 @@ learnings: 25
 **Mainstream:** Timeless design. Avoid trends.
 **Their approach:** Design captures moment. Embracing moment (without being slavish) can age better than false timelessness.
 **Example:** Design that feels of-its-moment (2000s, 2010s) is fine. Dated design dates. Honest contemporaneity ages well.
+
+## 26. Design and Marketing Are One Function, Not Two
+
+**Problem:** Organisations silo design and marketing. Designers work without understanding the customer. Marketers communicate without design quality.
+**Mainstream:** Design and marketing are separate disciplines with different skill sets and objectives.
+**Their approach:** "For me, design and marketing are not really different things. Many times, it does happen in organizations and I think they pay for it because they put the designers into a silo. They do not understand what is the requirement of a customer. If you just look into it, how would you design anything if you did not know what the customer needs? Who understands the requirements of the customer better than a designer?"
+**Example:** Designers who understand customer needs are "exceptional in marketing as well." The firepower comes when design, marketing, and sales work as one organism — not as sequentially handed-off stages.
+
+## 27. Technical Design Skill and Design Thinking Are Two Distinct Capacities
+
+**Problem:** Designers conflate their technical skills (colour, typography, layout, rendering) with design thinking. Treat the skill as the ceiling.
+**Mainstream:** Great design skill equals great design capability.
+**Their approach:** Skills (colours, fonts, balance; renderings and 3D space; architectural reasoning) are discipline-specific. Design thinking — planning for user benefit, longevity, coherent execution, non-destructiveness — is "agnostic to the skill side." A graphic designer and a product designer have different skills but can share the same design thinking.
+**Example:** "If you are a graphic designer, the skills are probably to do with colors and fonts and balance and stuff like that. If you are an industrial designer, your skills are to do with renderings and 3d space planning." But the designer mind that plans for the user is the same in both.
+
+## 28. Design Thinking Matures After 3–4 Years of Practice
+
+**Problem:** Fresh graduates lead with technical skills and are hired for them. They may never deliberately develop the next capacity.
+**Mainstream:** Seniority automatically develops design thinking over time.
+**Their approach:** "As the years go forward, I think three-four years is when your designer part becomes a very important skill part. You can delegate [technical skills]. Somebody else can do it for you." The design thinking — not the craft skills — is what makes a senior designer irreplaceable and undelegatable.
+**Example:** "When you are a fresh graduate, the skills are very important because people can only see skills, they do not see the value, they do not see your thinking part experience, because that takes a little time to unravel and to mature."
+
+## 29. Client Understanding Requires Going Beyond the Brief
+
+**Problem:** Designer receives the client's brief. Executes it. Delivers what was asked for, not what was needed.
+**Mainstream:** Design to the brief as given.
+**Their approach:** "One of our biggest differentiating factors has been spending adequate time with clients to understand their real needs rather than proceed blindly with the mandate they hand out." The brief is a starting point, not a specification. Real needs are beneath the stated brief.
+**Example:** Elephant Design's founding differentiator: every project began with client immersion. Understanding the real problem before any design began.
+
+## 30. Ego and Attitude Are Cover-Ups for Bad Work
+
+**Problem:** Designers defend mediocre work with bravado. Treat criticism as disrespect rather than information.
+**Mainstream:** Designers need to protect their creative vision from clients who do not understand design.
+**Their approach:** "We realised that ego and attitude were actually cover-ups for bad work." Defensiveness signals insecurity about quality. Good work is easy to discuss, improve, and defend on its merits. The creative with the biggest ego often has the least secure work.
+**Example:** Learning in the early years of Elephant Design that setting aside personal differences and ego was essential for the team to produce, improve, and grow. Attitude was a tax on quality.
+
+## 31. World-Class Thinking Is Required for World-Class Work
+
+**Problem:** Teams aim for good-enough quality and attribute the gap to resource constraints or market conditions.
+**Mainstream:** Work within the constraints of the local market; global standards are aspirational.
+**Their approach:** "It is our conviction that you can make a world-class product or service only with world-class thinking." The thinking must come first and set the ambition; it cannot adapt downward to the available resources. The output quality follows from the quality of thought, not from the size of the budget.
+**Example:** Elephant Design sought world-class standards in India before the local market demanded them — the bet was that raising the standard of thinking would raise the standard of work.
+
+## 32. Professional Conduct Shapes Client Relationships as Much as Creative Quality
+
+**Problem:** Designer focuses entirely on creative output. Neglects the human quality of the client relationship.
+**Mainstream:** Great design speaks for itself. The work is what clients remember.
+**Their approach:** "Apart from the quality of work, your conduct too had to be pleasant and memorable for the client." Professional relationship quality is not peripheral to design practice — it determines whether clients return, recommend, and allow designers the latitude to do their best work.
+**Example:** Even as Elephant Design raised creative standards progressively, they "remained extremely approachable for small jobs." Accessibility was a strategic choice, not a concession.
+
+## 33. Innovation Is Intuitive as Much as Systematic
+
+**Problem:** Innovation frameworks reduce creative problem-solving to pure process. Intuition is treated as unreliable and therefore excluded.
+**Mainstream:** Innovation follows a research-and-systems methodology. Intuition is not a method.
+**Their approach:** "We believe the innovation process is an intuitive one as much as it is about research and systems." Design at its best integrates both: rational process creates the conditions; intuitive leaps produce the breakthroughs. Privileging only one side produces incomplete solutions.
+**Example:** Elephant Design's post-graduate innovation programme (Elephantversity) was built on this dual principle — neither pure research nor pure intuition, but the integration of both as a teachable practice.
+
+## 34. Emerging Markets Create Design's Most Demanding Conditions
+
+**Problem:** Global design standards are set in developed markets. Emerging market design is positioned as catching up to those standards.
+**Mainstream:** Western design practice is the benchmark against which Indian design is measured.
+**Their approach:** "Ideas, innovations and processes from emerging markets are the only future of sustainable growth for businesses around the world." Designing under Indian conditions — constrained budgets, diverse multilingual audiences, extreme environmental variation, vast economic range — produces solutions that are more robust and universally applicable than those designed only for wealthy homogeneous markets.
+**Example:** Sudhir's work for Indi Design across 14 global offices, and his service on the World Economic Forum's Global Council for Design, was premised on this thesis: Indian design thinking is not a local version of global practice but a distinctive contribution to it.
+
+## 35. India's Design Culture Requires Active Documentation and Advocacy
+
+**Problem:** Indian design community works without a shared record. Contributions remain invisible domestically and globally. No community forms around invisible work.
+**Mainstream:** Great work gets noticed on its own; recognition follows quality.
+**Their approach:** Sudhir founded Pool Magazine (later DesignIndia Magazine) — India's first international platform for Indian design, running for 144 issues over 12 years — specifically because Indian design culture needed documentation to develop recognition, coherence, and community. Visibility is not automatic; it must be built.
+**Example:** "This magazine was instrumental in recognising the contributions of the Indian design and design community globally." The DesignIndia Show extended this advocacy into an annual award structure for Indian studios.
+
+## 36. Design, Marketing, and Sales Form a Unified Chain, Not Separate Stages
+
+**Problem:** Design, marketing, and sales teams treat their handoffs as natural separations. Each stage loses signal from the others. Design decisions are made without sales reality; sales happens without design support.
+**Mainstream:** Design, marketing, and sales are sequentially separate disciplines with different metrics.
+**Their approach:** "Design is where the new ideas come in, marketing is where the ideas get executed, sales is where those ideas get realized." These three are "joined at the hip" and must "work in unison." When they are siloed, all three suffer — design is irrelevant, marketing is disconnected, sales is unarmed.
+**Example:** "I need to create the firepower for the organization and move together." The ambition is not R&D isolated from commercial reality but design DNA threaded through the entire organisation — a principle Sudhir carried from Elephant Design through to Indi Design.

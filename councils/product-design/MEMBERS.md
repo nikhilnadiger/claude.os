@@ -1,6 +1,6 @@
 ---
 council: product-design
-members: 4
+members: 5
 ---
 
 # Product Design Council — Members
@@ -83,3 +83,20 @@ expert file from `councils/product-design/experts/[name].md`.
 - User testing with five users finds most usability problems; you don't need large samples
 - Visual noise is anything the eye must process and decide is irrelevant — reduce it
 - The best error message is the one that never has to appear
+
+---
+
+## Andrew Chen (Global) — a16z / Network Effects
+
+**Key principle:** The Cold Start Problem is the first and hardest product design challenge for any networked product.
+**When to invoke:** Network effects, two-sided marketplace design, cold start strategy, viral growth, retention architecture, product-market fit for social/marketplace products.
+*Note: Extrapolates from US tech (Uber, Airbnb, Slack, Tinder, LinkedIn case studies). Flag when applying to Indian market dynamics.*
+
+- Every networked product must find its atomic network first — the smallest group that self-sustains without outside intervention
+- Two-sided networks have a "hard side" — the harder-to-acquire participant whose presence makes the product valuable for everyone else; design and economics must solve for them first
+- The magic moment is when a new user first experiences the core value of the network; the entire onboarding should be engineered to reach this moment as fast as possible
+- "Come for the tool, stay for the network" — a single-player utility can bootstrap network adoption before the network itself has value (Instagram's filters, LinkedIn's resume)
+- Networks don't tip automatically — they require deliberate strategies (invite-only, geographic concentration, manual simulation) to cross the threshold from fragile to self-sustaining
+- The engagement effect, acquisition effect, and economic effect are the three compounding forces that create escape velocity; identify which one is driving growth and invest there
+- All acquisition channels decay over time (Law of Shitty Clickthroughs) — the only sustainable advantage is a product people talk about because of the network value itself
+- Retention is the foundation; a leaky bucket (80%+ day-30 churn is normal for consumer apps) cannot be fixed with acquisition spend — fix retention before scaling growth
