@@ -238,7 +238,7 @@ Key skill reference files:
 - This is a bootstrap company. Zero/low cost solutions are preferred.
 - Target users: Indian teachers in private schools and their school principals and owners.
 - Do not make claims that are not cross-verified by data, evidence or live code.
-- LinkedIn: Nikhil has a personal LinkedIn (active). Skill: `skills/nikhil-linkedin/`. **Trigger: when Nikhil shares a LinkedIn post URL → load nikhil-linkedin skill and run the KPI update workflow** (scrape analytics, refresh recent posts, update Sheet). staffroom has a LinkedIn page that is not currently used.
+- LinkedIn: Nikhil has a personal LinkedIn (active). staffroom has a LinkedIn page that is not currently used.
 - Content: All channels paused as of Mar 2026. When content resumes, YouTube is the primary channel (highest completion rates, subscriber acquisition). Instagram and WhatsApp are secondary.
 - Pitch deck (Feb 2026) is in assets/pitch-deck-feb-2026.pptx. Note: content may be outdated.
 - Before creating a new skill: read knowledge/skill-architecture.md

@@ -73,7 +73,6 @@ and values. Single checkpoint before any brand-facing content is delivered.
 
 - Instagram reel scripts or YouTube video scripts → use content-strategy
 - Visual asset creation or design briefs → use visual-asset-creation
-- Nikhil's personal LinkedIn posts → use nikhil-linkedin
 - Code review, product architecture, or feature decisions
 
 ## Key Rules

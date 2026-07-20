@@ -1,7 +1,7 @@
 ---
 source: https://docs.google.com/document/d/19jIOrYVoXV455HV-OMCZ5fw7qT4nt9IACSX7r294kfg/edit
 last_updated: undated (pre-Feb 2026)
-skills: [content-strategy, nikhil-linkedin, advisory-councils]
+skills: [content-strategy, advisory-councils]
 data-freshness: >
   USE THIS FILE FOR NARRATIVE AND ORIGIN CONTEXT ONLY. All specific figures are outdated
   or incorrect. Do not cite any number from this file without verifying against a live source.

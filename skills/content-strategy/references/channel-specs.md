@@ -156,8 +156,7 @@ as a platform, not a teacher advocacy voice.
   [hypothetical — use real data when available]
 - Partnership and recognition announcements
 - Thought leadership from Nikhil on the Indian private school teacher market
-  (use nikhil-linkedin skill for Nikhil's personal posts — this is for the
-  company page)
+  (this skill covers the company page only, not Nikhil's personal LinkedIn)
 
 **Format:**
 - Post length: 150–300 words. LinkedIn rewards native long-form but

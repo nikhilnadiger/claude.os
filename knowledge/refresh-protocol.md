@@ -5,8 +5,7 @@ purpose: >
   Step-by-step protocol for refreshing the claude.os knowledge base and skill
   reference files. This covers the full claude.os refresh — analytics updates,
   product metrics, content performance, schema changes, and API/codebase changes.
-  It does NOT cover: competitor landscape (trigger separately), LinkedIn
-  (nikhil-linkedin skill has its own update workflow), or staffroom-user-journey.md
+  It does NOT cover: competitor landscape (trigger separately), or staffroom-user-journey.md
   (trigger "update user journey" with the product-context skill).
 ---
 
@@ -31,7 +30,6 @@ purpose: >
 **Excluded from this refresh (separate protocols):**
 - `knowledge/staffroom-competitive-landscape.md` — trigger as a standalone task
 - `knowledge/staffroom-user-journey.md` — trigger "update user journey" with product-context skill loaded
-- `skills/nikhil-linkedin/` — LinkedIn skill has its own voice and update workflow
 - `knowledge/staffroom-teacher-insights.md` — updated only when new Dovetail/user research is conducted
 
 ---

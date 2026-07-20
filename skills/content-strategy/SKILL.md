@@ -9,8 +9,7 @@ description: >
   'content plan', 'what should we post', 'script for Instagram',
   'content calendar', 'IR script', 'episode idea', 'what content should
   we make'. Not for brand voice review of non-content outputs
-  (use brand-custodian), Nikhil's personal LinkedIn (use nikhil-linkedin),
-  or visual asset creation (use visual-asset-creation).
+  (use brand-custodian), or visual asset creation (use visual-asset-creation).
 
 triggers:
   - "write a script"
@@ -77,7 +76,6 @@ pillars. No hypothetical frameworks.
 ## When NOT to Load This Skill
 
 - Brand voice review of emails, product UI, or investor materials → use brand-custodian
-- Nikhil's personal LinkedIn posts → use nikhil-linkedin (separate skill, not part of this workflow)
 - Creating visual assets, thumbnails, or design briefs → use visual-asset-creation
 - Product decisions, engineering, or growth strategy
 

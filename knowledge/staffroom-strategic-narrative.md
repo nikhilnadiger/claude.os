@@ -1,7 +1,7 @@
 ---
 source: https://docs.google.com/document/d/1K_kqad4uP8JP8DUrixBCq8K2y8u0ZWkpguS_Dmuf-UI/edit
 last_updated: Feb 2026
-skills: [nikhil-linkedin, brand-custodian, advisory-councils]
+skills: [brand-custodian, advisory-councils]
 data-freshness: >
   This file contains platform traction figures, market statistics, GTM metrics,
   and monetisation projections that are outdated. The Feb 2026 version is the most

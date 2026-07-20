@@ -81,9 +81,9 @@ Skill reference docs (in skills/*/references/):
 
 ---
 
-## The 10-Skill Ecosystem
+## The 9-Skill Ecosystem
 
-staffroom's claude.os has 10 skills across five clusters:
+staffroom's claude.os has 9 skills across four clusters:
 
 | Cluster | Skill | Primary intent |
 |---|---|---|
@@ -94,7 +94,6 @@ staffroom's claude.os has 10 skills across five clusters:
 | Engineering | engineering-review | Review PRs, architecture decisions, ADRs |
 | Product | product-context | Understand how features, flows, and APIs work |
 | Product | product-design | UI/UX design decisions, screen design, critique |
-| Personal | nikhil-linkedin | Write and analyse LinkedIn posts in Nikhil's founder voice |
 | Strategy | advisory-councils | Expert council deliberation on strategic decisions |
 | Marketing | meta-ad-creation | Run a Meta Ads campaign via 4-gate sequential process |
 
@@ -246,12 +245,12 @@ skill system but may still appear in other locations:
 | product-context/references/db-schema.md | `searches` table missing from Section 1 Active Neon Tables | `searches` is an active Neon table used by search.service.ts — added to Section 1 | Fixed in Task 8 |
 | visual-asset-creation/SKILL.md | Key Rule 1 said "before writing any prompt or building any Figma asset" | v1.3 replaced Figma with PPTX but this line was not updated — now reads "any PPTX" | Fixed in Task 8 |
 | knowledge/staffroom-ux-constraints.md | "Staffroom's user base" — capitalised | Brand rule violation — changed to "staffroom's" | Fixed in Task 8 |
-| knowledge/skill-architecture.md | "The 7-Skill Ecosystem" — nikhil-linkedin omitted from table, count wrong | Table updated to 8 skills across 4 clusters with nikhil-linkedin added | Fixed in Task 8 |
+| knowledge/skill-architecture.md | "The 7-Skill Ecosystem" — count wrong | Table updated to 8 skills across 4 clusters | Fixed in Task 8 |
 | knowledge/staffroom-teacher-insights.md | 30.7% completion rate appeared to contradict the 40% figure in product-metrics.md and ux-constraints.md | Added clarifying note: D1 measures all form-start attempts (broader denominator); Neon measures completions among submitted reviews | Fixed in Task 8 |
 | CLAUDE.md + knowledge/staffroom-competitive-landscape.md | Market size stated as "4 million teachers / 340,000+ private schools" | UDISE+ 2023-24 (primary source): ~3.7M (37.3 lakh) teachers, ~330,000 (3.31 lakh) private unaided schools. Updated in both files Jul 2026. | Fixed Jul 2026 |
 | knowledge/staffroom-journey.md | "50L teachers / 4L schools" (market size), "34yrs" teacher age, "2500+ sign-ups", "₹30 CAC", "~20% review rate" | All outdated/wrong. Market size: see UDISE+ 2023-24 figures above. Teacher age: 32yrs (TISS SOTTTER 2023). Other figures: see staffroom-product-metrics.md. Prominent data-freshness warning added to file. | Fixed Jul 2026 |
 | knowledge/staffroom-strategic-narrative.md | "~50L teachers and 4L+ private schools" (market size overstated) | UDISE+ 2023-24: ~3.7M teachers, ~330K private unaided schools. Data-freshness warning updated with specific inaccurate figures. | Fixed Jul 2026 |
-| knowledge/skill-architecture.md | "The 9-Skill Ecosystem" in header (body already said 10 skills) | Updated header to "The 10-Skill Ecosystem" to match body. | Fixed Jul 2026 |
+| knowledge/skill-architecture.md | "The 9-Skill Ecosystem" in header (body already said 10 skills) | Updated header to "The 10-Skill Ecosystem" to match body; later reduced to 9 skills after a skill was removed. | Fixed Jul 2026 |
 | product-context/references/api-inventory.md | Auth module documented as `/auth/send-otp`, `/auth/verify`, `/auth/me` | All wrong. Correct: `/whatsapp/send-otp`, `/whatsapp/verify-otp`, `/whatsapp/update-profile`. No `/auth/me` endpoint — session verified via `GET /user/context`. Admin auth only is at `/admin/login`. | Fixed Apr 2026 |
 | product-context/references/api-inventory.md | 10+ modules entirely missing from the inventory | Added: WhatsApp Auth, User, Saved Schools, Places, Teacher Counts, Top Rated, Tracking, Insights, Referral, Nudge redirect. Expanded Admin routes. | Fixed Apr 2026 |
 | product-context/references/data-flow.md | Flow 3 step 4: "stepper_form_approval records created with 5 boolean approval fields — Approval is admin-reviewed" | stepper_form_approval exists in schema but is NEVER written to by any code. No moderation pipeline is implemented. | Fixed Apr 2026 |
