@@ -1,11 +1,13 @@
 # staffroom — User Journey & System Design Document
 
-**Version:** 2.0  
+**Version:** 2.1  
 **Built from:** Live production codebase · staffroom-v2 · main branch  
-**Codebase last verified:** 17 July 2026  
+**Codebase last verified:** 22 July 2026  
 **Purpose:** Single reference document covering every screen, user action, system response, wait state, and invisible backend operation — verified directly from code.
 
-**Changelog note:** Between the v1.7 baseline (24 June 2026) and this refresh, an untracked manual edit (7 July 2026, commit `cf0427f`) had already patched in the Screen 5 gate-skip explanation and the WhatsApp template copy appendix without bumping the version or verified-date — both are now folded into this v2.0 baseline along with everything else below. Major changes this refresh: review form restructured from 6 to 7 steps with 3 new mid-flow reveal cards (Screen 5); Career Insights expanded from 5 to 9 cards (Section 5); "share your experience" terminology renamed to "review" throughout the app; insight-card taps now open a popup instead of direct navigation; Clarity tracking substantially expanded (Section 8).
+**Changelog note:** Between the v1.7 baseline (24 June 2026) and the v2.0 refresh (17 July 2026), an untracked manual edit (7 July 2026, commit `cf0427f`) had already patched in the Screen 5 gate-skip explanation and the WhatsApp template copy appendix without bumping the version or verified-date — both were folded into v2.0 along with everything else below. Major changes in v2.0: review form restructured from 6 to 7 steps with 3 new mid-flow reveal cards (Screen 5); Career Insights expanded from 5 to 9 cards (Section 5); "share your experience" terminology renamed to "review" throughout the app; insight-card taps now open a popup instead of direct navigation; Clarity tracking substantially expanded (Section 8).
+
+**This refresh (v2.1, 22 July 2026):** covers 3 commits since the 17 July verification. The "My Applications" hamburger-menu item is now gated behind the Apply feature flag (`NEXT_PUBLIC_APPLY_ENABLED`) — previously it was the one Apply surface that showed regardless of the flag (Screens 3, 9, 10, Appendix). Step 7 review-form placeholders (what you liked / what to improve) are now prefixed "e.g. " and rendered in italics, drawn from a deepened pool of longer real teacher quotes, with a persistent lightbulb-tagged helper line replacing the old vanish-on-type placeholder prompt (Screen 5).
 
 ---
 
@@ -426,7 +428,7 @@ The Home page renders **identical content** to the Landing page — the same `Ho
 Dropdown opens with:
 - User avatar + masked phone number + Contributor's Voice badge (if earned)
 - **Your Profile** item
-- **My Applications** item (routes to `/my-applications`) — always shown for authenticated users
+- **My Applications** item (routes to `/my-applications`) — shown only when the Apply feature flag (`NEXT_PUBLIC_APPLY_ENABLED`) is on; hidden entirely when Apply is off (fixed 21 Jul 2026 — previously shown regardless of the flag, the one Apply entry point that wasn't gated)
 - **Sign out** item
 - Footer: *"staffroom powered WIP Technology Solutions Private Limited"* + Instagram + YouTube icons
 
@@ -450,7 +452,7 @@ Three items — Schools | Reviews | Community (renamed from "Your Experience" 7 
 | Tap a city button (City selector) | Top Schools list filters to that city |
 | Click any insight card, locked or unlocked (changed 30 Jun 2026) | Opens a bottom-sheet popup (reusing the `SalaryBandPopup` shell) showing the card's headline and body. The popup's CTA adapts to the user's unlock state: all-locked → routes to Write a Review; partial (some cards unlocked) → continues the in-progress review; full-complete (all 9 unlocked) → WhatsApp invite as the primary button, "write another review" as secondary. Previously, tapping a locked card only prompted to continue/start, and tapping an unlocked card showed its data inline with no popup. Separately (also 30 Jun 2026), the `SeeYourInsightsCard` and the gate screen before Step 1 became fully tappable anywhere on the card — previously only the CTA pill inside them was tappable. |
 | Click **Help a friend get their insights** (visible only when all 9 cards unlocked) | Opens WhatsApp with a pre-filled share message containing the user's personal referral link |
-| Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **My Applications** / **Sign out** + footer |
+| Click hamburger menu (authenticated) | Dropdown opens with: **Your Profile** / **My Applications** (only if Apply flag on) / **Sign out** + footer |
 | Click **Your Profile** | Profile page |
 | Click **My Applications** | My Applications page (`/my-applications`) |
 | Click **Sign out** | Session cleared from browser (cookie + local storage + app memory). Taken to Landing page (`/`). |
@@ -782,6 +784,8 @@ Multi-radio group: *"Are the following easy to do in this school?"* — covers: 
 **Step 7 — Final Comments:**
 Two required free-text fields: what you like about working here; what needs improvement. Both fields require **more than 12 characters** (minLength: 13) **and** pass a low-effort-answer check (added 7 July 2026): generic non-answers like "Nothing," "Everything," "N/A," etc. are rejected on both the client and the server, closing a gap where such answers could previously slip through via autosave-on-blur before the length check ran. If the user attempts to proceed with too little text or a rejected low-effort answer, an inline error appears below the field: *"Add few more words - share one real thing you liked working here."* / *"Add few more words - share one real thing you would change here."*
 
+**Placeholder text (both fields):** Shows a real teacher quote drawn from a curated pool, picked at random once when the field first appears and held stable for that visit. Every quote is prefixed *"e.g. "* and rendered in italics, so it reads as an example rather than pre-filled content (fixed 20 Jul 2026 — the plain placeholder previously looked like a real answer until the user started typing). The quote pool was also deepened the same day: single-line quotes under 120 characters were replaced with multi-sentence real submissions (140–340 characters) to model the depth expected of a review. Below the field, persistent helper text (small lightbulb icon, added 20 Jul 2026) reads: *"Think about culture, professional development, salary, leadership, workload — specific examples help other teachers the most."* (what you like) / *"Think about workload, policies, communication, facilities — specific examples help other teachers the most."* (what to improve). This category-breadth prompt previously lived only in the placeholder and disappeared once the user started typing; it now stays visible throughout. `minLength` stays at 13 characters — deliberately unchanged, to avoid risking completion/eligibility metrics gated on this field.
+
 **Completion screen (after Step 7 submitted):**
 - Heading: *"All insights unlocked"*
 - Body: *"Your review has been noted. Your name will never be shared with the school."*
@@ -1014,7 +1018,7 @@ No database call is made on the `/referral` page itself — all data is handled 
 
 ### SCREEN 9 — staffroom Apply
 
-**Feature flag:** `NEXT_PUBLIC_APPLY_ENABLED` (frontend) / `APPLY_ENABLED` (backend). Apply is currently live in production. The flag controls visibility of the entire Apply surface — the CTA card on school pages, the application sheet, `/my-applications`, `/apply/[token]`, `/apply/payment-status`, and the post-review Reveal card. When the flag is off, none of this UI is visible to users.
+**Feature flag:** `NEXT_PUBLIC_APPLY_ENABLED` (frontend) / `APPLY_ENABLED` (backend). Apply is currently live in production. The flag controls visibility of the entire Apply surface — the CTA card on school pages, the application sheet, the "My Applications" hamburger-menu item (fixed 21 Jul 2026 — previously the one entry point that ignored the flag), `/my-applications`, `/apply/[token]`, `/apply/payment-status`, and the post-review Reveal card. When the flag is off, none of this UI is visible to users.
 
 **What it is:** A teacher-to-school job application system. Teachers send their resume + profile to a school directly through staffroom. staffroom delivers it to the school via email and WhatsApp, and the school can view the applicant on a one-time tokenized link.
 
@@ -1129,7 +1133,7 @@ When the school taps Interested or Not a fit, they are prompted to enter their W
 
 **URL:** `thestaffroom.in/my-applications`  
 **Who sees this:** Logged-in users only. Unauthenticated users are redirected to `/login?returnUrl=/my-applications`.  
-**How you arrive:** Hamburger menu → "My Applications" (always visible when logged in); or the *"Track my application →"* button after a successful application.
+**How you arrive:** Hamburger menu → "My Applications" (visible when logged in **and** the Apply feature flag is on; fixed 21 Jul 2026 — previously visible regardless of the flag); or the *"Track my application →"* button after a successful application.
 
 ---
 
@@ -1717,10 +1721,10 @@ All auth errors delivered as: inline red alert box (`"alert"` accessibility role
 | Blog Post | `/blogs/[id]` | Yes | No | **No — URL only** | No |
 | WhatsApp Verify | `/whatsapp-verification` | Yes | No | **No — orphaned** | No |
 | Dashboard | `/dashboard` | No | Admin only | **No — admin only** | No |
-| My Applications | `/my-applications` | No | Yes | Hamburger menu (always shown when logged in) | No |
+| My Applications | `/my-applications` | No | Yes | Hamburger menu (shown when logged in and Apply flag on) | No |
 | Apply school view | `/apply/[token]` | Yes (token-gated) | No (school OTP) | **No — sent via email/WhatsApp only** | No |
 | Apply payment status | `/apply/payment-status` | No | Yes | **No — redirect only after payment** | No |
 
 ---
 
-*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 24 June 2026. All content verified from code.*
+*Document built from direct code review of staffroom-v2 (main branch). Codebase last verified: 22 July 2026. All content verified from code.*
