@@ -86,6 +86,14 @@ Short-form scripts (Reels, Shorts) follow a 5-beat internal structure
 within the IR table. This ensures front-loaded value, a curiosity gap,
 and an emotionally-anchored CTA — the pattern confirmed by performance data.
 
+> **For Meta Ads scripts only — the cliff is named before any beat is written.**
+>
+> Meta Ads scripts follow a separate brief and gate process (`skills/meta-ad-creation/references/gate-framework.md`). For those scripts, before writing the hook or any beat below, name the cliff: the specific unresolved question the teacher will be left with after seeing the ad. The cliff must require current employment to feel urgent — a job seeker must not be able to feel the same urgency. If this test is not met, the script is not ready.
+>
+> The cliff beat appears within the first 7 seconds. Tag it with **[CLIFF]** in the script table row where it lands.
+>
+> This requirement applies to Meta Ads scripts only. For organic YouTube, Instagram Reels, and WhatsApp content, use the beat structure below without modification.
+
 | Beat | Timing | Function |
 |---|---|---|
 | Opening | 0–3s | Hook — stops scroll, states value fast. Choose one proven type: Authority, Data, or Validation hook (see hook types section below). Must be the strongest line in the script. |

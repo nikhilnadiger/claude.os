@@ -31,7 +31,7 @@ Standard UTM parameter structure for all staffroom Meta Ads:
 
 | Script ID | Creative Name | Full UTM URL |
 |---|---|---|
-| script_1a | [Route 1 name — Format] | https://thestaffroom.in/[landing-path]?utm_source=meta&utm_medium=paid_social&utm_campaign=[name]&utm_content=script_1a&utm_term=[format] |
+| script_1a | [Route 1 name — Format] | https://www.thestaffroom.in/[landing-path]?utm_source=meta&utm_medium=paid_social&utm_campaign=[name]&utm_content=script_1a&utm_term=[format] |
 
 Pre-launch verification: paste each destination URL into a browser and
 confirm the landing page loads correctly. See pre-launch checklist below.
@@ -116,6 +116,7 @@ Claude fills this template per campaign from confirmed self-briefing sweep input
 **Exclusions**
 - Prior converters: exclude if the campaign objective is new registrations
   and retargeting is not the brief
+- **Job seekers:** Add Meta behavioral exclusion for "Currently looking for a job" or equivalent job-seeking behavior signals where available in the Meta targeting interface. Note: Meta's behavioral exclusions for job-seeking are imprecise at the audience sizes staffroom operates. The primary filter is creative framing — every ad in the campaign must use "your school" or "currently working at" language. Copy that passes the cliff test (see gate-framework.md) is the first-order job-seeker filter; behavioral exclusions are the second-order filter.
 - [Any campaign-specific exclusions confirmed by Nikhil]
 
 **Note on targeting constraints at bootstrapped scale:** At early-stage
@@ -124,6 +125,18 @@ enough for the algorithm to find the signal. Narrow to the city level first
 — interest stacking comes after CPR data proves the base audience is working.
 
 ---
+
+## Platform Credentials (verified Jul 2026)
+
+| Credential | Value |
+|---|---|
+| Meta Ad Account ID | 149743647 |
+| Meta Pixel ID | 1182526897224226 |
+| Canonical destination domain | https://www.thestaffroom.in/ |
+
+Confirm these are current before each campaign. The canonical domain is `www.thestaffroom.in` — not `thestaffroom.in`. The www prefix is required for correct UTM attribution.
+
+The ad account ID is required for: Meta Ads Connector MCP tool calls, Events Manager pixel verification (pre-launch checklist item 2), and ad-level performance queries via the MCP.
 
 ## Pre-Launch Checklist
 
@@ -134,6 +147,7 @@ to Nikhil for approval:
    confirm landing page loads correctly and is not a 404 or redirect loop.
 2. **Pixel firing confirmed** — Events Manager shows `CompleteRegistration`
    firing on form submission. Do not assume it is live — verify before launch.
+   The Pixel ID is 1182526897224226. Navigate to Events Manager → this pixel → Test Events tab to verify firing. This step requires the ad account ID (149743647).
 3. **Ad copy confirmed against each creative** — no mismatch between the
    primary text promise and what the landing page actually delivers to the user.
 4. **Campaign objective set correctly** — Conversions → `CompleteRegistration`.
@@ -151,3 +165,4 @@ to Nikhil for approval:
    every ad. Examples: `script_3a_en`, `script_3a_kaen` (Kannada-English).
 10. **staffroom lowercase verified** — in all copy fields across all ads;
     no capitalisation variant anywhere.
+11. **Click-to-registration rate baseline set** — before the campaign goes live, record the expected click-to-registration rate from the self-briefing sweep (from prior campaign data or platform baseline of ~9% for NCR currently-employed teacher audience). This becomes the Day 7 audience quality benchmark.

@@ -67,6 +67,7 @@ Claude executes this check at invocation, before anything else:
 **Iteration Mode:** Gate 0 brief is pre-seeded with what worked and what
 failed from the prior campaign. The council sees this as context — it does
 not constrain their creative direction, but they are not briefed blind.
+Prior campaign data includes both CPR benchmarks AND data quality signals (reviewer experience distribution, 5-star rate, salary blank rate from the self-briefing sweep query). Both are presented in the Gate 0 pre-session briefing package and visible to all council experts before Phase 1 begins.
 
 **Fresh Mode:** Gate 0 starts from the assembled brief alone. No prior
 creative assumptions imported.
@@ -93,6 +94,7 @@ Gate 0 does not open until Nikhil confirms or edits the assembled inputs.
 | Prior CPR benchmarks | Meta Ads exports if available; knowledge/staffroom-content-performance.md |
 | Strongest current platform insight | Live Neon query — run it; do not use cached data |
 | Current product state | Live codebase review; CLAUDE.md; what the product actually delivers to a user who clicks an ad right now |
+| Data quality from prior campaign | Neon DB: query 5-star review rate, 0–1 year experience rate, and salary blank rate for reviewers acquired in the most recent campaign window. Flag in the assembled inputs if: 5-star rate >25%, 0–1 year experience rate >30%, or salary blank rate >15%. If any threshold is breached, label it "DATA QUALITY RISK" in the assembled inputs — the council must address it in Gate 0 creative direction. Do not suppress it or treat it as a background note. |
 
 ---
 

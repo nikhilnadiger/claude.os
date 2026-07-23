@@ -34,6 +34,18 @@ Brand-Marketing Council (full deliberation, all 4 experts).
 - **Hook strategy recommendation:** Grounded in available performance data (CPR, completion rates, strongest prior hooks).
 - **Format mix recommendation:** Which production formats (AI Avatar, AI Video, Static, Agency), how many ads, and why this mix for this objective.
 - **The specific creative tension:** What makes this campaign brief different from a generic brief — the named tension the council is solving. This must be explicit, not implied.
+- **The Cliff:** A specific, personally urgent, unresolved question designed into the ad that can only be felt by a teacher who is currently employed at a school. The cliff is designed before the hook — the hook wraps around it. The cliff is not the landing page's give-to-get mechanic. It must live in the ad itself, before the click. The council names it precisely before Gate 0 closes.
+
+  **Cliff test (applied at Gate 0 before the brief is presented to Nikhil):** Ask: "Could a job seeker feel this urgency equally?" If yes, the cliff fails. Return to the council.
+
+  Cliffs that pass the test:
+  - "How does your school's management compare to the hundreds of schools already rated?" — requires having a current school.
+  - "Are you paid fairly vs teachers with your years of experience at similar schools in your city?" — requires having a current salary.
+
+  Cliffs that fail the test:
+  - "Some schools teachers actually love" — a job seeker wants to find those schools too.
+  - "Great schools as shared by teachers" — a job seeker wants to know which schools are great to target.
+  - "Finally, a way to know" — a job seeker wants to know just as much as a current teacher.
 
 ### Approval Protocol
 Nikhil reads the brief. Either:
@@ -62,6 +74,7 @@ Brand-Marketing Council (new session; approved Gate 0 Brief is the sole creative
 - **Format fit recommendation:** Which production format(s) suit this route and why.
 - **Production complexity rating:** Simple / Medium / High — relative to available formats.
 - **Predicted performance pattern:** Why this route is expected to work for this audience and objective, grounded in prior data or teacher insight.
+- **Cliff test result:** State the specific unresolved question this route plants in the ad. Confirm in one sentence why this question requires current employment to feel urgent. If the council cannot confirm this, the route fails the cliff test and must be revised before Gate 1 closes.
 
 ### Approval Protocol
 Nikhil selects which routes to develop. Written direction required — e.g., "develop Route 1 and Route 2, kill Route 3." Partial selection is valid.
@@ -83,6 +96,12 @@ Brand-Marketing Council (one full script per approved route).
 Per script:
 - **Full 2-column script table:** Audio | Visual
 - **Duration specified:** 15s, 30s, 60s cuts where relevant — or council recommends which cuts are needed and why
+**The cliff is named before the script is written.**
+
+Before the council writes any beat, they name the cliff: the specific unresolved question this ad plants for a currently-employed teacher. The hook is then written to set up that cliff. If the cliff cannot be named before the hook is written, the script is not ready.
+
+The cliff beat is the moment within the first 7 seconds where the unresolved question is planted. Identify it explicitly in the script table with a **[CLIFF]** tag on that row.
+
 - **Beat structure per the style guide:**
   - Hook (0–3s)
   - Reinforcement (4–7s)
@@ -147,3 +166,37 @@ Full spec: `references/meta-ads-setup.md`
 
 ### Approval Protocol
 Nikhil approves the Gate 4 brief before any ad goes live. No exceptions.
+
+### Post-Launch Monitoring (mandatory after every campaign goes live)
+
+**Day 3 check:**
+- CPR trajectory per ad set and per ad.
+- Click-to-registration rate per ad (link clicks → completed registrations). This is equally important to CPR. A ₹49 CPR ad with 2.65% click-to-registration is worse for data quality than a ₹118 CPR ad with 9% click-to-registration.
+- Budget allocation within ABO ad sets: which ads are being starved. Expected: ABO concentrates on 1–2 ads. This is normal. Document which ads are receiving <₹100/day — do not treat starvation as creative failure at this stage.
+
+**Day 7 check — data quality (Neon query):**
+
+Run the following query against the Neon database and flag if any threshold is breached:
+
+```sql
+SELECT 
+    ROUND(COUNT(CASE WHEN "overallExperience" >= 4.5 THEN 1 END)::numeric / COUNT(*) * 100, 1) AS five_star_pct,
+    ROUND(COUNT(CASE WHEN "totalWorkExperience"::numeric <= 1 THEN 1 END)::numeric / COUNT(*) * 100, 1) AS zero_to_one_yr_pct,
+    ROUND(COUNT(CASE WHEN "salaryPerMonth" IS NULL OR "salaryPerMonth" = 0 THEN 1 END)::numeric / COUNT(*) * 100, 1) AS no_salary_pct
+FROM stepper_form_data
+WHERE "workedRecently" IS NOT NULL
+  AND "overallExperience" > 0
+  AND "createdAt"::timestamp >= NOW() - INTERVAL '7 days';
+```
+
+Thresholds — flag and investigate if breached:
+- 5-star rate > 25%: audience quality risk. Discovery-framed creative may be attracting job seekers who aspirationally rate target schools.
+- 0–1 year experience rate > 30%: job seeker signal. Users may not have genuine workplace experience to share.
+- Salary blank rate > 15%: job seeker signal. Users may not have a current salary to enter.
+
+If any threshold is breached: pause the ad set with the discovery-framed creative and run the cliff test against the live creative before committing more budget.
+
+**Day 14 check — creative fatigue:**
+- Compute 7-day rolling CPR vs opening CPR (days 1–3 average).
+- If rolling CPR exceeds 130% of opening CPR for 3 consecutive days, the dominant creative is fatiguing. Introduce a new creative variant before pausing the fatigued ad.
+- **Learning phase reset cost:** any budget change, ad pause, addition of new ads, or optimisation goal switch on an existing ad set resets the learning phase. Estimated cost: 2–4 days of above-baseline CPR as the algorithm re-learns. Require Nikhil's explicit written sign-off before any mid-flight structural change.
